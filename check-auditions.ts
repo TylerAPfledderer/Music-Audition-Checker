@@ -316,7 +316,7 @@ async function sendEmail(
     html += `</ul>`;
   }
 
-  html += `<p style="color:#888;font-size:12px;">Sent by audition-checker</p>`;
+  html += `<p style="color:#888;font-size:12px;">Sent by <a href="https://github.com/TylerAPfledderer/Music-Audition-Checker">audition-checker</a></p>`;
 
   const warningTag = probeFailures.length > 0 ? " ⚠️" : "";
   const subject = `🎺 ${findings.length} new trumpet audition${findings.length > 1 ? "s" : ""} found — ${today}${warningTag}`;
@@ -655,7 +655,11 @@ async function main(): Promise<void> {
     console.log(`\n📄 ${urlConfig.name}`);
     try {
       // Reuse content fetched during preflight — no second HTTP request
-      const text = pageContentCache.get(urlConfig.url)!;
+      const text = pageContentCache.get(urlConfig.url);
+      if (!text) {
+        console.log(`  ⏭️  Skipping (failed preflight)`);
+        continue;
+      }
       const hash = contentHash(text);
       const previousState = state.pages[urlConfig.url];
 
