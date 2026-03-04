@@ -1,0 +1,52 @@
+name: Weekly Audition Checker
+
+on:
+  schedule:
+    # Runs every Monday at 8:00 AM UTC
+    - cron: "0 8 * * 1"
+  workflow_dispatch: # Allow manual runs from GitHub UI
+
+permissions:
+  contents: write # Needed to commit updated audition-state.json back to repo
+
+jobs:
+  check-auditions:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Chromium for Puppeteer
+        run: npx puppeteer browsers install chrome
+        # Only needed for JS-rendered pages; safe to run even if not triggered
+
+      - name: Run audition checker
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GMAIL_CLIENT_ID: ${{ secrets.GMAIL_CLIENT_ID }}
+          GMAIL_CLIENT_SECRET: ${{ secrets.GMAIL_CLIENT_SECRET }}
+          GMAIL_REFRESH_TOKEN: ${{ secrets.GMAIL_REFRESH_TOKEN }}
+          GMAIL_USER: ${{ secrets.GMAIL_USER }}
+          NOTIFY_EMAIL: ${{ secrets.NOTIFY_EMAIL }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: npx ts-node check-auditions.ts
+
+      - name: Commit updated state file
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add audition-state.json
+          # Only commit if the state file actually changed
+          git diff --staged --quiet || git commit -m "chore: update audition state [skip ci]"
+          git push
