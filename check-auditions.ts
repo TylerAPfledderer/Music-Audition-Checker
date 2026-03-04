@@ -655,7 +655,11 @@ async function main(): Promise<void> {
     console.log(`\n📄 ${urlConfig.name}`);
     try {
       // Reuse content fetched during preflight — no second HTTP request
-      const text = pageContentCache.get(urlConfig.url)!;
+      const text = pageContentCache.get(urlConfig.url);
+      if (!text) {
+        console.log(`  ⏭️  Skipping (failed preflight)`);
+        continue;
+      }
       const hash = contentHash(text);
       const previousState = state.pages[urlConfig.url];
 
