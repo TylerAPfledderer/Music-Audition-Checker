@@ -1,0 +1,19 @@
+{
+  "name": "audition-checker",
+  "version": "1.0.0",
+  "description": "Weekly cron job to monitor symphony orchestra audition pages for trumpet opportunities",
+  "scripts": {
+    "check": "ts-node check-auditions.ts",
+    "check:dry": "DRY_RUN=true ts-node check-auditions.ts"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.39.0",
+    "googleapis": "^144.0.0",
+    "puppeteer": "^22.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "ts-node": "^10.9.0",
+    "typescript": "^5.4.0"
+  }
+}
