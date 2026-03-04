@@ -316,7 +316,7 @@ async function sendEmail(
     html += `</ul>`;
   }
 
-  html += `<p style="color:#888;font-size:12px;">Sent by audition-checker</p>`;
+  html += `<p style="color:#888;font-size:12px;">Sent by <a href="https://github.com/TylerAPfledderer/Music-Audition-Checker">audition-checker</a></p>`;
 
   const warningTag = probeFailures.length > 0 ? " ⚠️" : "";
   const subject = `🎺 ${findings.length} new trumpet audition${findings.length > 1 ? "s" : ""} found — ${today}${warningTag}`;
