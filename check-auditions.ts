@@ -200,8 +200,9 @@ ${pageText.slice(0, 8000)}`;
     .join("");
 
   try {
-    const cleaned = raw.replace(/```json|```/g, "").trim();
-    return JSON.parse(cleaned) as AuditionAnalysis;
+    const match = raw.match(/\{[\s\S]*\}/);
+    if (!match) throw new Error("No JSON object found");
+    return JSON.parse(match[0]) as AuditionAnalysis;
   } catch {
     console.warn("  Could not parse Claude response as JSON:", raw.slice(0, 200));
     return {
@@ -431,8 +432,9 @@ ${pageText.slice(0, 2000)}`,
     .join("");
 
   try {
-    const cleaned = raw.replace(/```json|```/g, "").trim();
-    return JSON.parse(cleaned);
+    const match = raw.match(/\{[\s\S]*\}/);
+    if (!match) throw new Error("No JSON object found");
+    return JSON.parse(match[0]);
   } catch {
     return { isAuditionPage: false, reason: "Could not parse Claude response" };
   }
