@@ -1,11 +1,83 @@
 {
-  "lastRun": "2026-03-05T22:14:01.181Z",
+  "lastRun": "2026-03-05T23:53:17.410Z",
   "pages": {
     "https://www.chamberorchestraofthetriangle.org/employment": {
       "url": "https://www.chamberorchestraofthetriangle.org/employment",
       "name": "Chamber Orchestra of the Triangle",
       "lastChecked": "2026-03-05T22:14:01.181Z",
       "contentHash": "26c2afab20ab2fe9",
+      "extractedSummary": null,
+      "hasRelevantAuditions": false
+    },
+    "https://wpsymphony.org/employment/": {
+      "url": "https://wpsymphony.org/employment/",
+      "name": "Western Piedmont Symphony",
+      "lastChecked": "2026-03-05T23:52:54.012Z",
+      "contentHash": "31d2ec9a13266e62",
+      "extractedSummary": null,
+      "hasRelevantAuditions": false
+    },
+    "https://www.fayettevillesymphony.org/auditions-and-employment/": {
+      "url": "https://www.fayettevillesymphony.org/auditions-and-employment/",
+      "name": "Fayetteville Symphony Orchestra",
+      "lastChecked": "2026-03-05T23:52:56.639Z",
+      "contentHash": "2f6e9db307c32f47",
+      "extractedSummary": "While there are no active formal auditions currently posted, the Fayetteville Symphony Orchestra is accepting submissions for their substitute musician list. Musicians interested in joining the sub list can contact the Operations Manager via email.",
+      "hasRelevantAuditions": true
+    },
+    "https://www.raleighsymphony.org/auditions": {
+      "url": "https://www.raleighsymphony.org/auditions",
+      "name": "Raleigh Symphony Orchestra",
+      "lastChecked": "2026-03-05T23:53:00.075Z",
+      "contentHash": "c5c464ed5adb2125",
+      "extractedSummary": "The Raleigh Symphony Orchestra holds annual auditions in late summer for both open positions and substitute positions on all instruments, including trumpet. Their next audition date is currently pending with details to be announced in early summer 2026.",
+      "hasRelevantAuditions": true
+    },
+    "https://rso.com/auditions/": {
+      "url": "https://rso.com/auditions/",
+      "name": "Roanoke Symphony Orchestra",
+      "lastChecked": "2026-03-05T23:53:02.678Z",
+      "contentHash": "c684154d8e2c9037",
+      "extractedSummary": "The Roanoke Symphony Orchestra has a \"Winds Auditions\" listing which would likely include trumpet positions as trumpets are wind instruments in orchestral settings. However, no specific dates or detailed information about the audition are provided on this page.",
+      "hasRelevantAuditions": true
+    },
+    "https://williamsburgsymphony.org/careers/": {
+      "url": "https://williamsburgsymphony.org/careers/",
+      "name": "Williamsburg Symphony Orchestra",
+      "lastChecked": "2026-03-05T23:53:05.816Z",
+      "contentHash": "3ce913764f33e613",
+      "extractedSummary": "The Williamsburg Symphony Orchestra accepts resumes from musicians interested in substitute work for any orchestral positions. There are no specific audition dates listed, but they maintain an ongoing file of interested musicians who meet their qualifications.",
+      "hasRelevantAuditions": true
+    },
+    "https://charlestonsymphony.org/employment/": {
+      "url": "https://charlestonsymphony.org/employment/",
+      "name": "Charleston Symphony Orchestra",
+      "lastChecked": "2026-03-05T23:53:08.990Z",
+      "contentHash": "ff5e69e1b207631f",
+      "extractedSummary": "The Charleston Symphony Orchestra has a 'GUEST MUSICIANS' position listed, which would typically be open to musicians of various instruments including trumpet players. This appears to be an ongoing opportunity for substitute/guest work with the orchestra.",
+      "hasRelevantAuditions": true
+    },
+    "https://rhsymphony.org/auditions": {
+      "url": "https://rhsymphony.org/auditions",
+      "name": "Rock Hill Symphony Orchestra",
+      "lastChecked": "2026-03-05T23:53:11.319Z",
+      "contentHash": "6891379430f5098a",
+      "extractedSummary": "The Rock Hill Symphony Orchestra has ongoing auditions for section and sub positions open to all instruments, including trumpet. Submissions are accepted via YouTube video with a concerto movement and orchestral excerpts.",
+      "hasRelevantAuditions": true
+    },
+    "https://greensborosymphony.org/about-the-symphony/auditions/": {
+      "url": "https://greensborosymphony.org/about-the-symphony/auditions/",
+      "name": "Greensboro Symphony Orchestra",
+      "lastChecked": "2026-03-05T23:53:13.470Z",
+      "contentHash": "83ca212341c5b875",
+      "extractedSummary": null,
+      "hasRelevantAuditions": false
+    },
+    "https://www.wssymphony.org/about/jobs-2/": {
+      "url": "https://www.wssymphony.org/about/jobs-2/",
+      "name": "Winston-Salem Symphony",
+      "lastChecked": "2026-03-05T23:53:17.410Z",
+      "contentHash": "edb6c20d53a0e816",
       "extractedSummary": null,
       "hasRelevantAuditions": false
     }
