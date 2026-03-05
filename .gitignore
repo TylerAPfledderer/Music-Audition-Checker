@@ -6,9 +6,6 @@ node_modules/
 .env.local
 .env*.local
 
-# State files
-audition-state.json
-
 # OS files
 .DS_Store
 Thumbs.db
