@@ -82,7 +82,8 @@ function fetchPage(url: string): Promise<string> {
 
 async function fetchWithPuppeteer(url: string): Promise<string> {
   // Dynamically import so the script still runs if puppeteer isn't installed
-  let puppeteer: typeof import("puppeteer");
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let puppeteer: any;
   try {
     puppeteer = await import("puppeteer");
   } catch {
@@ -91,7 +92,7 @@ async function fetchWithPuppeteer(url: string): Promise<string> {
     );
   }
 
-  const browser = await puppeteer.launch({
+  const browser = await puppeteer.default.launch({
     headless: true,
     args: ["--no-sandbox", "--disable-setuid-sandbox"],
   });

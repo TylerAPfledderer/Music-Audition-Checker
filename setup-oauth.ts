@@ -6,7 +6,7 @@
  *   GMAIL_CLIENT_ID=... GMAIL_CLIENT_SECRET=... npx ts-node setup-oauth.ts
  */
 
-import * as readline from "readline";
+import * as http from "http";
 import { google } from "googleapis";
 
 const clientId = process.env.GMAIL_CLIENT_ID;
@@ -20,8 +20,8 @@ if (!clientId || !clientSecret) {
   process.exit(1);
 }
 
-// Use OOB redirect for CLI flows (no local server needed)
-const REDIRECT_URI = "urn:ietf:wg:oauth:2.0:oob";
+const PORT = 3000;
+const REDIRECT_URI = `http://localhost:${PORT}/oauth2callback`;
 const SCOPES = ["https://www.googleapis.com/auth/gmail.send"];
 
 const oauth2Client = new google.auth.OAuth2(clientId, clientSecret, REDIRECT_URI);
@@ -29,7 +29,7 @@ const oauth2Client = new google.auth.OAuth2(clientId, clientSecret, REDIRECT_URI
 const authUrl = oauth2Client.generateAuthUrl({
   access_type: "offline",
   scope: SCOPES,
-  prompt: "consent", // Force consent screen to always return a refresh_token
+  prompt: "consent",
 });
 
 console.log("\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
@@ -38,37 +38,76 @@ console.log("━━━━━━━━━━━━━━━━━━━━━━�
 console.log("1. Open this URL in your browser:\n");
 console.log(`   ${authUrl}\n`);
 console.log("2. Sign in with your Gmail account and click Allow.");
-console.log('3. Copy the authorization code shown ("Your code is: ...").\n');
+console.log("3. You will be redirected back automatically.\n");
+console.log("Waiting for authorization...\n");
 
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout,
-});
+const server = http.createServer(async (req, res) => {
+  if (!req.url?.startsWith("/oauth2callback")) {
+    res.writeHead(404);
+    res.end("Not found");
+    return;
+  }
 
-rl.question("Paste the authorization code here: ", async (code) => {
-  rl.close();
+  const url = new URL(req.url, `http://localhost:${PORT}`);
+  const code = url.searchParams.get("code");
+  const error = url.searchParams.get("error");
+
+  if (error) {
+    res.writeHead(400, { "Content-Type": "text/html" });
+    res.end(`<h1>Authorization failed</h1><p>Error: ${error}</p>`);
+    console.error(`\n❌ Authorization failed: ${error}`);
+    server.close();
+    process.exit(1);
+  }
+
+  if (!code) {
+    res.writeHead(400, { "Content-Type": "text/html" });
+    res.end("<h1>No authorization code received</h1>");
+    return;
+  }
+
   try {
-    const { tokens } = await oauth2Client.getToken(code.trim());
+    const { tokens } = await oauth2Client.getToken(code);
 
     if (!tokens.refresh_token) {
+      res.writeHead(400, { "Content-Type": "text/html" });
+      res.end(
+        "<h1>No refresh token returned</h1><p>Go to https://myaccount.google.com/permissions, revoke access for this app, and try again.</p>"
+      );
       console.error(
         "\n❌ No refresh token returned. This usually means the account already\n" +
           "   authorized this app without 'prompt: consent'. To fix:\n" +
           "   → Go to https://myaccount.google.com/permissions\n" +
           "   → Revoke access for your app, then re-run this script."
       );
+      server.close();
       process.exit(1);
     }
 
-    console.log("\n✅ Success! Add these as GitHub Secrets:\n");
+    res.writeHead(200, { "Content-Type": "text/html" });
+    res.end(
+      "<h1>Success!</h1><p>You can close this window and return to the terminal.</p>"
+    );
+
+    console.log("✅ Success! Add these as GitHub Secrets:\n");
     console.log(`  GMAIL_CLIENT_ID       = ${clientId}`);
     console.log(`  GMAIL_CLIENT_SECRET   = ${clientSecret}`);
     console.log(`  GMAIL_REFRESH_TOKEN   = ${tokens.refresh_token}`);
     console.log(
       "\nThe refresh token does not expire unless you revoke app access."
     );
+
+    server.close();
+    process.exit(0);
   } catch (err) {
+    res.writeHead(500, { "Content-Type": "text/html" });
+    res.end(`<h1>Failed to exchange code</h1><p>${err}</p>`);
     console.error("\n❌ Failed to exchange code for tokens:", err);
+    server.close();
     process.exit(1);
   }
+});
+
+server.listen(PORT, () => {
+  console.log(`Local server listening on http://localhost:${PORT}`);
 });
