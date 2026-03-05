@@ -8,6 +8,7 @@ on:
 
 permissions:
   contents: write # Needed to commit updated audition-state.json back to repo
+  issues: write   # Needed to create GitHub issues for preflight failures
 
 jobs:
   check-auditions:

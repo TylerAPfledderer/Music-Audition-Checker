@@ -644,7 +644,9 @@ async function main(): Promise<void> {
 
   if (probeFailures.length > 0) {
     console.log(`\n⚠️  ${probeFailures.length} URL(s) had preflight issues — creating GitHub issue...`);
-    await createGitHubIssue(probeFailures);
+    await createGitHubIssue(probeFailures).catch((err) =>
+      console.warn("  Could not create GitHub issue:", err.message)
+    );
   }
 
   console.log("\n▶️  Starting main run\n");
