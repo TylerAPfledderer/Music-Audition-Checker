@@ -1,5 +1,5 @@
 {
-  "lastRun": "2026-03-05T23:53:17.410Z",
+  "lastRun": "2026-03-06T00:00:27.780Z",
   "pages": {
     "https://www.chamberorchestraofthetriangle.org/employment": {
       "url": "https://www.chamberorchestraofthetriangle.org/employment",
@@ -78,6 +78,14 @@
       "name": "Winston-Salem Symphony",
       "lastChecked": "2026-03-05T23:53:17.410Z",
       "contentHash": "edb6c20d53a0e816",
+      "extractedSummary": null,
+      "hasRelevantAuditions": false
+    },
+    "https://www.lynchburgsymphony.org/audition/": {
+      "url": "https://www.lynchburgsymphony.org/audition/",
+      "name": "Lynchburg Symphony Orchestra",
+      "lastChecked": "2026-03-06T00:00:27.780Z",
+      "contentHash": "6ab1be56ca3885e1",
       "extractedSummary": null,
       "hasRelevantAuditions": false
     }
