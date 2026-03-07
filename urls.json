@@ -42,5 +42,10 @@
   {
     "name": "Lynchburg Symphony Orchestra",
     "url": "https://www.lynchburgsymphony.org/audition/"
+  },
+  {
+    "name": "Playbill Job Board",
+    "url": "https://playbill.com/jobs?show=60&category=Musician",
+    "crawlMode": "playbill"
   }
 ]
