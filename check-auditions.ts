@@ -1,18 +1,70 @@
+/**
+ * Module Overview — check-auditions.ts
+ *
+ * Single-entry-point GitHub Actions cron script that monitors external web pages
+ * for trumpet audition opportunities and delivers email digests via Gmail API.
+ *
+ * Architectural mental model:
+ *
+ *   PREFLIGHT → STATE LOAD → PER-URL DISPATCH → STATE SAVE → EMAIL
+ *
+ * The two-phase design (preflight before any state mutation) is intentional:
+ * infrastructure failures (bad secrets, unreachable URLs) are caught and reported
+ * before the script can corrupt state or send misleading emails.
+ *
+ * Two crawl paradigms coexist and are dispatched by `crawlMode` on UrlConfig:
+ *   - Standard (default): single-page fetch → Claude relevance check → notify on change
+ *   - Playbill ("playbill"): index fetch → Claude listing extraction →
+ *     per-listing detail fetch → Claude trumpet check → notify per matching listing
+ *
+ * State is persisted to audition-state.json and committed back to the repo by
+ * the Actions workflow, making it the source of truth for "what has been seen
+ * and notified." This avoids any external database dependency.
+ */
+
 import * as fs from "fs";
 import * as path from "path";
 import * as https from "https";
-import * as http from "http";
-import * as crypto from "crypto";
 import Anthropic from "@anthropic-ai/sdk";
 import { google } from "googleapis";
 
+import {
+  MIN_CONTENT_LENGTH,
+  fetchPage,
+  fetchWithPuppeteer,
+  stripHtml,
+  scrapeUrl,
+  contentHash,
+} from "./scraper";
+import {
+  PlaybillListing,
+  PlaybillFinding,
+  PlaybillState,
+  processPlaybillUrl,
+} from "./playbill-crawler";
+
 // ─── Types ────────────────────────────────────────────────────────────────────
 
+/**
+ * The optional `crawlMode` field is the extension point for non-standard sources.
+ * Without it, a URL is treated as a single audition/careers page (the original model).
+ * Adding a new crawl strategy only requires: a new literal type here, a new processor
+ * function, and a branch in main().
+ */
 interface UrlConfig {
   name: string;
   url: string;
+  crawlMode?: "playbill";
 }
 
+/**
+ * Tracks the last-known state of a standard single-page source.
+ * `contentHash` is the change-detection signal: if it matches the current fetch,
+ * Claude is not called and no email is sent — keeping API costs proportional to
+ * actual page changes rather than run frequency.
+ * `hasRelevantAuditions` persists the previous relevance verdict so the system
+ * can distinguish "newly relevant" (notify) from "still relevant" (suppress).
+ */
 interface PageState {
   url: string;
   name: string;
@@ -22,7 +74,13 @@ interface PageState {
   hasRelevantAuditions: boolean;
 }
 
-interface StateFile {
+/**
+ * The full persisted state written to audition-state.json after each run.
+ * The Playbill fields come from PlaybillState and are additive — `loadState()`
+ * populates them with safe defaults so existing state files without these keys
+ * continue to work without a migration step.
+ */
+interface StateFile extends PlaybillState {
   lastRun: string;
   pages: Record<string, PageState>;
 }
@@ -38,117 +96,17 @@ interface AuditionAnalysis {
 
 const STATE_FILE = path.join(process.cwd(), "audition-state.json");
 const URLS_FILE = path.join(process.cwd(), "urls.json");
-const MIN_CONTENT_LENGTH = 500; // chars threshold to consider fetch "empty"
-
-// ─── HTTP Fetch (no deps) ─────────────────────────────────────────────────────
-
-function fetchPage(url: string): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const client = url.startsWith("https") ? https : http;
-    const req = client.get(
-      url,
-      {
-        headers: {
-          "User-Agent":
-            "Mozilla/5.0 (compatible; AuditionChecker/1.0; +https://github.com)",
-          Accept: "text/html,application/xhtml+xml",
-        },
-      },
-      (res) => {
-        // Handle redirects
-        if (
-          res.statusCode &&
-          res.statusCode >= 300 &&
-          res.statusCode < 400 &&
-          res.headers.location
-        ) {
-          fetchPage(res.headers.location).then(resolve).catch(reject);
-          return;
-        }
-        let data = "";
-        res.on("data", (chunk) => (data += chunk));
-        res.on("end", () => resolve(data));
-      }
-    );
-    req.on("error", reject);
-    req.setTimeout(15000, () => {
-      req.destroy();
-      reject(new Error("Request timed out"));
-    });
-  });
-}
-
-// ─── Puppeteer fallback ───────────────────────────────────────────────────────
-
-async function fetchWithPuppeteer(url: string): Promise<string> {
-  // Dynamically import so the script still runs if puppeteer isn't installed
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let puppeteer: any;
-  try {
-    puppeteer = await import("puppeteer");
-  } catch {
-    throw new Error(
-      "Puppeteer not installed. Run: npm install puppeteer  (or add to package.json)"
-    );
-  }
-
-  const browser = await puppeteer.default.launch({
-    headless: true,
-    args: ["--no-sandbox", "--disable-setuid-sandbox"],
-  });
-  try {
-    const page = await browser.newPage();
-    await page.setUserAgent(
-      "Mozilla/5.0 (compatible; AuditionChecker/1.0; +https://github.com)"
-    );
-    await page.goto(url, { waitUntil: "networkidle2", timeout: 30000 });
-    // Wait a bit more for lazy-loaded content
-    await new Promise((r) => setTimeout(r, 2000));
-    return await page.content();
-  } finally {
-    await browser.close();
-  }
-}
-
-// ─── HTML stripper ────────────────────────────────────────────────────────────
-
-function stripHtml(html: string): string {
-  return html
-    .replace(/<script[\s\S]*?<\/script>/gi, "")
-    .replace(/<style[\s\S]*?<\/style>/gi, "")
-    .replace(/<[^>]+>/g, " ")
-    .replace(/&nbsp;/g, " ")
-    .replace(/&amp;/g, "&")
-    .replace(/&lt;/g, "<")
-    .replace(/&gt;/g, ">")
-    .replace(/\s{2,}/g, " ")
-    .trim();
-}
-
-// ─── Scrape with fallback ─────────────────────────────────────────────────────
-
-async function scrapeUrl(url: string): Promise<string> {
-  console.log(`  Fetching: ${url}`);
-  let html: string;
-  try {
-    html = await fetchPage(url);
-  } catch (err) {
-    console.log(`  Fetch failed (${err}), trying Puppeteer...`);
-    html = await fetchWithPuppeteer(url);
-  }
-
-  if (html.length < MIN_CONTENT_LENGTH) {
-    console.log(
-      `  Content too short (${html.length} chars), falling back to Puppeteer...`
-    );
-    html = await fetchWithPuppeteer(url);
-  }
-
-  return stripHtml(html);
-}
 
 // ─── Claude Analysis ──────────────────────────────────────────────────────────
 
+/**
+ * LLM-as-classifier for standard single-page sources. Claude is given the full
+ * relevance criteria inline so the classification logic lives in the prompt, not
+ * in fragile HTML parsing or keyword matching. The structured JSON contract in the
+ * prompt ensures the output is machine-readable without a schema validation library.
+ * Regex extraction (`/\{[\s\S]*\}/`) is the fallback in case Claude wraps the JSON
+ * in prose despite instructions — a known LLM output reliability issue.
+ */
 async function analyzeWithClaude(
   client: Anthropic,
   pageText: string,
@@ -216,23 +174,35 @@ ${pageText.slice(0, 8000)}`;
 
 // ─── State helpers ────────────────────────────────────────────────────────────
 
+/**
+ * Defensive defaults on load enable backwards-compatible schema evolution:
+ * new fields can be added to StateFile without requiring a migration script —
+ * old state files simply omit the keys and get initialized to empty on first read.
+ */
 function loadState(): StateFile {
   if (fs.existsSync(STATE_FILE)) {
-    return JSON.parse(fs.readFileSync(STATE_FILE, "utf-8")) as StateFile;
+    const raw = JSON.parse(fs.readFileSync(STATE_FILE, "utf-8")) as Partial<StateFile>;
+    return {
+      lastRun: raw.lastRun ?? "",
+      pages: raw.pages ?? {},
+      playbillIndexHash: raw.playbillIndexHash ?? null,
+      playbillListings: raw.playbillListings ?? {},
+    };
   }
-  return { lastRun: "", pages: {} };
+  return { lastRun: "", pages: {}, playbillIndexHash: null, playbillListings: {} };
 }
 
 function saveState(state: StateFile): void {
   fs.writeFileSync(STATE_FILE, JSON.stringify(state, null, 2), "utf-8");
 }
 
-function contentHash(text: string): string {
-  return crypto.createHash("sha256").update(text).digest("hex").slice(0, 16);
-}
-
 // ─── Email (Gmail API + OAuth2) ───────────────────────────────────────────────
 
+/**
+ * Gmail API requires raw MIME messages encoded as base64url. `buildEmailRaw` constructs
+ * the MIME envelope so `sendEmail` stays focused on content assembly. The two functions
+ * together form a simple Template Method: structure is fixed, content is variable.
+ */
 function buildEmailRaw(params: {
   from: string;
   to: string;
@@ -257,9 +227,20 @@ function buildEmailRaw(params: {
     .replace(/=+$/, "");
 }
 
+/**
+ * Digest email that aggregates all finding types into a single send.
+ * Sending one email per run (rather than one per finding) is intentional:
+ * it avoids inbox flooding when multiple sources become relevant simultaneously.
+ *
+ * The two finding types (`findings` for standard sources, `playbillFindings` for
+ * the Playbill board) render as distinct sections with different visual treatments,
+ * reflecting their different data shapes — standard findings link to an orchestra's
+ * audition page while Playbill findings link to specific job listing URLs.
+ */
 async function sendEmail(
   findings: Array<{ config: UrlConfig; analysis: AuditionAnalysis }>,
-  probeFailures: ProbeFailure[] = []
+  probeFailures: ProbeFailure[] = [],
+  playbillFindings: PlaybillFinding[] = []
 ): Promise<void> {
   const clientId = process.env.GMAIL_CLIENT_ID;
   const clientSecret = process.env.GMAIL_CLIENT_SECRET;
@@ -308,6 +289,22 @@ async function sendEmail(
     html += `<p><a href="${config.url}">→ View page</a></p><hr/>`;
   }
 
+  if (playbillFindings.length > 0) {
+    html += `<h3 style="margin-top:24px;">🎭 Playbill Job Board</h3>
+<p>The following Playbill listings mention trumpet:</p>`;
+    for (const f of playbillFindings) {
+      html += `<div style="margin-bottom:16px;padding:12px;border-left:4px solid #c0392b;">
+<h4 style="margin:0 0 4px;"><a href="${f.listingUrl}">${f.title}</a></h4>
+<p style="margin:0 0 4px;color:#555;"><em>${f.organization}</em></p>`;
+      if (f.summary) {
+        html += `<p style="margin:0 0 8px;">${f.summary}</p>`;
+      }
+      html += `<p style="margin:0;"><a href="${f.listingUrl}">→ View listing on Playbill</a></p>
+</div>`;
+    }
+    html += `<hr/>`;
+  }
+
   if (probeFailures.length > 0) {
     html += `<hr/><h3 style="color:#c0392b;">⚠️ URL Issues Detected</h3>
 <p>The following URLs had problems during this run and were skipped. A GitHub issue has been created.</p><ul>`;
@@ -320,8 +317,9 @@ async function sendEmail(
 
   html += `<p style="color:#888;font-size:12px;">Sent by <a href="https://github.com/TylerAPfledderer/Music-Audition-Checker">audition-checker</a></p>`;
 
+  const totalFindings = findings.length + playbillFindings.length;
   const warningTag = probeFailures.length > 0 ? " ⚠️" : "";
-  const subject = `🎺 ${findings.length} new trumpet audition${findings.length > 1 ? "s" : ""} found — ${today}${warningTag}`;
+  const subject = `🎺 ${totalFindings} new trumpet audition${totalFindings > 1 ? "s" : ""} found — ${today}${warningTag}`;
 
   const raw = buildEmailRaw({
     from: `Audition Checker <${gmailUser}>`,
@@ -340,6 +338,12 @@ async function sendEmail(
 
 // ─── Preflight: secrets ───────────────────────────────────────────────────────
 
+/**
+ * Validates not just presence but actual usability of credentials by performing a
+ * live OAuth2 token exchange. This catches expired refresh tokens before any page
+ * fetching or state mutation occurs, so a credential failure produces a clean error
+ * rather than a partially-completed run with no email sent.
+ */
 async function preflightSecrets(): Promise<void> {
   console.log("🔐 Preflight: checking secrets...");
 
@@ -440,6 +444,19 @@ ${pageText.slice(0, 2000)}`,
   }
 }
 
+/**
+ * Dual-purpose preflight: validates URL reachability AND warms a content cache that
+ * the main loop consumes, eliminating the need to re-fetch pages. Only URLs that pass
+ * both checks (fetchable + confirmed audition page) are included in `contentCache`,
+ * meaning the main loop implicitly skips failing URLs without additional branching.
+ *
+ * Playbill URLs bypass the `probeIsAuditionPage` Claude check because that check is
+ * calibrated for single orchestra pages — a general job board would likely fail it
+ * as a false negative. The `crawlMode` discriminator makes this exception explicit.
+ *
+ * Failures are collected and returned rather than thrown, so the run continues for
+ * all healthy URLs and produces a single aggregated failure report.
+ */
 async function preflightUrls(
   urls: UrlConfig[],
   claude: Anthropic
@@ -482,19 +499,26 @@ async function preflightUrls(
       result.text = text; // retain for main run
       result.ok = true;
 
-      const { isAuditionPage, reason } = await probeIsAuditionPage(
-        claude,
-        text,
-        urlConfig.url,
-        urlConfig.name
-      );
-      result.isAuditionPage = isAuditionPage;
-      result.claudeReason = reason;
+      if (urlConfig.crawlMode === "playbill") {
+        // Playbill is a job board, not a single audition page — skip the Claude check
+        result.isAuditionPage = true;
+        result.claudeReason = "Playbill job board — audition page check skipped";
+        console.log(`    ✅ ${result.charCount.toLocaleString()} chars via ${result.method} — Playbill job board (check skipped)`);
+      } else {
+        const { isAuditionPage, reason } = await probeIsAuditionPage(
+          claude,
+          text,
+          urlConfig.url,
+          urlConfig.name
+        );
+        result.isAuditionPage = isAuditionPage;
+        result.claudeReason = reason;
 
-      const icon = isAuditionPage ? "✅" : "⚠️ ";
-      console.log(
-        `    ${icon} ${result.charCount.toLocaleString()} chars via ${result.method} — ${reason}`
-      );
+        const icon = isAuditionPage ? "✅" : "⚠️ ";
+        console.log(
+          `    ${icon} ${result.charCount.toLocaleString()} chars via ${result.method} — ${reason}`
+        );
+      }
     } catch (err) {
       result.error = String(err);
       console.log(`    ❌ Failed: ${result.error}`);
@@ -548,7 +572,6 @@ async function preflightUrls(
     failures,
   };
 }
-
 
 // ─── GitHub Issue ─────────────────────────────────────────────────────────────
 
@@ -623,6 +646,22 @@ _This issue was created automatically by the [audition-checker workflow](../../a
 
 // ─── Main ─────────────────────────────────────────────────────────────────────
 
+/**
+ * Orchestrates the two-phase run:
+ *
+ *   Phase 1 — PREFLIGHT: validate credentials and probe all URLs before touching state.
+ *   Any infrastructure issue surfaces here as a hard failure or a collected warning,
+ *   never as silent data corruption.
+ *
+ *   Phase 2 — MAIN RUN: dispatch each URL by `crawlMode`, accumulate findings, persist
+ *   state, and send a single digest email. The `crawlMode` branch is the seam where new
+ *   source types plug in without touching the standard-page code path.
+ *
+ * Notification idempotency for Playbill: `notified` flags are written to state only
+ * after `sendEmail` resolves successfully. A crash between email send and flag write
+ * causes a duplicate email on the next run — an acceptable tradeoff vs. the alternative
+ * of silently dropping a confirmed finding.
+ */
 async function main(): Promise<void> {
   console.log("🎺 Audition checker starting...\n");
 
@@ -653,12 +692,20 @@ async function main(): Promise<void> {
 
   // Load previous state
   const state = loadState();
-  const newFindings: Array<{ config: UrlConfig; analysis: AuditionAnalysis }> =
-    [];
+  const newFindings: Array<{ config: UrlConfig; analysis: AuditionAnalysis }> = [];
+  const newPlaybillFindings: PlaybillFinding[] = [];
 
   for (const urlConfig of urls) {
     console.log(`\n📄 ${urlConfig.name}`);
     try {
+      if (urlConfig.crawlMode === "playbill") {
+        // Multi-level Playbill crawl — handled separately
+        const playbillResults = await processPlaybillUrl(claude, urlConfig, state);
+        newPlaybillFindings.push(...playbillResults);
+        continue;
+      }
+
+      // Standard single-page flow
       // Reuse content fetched during preflight — no second HTTP request
       const text = pageContentCache.get(urlConfig.url);
       if (!text) {
@@ -696,7 +743,8 @@ async function main(): Promise<void> {
         hasRelevantAuditions: analysis.hasRelevantAuditions,
       };
 
-      // Only notify if newly relevant (wasn't relevant before, or no prior state)
+      // Rising-edge notification: only alert on the transition from not-relevant → relevant.
+      // This prevents re-alerting on every subsequent run while a listing remains posted.
       const wasRelevant = previousState?.hasRelevantAuditions ?? false;
       if (analysis.hasRelevantAuditions && !wasRelevant) {
         console.log(`  🎺 NEW relevant audition found!`);
@@ -709,19 +757,29 @@ async function main(): Promise<void> {
     }
   }
 
-  // Persist updated state
+  // Persist updated state (including Playbill listing state)
   state.lastRun = new Date().toISOString();
   saveState(state);
   console.log(`\n💾 State saved to ${STATE_FILE}`);
 
   // Send email if there are new findings OR probe failures to report
-  if (newFindings.length > 0 || probeFailures.length > 0) {
+  if (newFindings.length > 0 || newPlaybillFindings.length > 0 || probeFailures.length > 0) {
     const reason = [
-      newFindings.length > 0 ? `${newFindings.length} new finding(s)` : "",
+      newFindings.length > 0 ? `${newFindings.length} orchestra finding(s)` : "",
+      newPlaybillFindings.length > 0 ? `${newPlaybillFindings.length} Playbill finding(s)` : "",
       probeFailures.length > 0 ? `${probeFailures.length} URL issue(s)` : "",
     ].filter(Boolean).join(" + ");
     console.log(`\n📬 Sending email (${reason})...`);
-    await sendEmail(newFindings, probeFailures);
+    await sendEmail(newFindings, probeFailures, newPlaybillFindings);
+
+    // Mark Playbill findings as notified only after successful email send
+    for (const finding of newPlaybillFindings) {
+      if (state.playbillListings[finding.listingUrl]) {
+        state.playbillListings[finding.listingUrl].notified = true;
+      }
+    }
+    // Save state again with updated notified flags
+    saveState(state);
   } else {
     console.log("\n✅ No new relevant auditions found. No email sent.");
   }
