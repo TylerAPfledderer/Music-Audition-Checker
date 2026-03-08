@@ -199,11 +199,20 @@ function saveState(state: StateFile): void {
 // ─── Email (Gmail API + OAuth2) ───────────────────────────────────────────────
 
 /**
+ * RFC 2047 Base64-encodes a string for use in MIME headers (e.g. Subject).
+ * Email headers must be ASCII-only; non-ASCII characters (emojis, em dashes)
+ * require encoded-word format: =?charset?encoding?encoded_text?=
+ */
+export function encodeSubjectRfc2047(subject: string): string {
+  return `=?UTF-8?B?${Buffer.from(subject).toString("base64")}?=`;
+}
+
+/**
  * Gmail API requires raw MIME messages encoded as base64url. `buildEmailRaw` constructs
  * the MIME envelope so `sendEmail` stays focused on content assembly. The two functions
  * together form a simple Template Method: structure is fixed, content is variable.
  */
-function buildEmailRaw(params: {
+export function buildEmailRaw(params: {
   from: string;
   to: string;
   subject: string;
@@ -212,7 +221,7 @@ function buildEmailRaw(params: {
   const message = [
     `From: ${params.from}`,
     `To: ${params.to}`,
-    `Subject: ${params.subject}`,
+    `Subject: ${encodeSubjectRfc2047(params.subject)}`,
     `MIME-Version: 1.0`,
     `Content-Type: text/html; charset=utf-8`,
     ``,
@@ -787,7 +796,9 @@ async function main(): Promise<void> {
   console.log("\n🏁 Done.");
 }
 
-main().catch((err) => {
-  console.error("Fatal error:", err);
-  process.exit(1);
-});
+if (require.main === module) {
+  main().catch((err) => {
+    console.error("Fatal error:", err);
+    process.exit(1);
+  });
+}

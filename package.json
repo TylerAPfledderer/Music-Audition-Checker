@@ -4,7 +4,8 @@
   "description": "Weekly cron job to monitor symphony orchestra audition pages for trumpet opportunities",
   "scripts": {
     "check": "ts-node check-auditions.ts",
-    "check:dry": "DRY_RUN=true ts-node check-auditions.ts"
+    "check:dry": "DRY_RUN=true ts-node check-auditions.ts",
+    "test:email": "ts-node test-email.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.39.0",
