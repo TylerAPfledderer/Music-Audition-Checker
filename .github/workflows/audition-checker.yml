@@ -2,8 +2,9 @@ name: Weekly Audition Checker
 
 on:
   schedule:
-    # Runs every Monday at 8:00 AM UTC
+    # Runs every Monday at 8:00 AM UTC and Thursday at 8:00 PM UTC
     - cron: "0 8 * * 1"
+    - cron: "0 20 * * 4"
   workflow_dispatch: # Allow manual runs from GitHub UI
 
 permissions:
