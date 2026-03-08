@@ -41,7 +41,7 @@ jobs:
           NOTIFY_EMAIL: ${{ secrets.NOTIFY_EMAIL }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
-        run: npx ts-node check-auditions.ts
+        run: npx ts-node src/check-auditions.ts
 
       - name: Commit updated state file
         run: |
