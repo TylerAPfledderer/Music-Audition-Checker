@@ -56,7 +56,7 @@ interface PlaybillUrlConfig {
 // ─── Playbill: extract job URLs from raw HTML ─────────────────────────────────
 
 /** Extracts all unique Playbill job listing hrefs (including UUID slugs) from raw HTML. */
-function extractJobUrlsFromHtml(html: string): string[] {
+export function extractJobUrlsFromHtml(html: string): string[] {
   const seen = new Set<string>();
   const results: string[] = [];
   for (const match of html.matchAll(/href="((?:https?:\/\/(?:www\.)?playbill\.com)?\/job\/[^"?#]+)"/gi)) {
