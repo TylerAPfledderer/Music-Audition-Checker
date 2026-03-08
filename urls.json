@@ -44,6 +44,10 @@
     "url": "https://www.lynchburgsymphony.org/audition/"
   },
   {
+    "name": "Charlotte Symphony",
+    "url": "https://www.charlottesymphony.org/about/employment-auditions/"
+  },
+  {
     "name": "Playbill Job Board",
     "url": "https://playbill.com/jobs?show=60&category=Musician",
     "crawlMode": "playbill"
