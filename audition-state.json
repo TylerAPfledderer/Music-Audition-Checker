@@ -1,5 +1,5 @@
 {
-  "lastRun": "2026-03-06T00:00:27.780Z",
+  "lastRun": "2026-03-08T00:17:59.118Z",
   "pages": {
     "https://www.chamberorchestraofthetriangle.org/employment": {
       "url": "https://www.chamberorchestraofthetriangle.org/employment",
@@ -20,9 +20,9 @@
     "https://www.fayettevillesymphony.org/auditions-and-employment/": {
       "url": "https://www.fayettevillesymphony.org/auditions-and-employment/",
       "name": "Fayetteville Symphony Orchestra",
-      "lastChecked": "2026-03-05T23:52:56.639Z",
-      "contentHash": "2f6e9db307c32f47",
-      "extractedSummary": "While there are no active formal auditions currently posted, the Fayetteville Symphony Orchestra is accepting submissions for their substitute musician list. Musicians interested in joining the sub list can contact the Operations Manager via email.",
+      "lastChecked": "2026-03-08T00:17:34.488Z",
+      "contentHash": "1dfa40885d1253e1",
+      "extractedSummary": "The Fayetteville Symphony Orchestra currently has no active formal auditions but is accepting submissions for their substitute musician list. Interested musicians can contact the Operations Manager via email to join the sub list, which would be open to trumpet players.",
       "hasRelevantAuditions": true
     },
     "https://www.raleighsymphony.org/auditions": {
@@ -88,6 +88,109 @@
       "contentHash": "6ab1be56ca3885e1",
       "extractedSummary": null,
       "hasRelevantAuditions": false
+    }
+  },
+  "playbillIndexHash": "97ca0c2d25917655",
+  "playbillListings": {
+    "https://playbill.com/job/mrs-doubtfire-national-tour-drums-percussion/a0380083-fa6a-4e35-9549-bb35933d6694": {
+      "url": "https://playbill.com/job/mrs-doubtfire-national-tour-drums-percussion/a0380083-fa6a-4e35-9549-bb35933d6694",
+      "title": "Mrs. Doubtfire National Tour - Drums/Percussion",
+      "organization": "Work Light Productions",
+      "firstSeen": "2026-03-08T00:17:34.489Z",
+      "lastChecked": "2026-03-08T00:17:34.489Z",
+      "hasTrumpet": false,
+      "notified": true,
+      "summary": null
+    },
+    "https://playbill.com/job/mrs-doubtfire-national-tour-bass-player/41d22e77-9a7c-4bfb-a92b-f4357de0db10": {
+      "url": "https://playbill.com/job/mrs-doubtfire-national-tour-bass-player/41d22e77-9a7c-4bfb-a92b-f4357de0db10",
+      "title": "Mrs. Doubtfire National Tour - Bass Player",
+      "organization": "Work Light Productions",
+      "firstSeen": "2026-03-08T00:17:34.489Z",
+      "lastChecked": "2026-03-08T00:17:34.489Z",
+      "hasTrumpet": false,
+      "notified": true,
+      "summary": null
+    },
+    "https://playbill.com/job/the-palace-theatre-seeks-bassist-for-carole-king-tribute-concert/d3a645c2-160b-4a2c-84a7-9e76e3b5fdb6": {
+      "url": "https://playbill.com/job/the-palace-theatre-seeks-bassist-for-carole-king-tribute-concert/d3a645c2-160b-4a2c-84a7-9e76e3b5fdb6",
+      "title": "The Palace Theatre Seeks Bassist for Carole King Tribute Concert",
+      "organization": "Palace Theatre",
+      "firstSeen": "2026-03-08T00:17:34.489Z",
+      "lastChecked": "2026-03-08T00:17:34.489Z",
+      "hasTrumpet": false,
+      "notified": true,
+      "summary": null
+    },
+    "https://playbill.com/job/the-palace-theatre-seeks-musicians-for-footloose/65d4450e-8f68-482b-9d4a-f508cb2a8001": {
+      "url": "https://playbill.com/job/the-palace-theatre-seeks-musicians-for-footloose/65d4450e-8f68-482b-9d4a-f508cb2a8001",
+      "title": "The Palace Theatre Seeks Musicians for Footloose",
+      "organization": "Palace Theatre",
+      "firstSeen": "2026-03-08T00:17:34.489Z",
+      "lastChecked": "2026-03-08T00:17:34.489Z",
+      "hasTrumpet": false,
+      "notified": true,
+      "summary": null
+    },
+    "https://playbill.com/job/audition-pianist-accompanist---new-musical-fall-from-grace/dabf00ae-94b7-48b5-a7ff-e735367e6d1a": {
+      "url": "https://playbill.com/job/audition-pianist-accompanist---new-musical-fall-from-grace/dabf00ae-94b7-48b5-a7ff-e735367e6d1a",
+      "title": "Audition Pianist / Accompanist – New Musical Fall From Grace",
+      "organization": "Fall From Grace Productions",
+      "firstSeen": "2026-03-08T00:17:34.489Z",
+      "lastChecked": "2026-03-08T00:17:34.489Z",
+      "hasTrumpet": false,
+      "notified": true,
+      "summary": null
+    },
+    "https://playbill.com/job/musicians-for-jersey-boys-bus-truck-national-tour/cc23635f-fe14-44d0-bb0e-a9094c757dcd": {
+      "url": "https://playbill.com/job/musicians-for-jersey-boys-bus-truck-national-tour/cc23635f-fe14-44d0-bb0e-a9094c757dcd",
+      "title": "Musicians for Jersey Boys Bus & Truck National Tour",
+      "organization": "NETworks Presentations LLC",
+      "firstSeen": "2026-03-08T00:17:34.489Z",
+      "lastChecked": "2026-03-08T00:17:34.489Z",
+      "hasTrumpet": false,
+      "notified": true,
+      "summary": null
+    },
+    "https://playbill.com/job/seeking-musicians-for-musical-production/201d6486-37cd-464c-838c-c5c9d0c53b5b": {
+      "url": "https://playbill.com/job/seeking-musicians-for-musical-production/201d6486-37cd-464c-838c-c5c9d0c53b5b",
+      "title": "Seeking Musicians for Musical Production",
+      "organization": "Rising Tide Theatrical Collective",
+      "firstSeen": "2026-03-08T00:17:34.489Z",
+      "lastChecked": "2026-03-08T00:17:34.489Z",
+      "hasTrumpet": true,
+      "notified": true,
+      "summary": "Rising Tide Theatrical Collective is seeking musicians for an immersive festival Kingdom Faire musical in Hudson Valley, NY, including a brass player position with trumpet preferred. The production runs May 9-31, 2026 with daily compensation of $135-150."
+    },
+    "https://playbill.com/job/use-underground-skills-exchange-seeking-accompanist-for-2026-programs-performances/c9276040-d355-4bbd-9070-565e94051403": {
+      "url": "https://playbill.com/job/use-underground-skills-exchange-seeking-accompanist-for-2026-programs-performances/c9276040-d355-4bbd-9070-565e94051403",
+      "title": "USE: Underground Skills Exchange Seeking Accompanist for 2026 Programs & Performances",
+      "organization": "USE: Underground Skills Exchange, Inc",
+      "firstSeen": "2026-03-08T00:17:34.489Z",
+      "lastChecked": "2026-03-08T00:17:34.489Z",
+      "hasTrumpet": false,
+      "notified": true,
+      "summary": null
+    },
+    "https://playbill.com/job/female-or-non-binary-drummers-for-live-drumming-performances/3922bc77-2c93-433c-a2ea-aa89cb2f55c4": {
+      "url": "https://playbill.com/job/female-or-non-binary-drummers-for-live-drumming-performances/3922bc77-2c93-433c-a2ea-aa89cb2f55c4",
+      "title": "Female or Non-Binary Drummers for Live Drumming Performances",
+      "organization": "Drummer Queens USA",
+      "firstSeen": "2026-03-08T00:17:34.489Z",
+      "lastChecked": "2026-03-08T00:17:34.489Z",
+      "hasTrumpet": false,
+      "notified": true,
+      "summary": null
+    },
+    "https://playbill.com/job/summer-accompanist/5c31b50d-58b6-46a6-aac8-15370d4d1251": {
+      "url": "https://playbill.com/job/summer-accompanist/5c31b50d-58b6-46a6-aac8-15370d4d1251",
+      "title": "Summer Accompanist",
+      "organization": "Aloha Foundation",
+      "firstSeen": "2026-03-08T00:17:34.489Z",
+      "lastChecked": "2026-03-08T00:17:34.489Z",
+      "hasTrumpet": false,
+      "notified": true,
+      "summary": null
     }
   }
 }
