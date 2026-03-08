@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { encodeSubjectRfc2047, buildEmailRaw } from "../src/check-auditions";
+import { encodeSubjectRfc2047, buildEmailRaw } from "../src/email";
 
 // Helper: decode base64url MIME message back to UTF-8 text
 function decodeMime(raw: string): string {
