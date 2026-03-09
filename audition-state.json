@@ -1,5 +1,5 @@
 {
-  "lastRun": "2026-03-08T01:36:16.496Z",
+  "lastRun": "2026-03-09T08:22:20.820Z",
   "pages": {
     "https://www.chamberorchestraofthetriangle.org/employment": {
       "url": "https://www.chamberorchestraofthetriangle.org/employment",
@@ -20,9 +20,9 @@
     "https://www.fayettevillesymphony.org/auditions-and-employment/": {
       "url": "https://www.fayettevillesymphony.org/auditions-and-employment/",
       "name": "Fayetteville Symphony Orchestra",
-      "lastChecked": "2026-03-08T01:36:16.419Z",
-      "contentHash": "c96e3e82135fb299",
-      "extractedSummary": "The Fayetteville Symphony Orchestra currently has no active formal auditions, but they are accepting applications for their substitute musician list. Interested musicians can email the Operations Manager to be considered for sub opportunities.",
+      "lastChecked": "2026-03-09T08:22:09.337Z",
+      "contentHash": "e3ee05de2722e43c",
+      "extractedSummary": "The Fayetteville Symphony Orchestra currently has no active formal auditions, but they are accepting musicians for their substitute list. Interested players can email the Operations Manager to join the sub list, which would be open to trumpet players.",
       "hasRelevantAuditions": true
     },
     "https://www.raleighsymphony.org/auditions": {
@@ -90,7 +90,7 @@
       "hasRelevantAuditions": false
     }
   },
-  "playbillIndexHash": "97ca0c2d25917655",
+  "playbillIndexHash": "f52c668ea13781d4",
   "playbillListings": {
     "https://playbill.com/job/mrs-doubtfire-national-tour-drums-percussion/a0380083-fa6a-4e35-9549-bb35933d6694": {
       "url": "https://playbill.com/job/mrs-doubtfire-national-tour-drums-percussion/a0380083-fa6a-4e35-9549-bb35933d6694",
@@ -188,6 +188,16 @@
       "organization": "Aloha Foundation",
       "firstSeen": "2026-03-08T00:17:34.489Z",
       "lastChecked": "2026-03-08T00:17:34.489Z",
+      "hasTrumpet": false,
+      "notified": true,
+      "summary": null
+    },
+    "https://playbill.com/job/songwriting-project-coordinator/13e8da1d-62ae-47b9-a62a-1b2c9beaaeb0": {
+      "url": "https://playbill.com/job/songwriting-project-coordinator/13e8da1d-62ae-47b9-a62a-1b2c9beaaeb0",
+      "title": "Songwriting Project Coordinator",
+      "organization": "Hear Your Song, Inc.",
+      "firstSeen": "2026-03-09T08:22:09.339Z",
+      "lastChecked": "2026-03-09T08:22:09.339Z",
       "hasTrumpet": false,
       "notified": true,
       "summary": null
