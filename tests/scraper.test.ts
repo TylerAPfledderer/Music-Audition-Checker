@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { stripHtml, contentHash, MIN_CONTENT_LENGTH } from "../src/scraper";
+import { stripHtml, contentHash, normalizeForHash, MIN_CONTENT_LENGTH } from "../src/scraper";
 
 describe("MIN_CONTENT_LENGTH", () => {
   it("is 500", () => {
@@ -87,5 +87,34 @@ describe("contentHash", () => {
     const hash = contentHash("");
     expect(hash).toHaveLength(16);
     expect(hash).toMatch(/^[0-9a-f]{16}$/);
+  });
+});
+
+describe("normalizeForHash", () => {
+  it("strips relative timestamps", () => {
+    expect(normalizeForHash("Posted 3 hours ago on our site")).toBe("Posted on our site");
+    expect(normalizeForHash("Updated 2 days ago")).toBe("Updated");
+    expect(normalizeForHash("Submitted 1 minute ago")).toBe("Submitted");
+  });
+
+  it("strips 'just now' and 'yesterday'", () => {
+    expect(normalizeForHash("Posted just now")).toBe("Posted");
+    expect(normalizeForHash("Last seen yesterday")).toBe("Last seen");
+  });
+
+  it("strips 'last updated/modified/checked' lines", () => {
+    expect(normalizeForHash("Last updated: Monday March 9")).toBe("");
+    expect(normalizeForHash("Last modified by admin")).toBe("");
+    expect(normalizeForHash("Last checked 2026-03-09")).toBe("");
+  });
+
+  it("preserves audition-relevant content", () => {
+    const text = "Trumpet audition August 12. Submit resume by July 1.";
+    expect(normalizeForHash(text)).toBe(text);
+  });
+
+  it("collapses whitespace after stripping", () => {
+    const result = normalizeForHash("Open positions  3 hours ago  apply now");
+    expect(result).toBe("Open positions apply now");
   });
 });

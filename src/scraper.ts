@@ -88,6 +88,7 @@ export async function fetchWithPuppeteer(url: string): Promise<string> {
 
 export function stripHtml(html: string): string {
   return html
+    .replace(/<!--[\s\S]*?-->/g, "")
     .replace(/<script[\s\S]*?<\/script>/gi, "")
     .replace(/<style[\s\S]*?<\/style>/gi, "")
     .replace(/<[^>]+>/g, " ")
@@ -97,6 +98,69 @@ export function stripHtml(html: string): string {
     .replace(/&gt;/g, ">")
     .replace(/\s{2,}/g, " ")
     .trim();
+}
+
+/**
+ * Strips common dynamic text patterns (timestamps, calendar dates) from stripped
+ * text before hashing. Used only for hash computation — Claude still receives
+ * the full stripped text.
+ */
+export function normalizeForHash(text: string): string {
+  return text
+    // Relative timestamps: "3 hours ago", "2 days ago", "just now", etc.
+    .replace(/\b\d+\s+(second|minute|hour|day|week|month|year)s?\s+ago\b/gi, "")
+    .replace(/\bjust now\b/gi, "")
+    .replace(/\byesterday\b/gi, "")
+    // "Last updated: ..." / "Last modified: ..." lines
+    .replace(/\blast\s+(updated|modified|checked)[^\n.]*/gi, "")
+    // WordPress post meta: "admin 2026-02-11T21:24:08+00:00" (author + ISO timestamp)
+    .replace(/\b\w+\s+\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}[^\s]*/g, "")
+    // Collapse any newly created whitespace gaps
+    .replace(/\s{2,}/g, " ")
+    .trim();
+}
+
+/**
+ * Filters normalized text down to sentences that contain audition-relevant signals,
+ * plus short phrases (likely headings). Used as the final step before hashing so
+ * that rotating non-audition content (featured musician bios, news, event listings)
+ * does not cause spurious hash churn and unnecessary Claude re-analysis.
+ *
+ * Claude always receives the full stripped text — this function only affects the
+ * hash input.
+ */
+export function extractAuditionSignals(text: string): string {
+  const AUDITION_SIGNALS =
+    /\b(audition|vacancy|vacancies|position|opening|application|apply|deadline|excerpt|substitute|employment|hiring|compensation|pay)\b/i;
+
+  // Split on sentence-ending punctuation followed by a capital letter (new sentence)
+  const sentences = text.split(/(?<=[.!?;])\s+(?=[A-Z])/);
+
+  return sentences
+    .filter((s) => s.trim().length < 120 || AUDITION_SIGNALS.test(s))
+    .join(" ")
+    .replace(/\s{2,}/g, " ")
+    .trim();
+}
+
+/**
+ * Extracts the primary content area from raw HTML to exclude navigation, headers,
+ * and footers before stripping. Tries semantic elements in priority order and falls
+ * back to the full HTML if none are found.
+ */
+export function extractMainContent(html: string): string {
+  const candidates = [
+    /<main[\s\S]*?>([\s\S]*?)<\/main>/i,
+    /<article[\s\S]*?>([\s\S]*?)<\/article>/i,
+    /<div[^>]+\bid=["'](?:main|content|page-content|main-content|primary)["'][^>]*>([\s\S]*)<\/div>/i,
+    /<div[^>]+\bclass=["'][^"']*\b(?:main-content|page-content|entry-content|post-content|site-content)\b[^"']*["'][^>]*>([\s\S]*)<\/div>/i,
+    /<div[^>]+\bclass=["']content["'][^>]*>([\s\S]*)<\/div>/i,
+  ];
+  for (const pattern of candidates) {
+    const match = html.match(pattern);
+    if (match) return match[1];
+  }
+  return html;
 }
 
 // ─── Scrape with fallback ─────────────────────────────────────────────────────
@@ -134,4 +198,9 @@ export async function scrapeUrl(url: string): Promise<string> {
 
 export function contentHash(text: string): string {
   return crypto.createHash("sha256").update(text).digest("hex").slice(0, 16);
+}
+
+/** Full hash pipeline: normalize → extract signals → SHA256. */
+export function computePageHash(text: string): string {
+  return contentHash(extractAuditionSignals(normalizeForHash(text)));
 }

@@ -24,9 +24,11 @@
 
 import * as fs from "fs";
 import * as path from "path";
+import dotenv from "dotenv";
+dotenv.config({ path: ".env.local" });
 import Anthropic from "@anthropic-ai/sdk";
 
-import { contentHash } from "./scraper";
+import { computePageHash, normalizeForHash, extractAuditionSignals } from "./scraper";
 import { PlaybillFinding, PlaybillState, processPlaybillUrl } from "./playbill-crawler";
 import { UrlConfig, AuditionAnalysis, sendEmail } from "./email";
 import { analyzeWithClaude } from "./claude";
@@ -67,6 +69,14 @@ interface StateFile extends PlaybillState {
 
 const STATE_FILE = path.join(process.cwd(), "audition-state.json");
 const URLS_FILE = path.join(process.cwd(), "urls.json");
+const DEBUG_LOG_FILE = path.join(process.cwd(), "debug.log");
+
+// ─── Debug logger ─────────────────────────────────────────────────────────────
+
+function debugLog(line: string): void {
+  const entry = `[${new Date().toISOString()}] ${line}\n`;
+  fs.appendFileSync(DEBUG_LOG_FILE, entry, "utf-8");
+}
 
 // ─── State helpers ────────────────────────────────────────────────────────────
 
@@ -111,7 +121,10 @@ function saveState(state: StateFile): void {
  * of silently dropping a confirmed finding.
  */
 async function main(): Promise<void> {
-  console.log("🎺 Audition checker starting...\n");
+  const isDryRun = process.env.DRY_RUN === "true";
+  const isDebug = process.env.CHECKER_DEBUG === "true";
+  if (isDebug) fs.writeFileSync(DEBUG_LOG_FILE, "", "utf-8"); // clear on each run
+  console.log(`🎺 Audition checker starting...${isDryRun ? " (DRY RUN)" : ""}\n`);
 
   // Load URL list
   if (!fs.existsSync(URLS_FILE)) {
@@ -160,7 +173,7 @@ async function main(): Promise<void> {
         console.log(`  ⏭️  Skipping (failed preflight)`);
         continue;
       }
-      const hash = contentHash(text);
+      const hash = computePageHash(text);
       const previousState = state.pages[urlConfig.url];
 
       // Skip if content unchanged and we already checked it recently
@@ -169,6 +182,11 @@ async function main(): Promise<void> {
         continue;
       }
 
+      if (isDebug && previousState) {
+        const signals = extractAuditionSignals(normalizeForHash(text));
+        debugLog(`[${urlConfig.name}] hash: ${previousState.contentHash} → ${hash}`);
+        debugLog(`[${urlConfig.name}] hash input (${signals.length} chars):\n${signals}`);
+      }
       console.log(`  🔍 Content changed — analyzing with Claude...`);
       const analysis = await analyzeWithClaude(claude, text, urlConfig.url, urlConfig.name);
 
@@ -200,31 +218,59 @@ async function main(): Promise<void> {
     }
   }
 
-  // Persist updated state (including Playbill listing state)
-  state.lastRun = new Date().toISOString();
-  saveState(state);
-  console.log(`\n💾 State saved to ${STATE_FILE}`);
+  const hasFindings = newFindings.length > 0 || newPlaybillFindings.length > 0 || probeFailures.length > 0;
 
-  // Send email if there are new findings OR probe failures to report
-  if (newFindings.length > 0 || newPlaybillFindings.length > 0 || probeFailures.length > 0) {
-    const reason = [
-      newFindings.length > 0 ? `${newFindings.length} orchestra finding(s)` : "",
-      newPlaybillFindings.length > 0 ? `${newPlaybillFindings.length} Playbill finding(s)` : "",
-      probeFailures.length > 0 ? `${probeFailures.length} URL issue(s)` : "",
-    ].filter(Boolean).join(" + ");
-    console.log(`\n📬 Sending email (${reason})...`);
-    await sendEmail(newFindings, probeFailures, newPlaybillFindings);
-
-    // Mark Playbill findings as notified only after successful email send
-    for (const finding of newPlaybillFindings) {
-      if (state.playbillListings[finding.listingUrl]) {
-        state.playbillListings[finding.listingUrl].notified = true;
+  if (isDryRun) {
+    console.log("\n🧪 DRY RUN — state not saved, email not sent.\n");
+    if (hasFindings) {
+      if (newFindings.length > 0) {
+        console.log("── Orchestra findings ──");
+        for (const f of newFindings) {
+          console.log(`  ${f.config.name}: ${f.analysis.summary ?? "(no summary)"}`);
+          if (f.analysis.relevantItems.length > 0)
+            console.log(`    Items: ${f.analysis.relevantItems.join(", ")}`);
+        }
       }
+      if (newPlaybillFindings.length > 0) {
+        console.log("── Playbill findings ──");
+        for (const f of newPlaybillFindings)
+          console.log(`  ${f.title} — ${f.listingUrl}`);
+      }
+      if (probeFailures.length > 0) {
+        console.log("── Probe failures ──");
+        for (const f of probeFailures)
+          console.log(`  ${f.name}: ${f.detail}`);
+      }
+    } else {
+      console.log("✅ No new relevant auditions found.");
     }
-    // Save state again with updated notified flags
-    saveState(state);
   } else {
-    console.log("\n✅ No new relevant auditions found. No email sent.");
+    // Persist updated state (including Playbill listing state)
+    state.lastRun = new Date().toISOString();
+    saveState(state);
+    console.log(`\n💾 State saved to ${STATE_FILE}`);
+
+    // Send email if there are new findings OR probe failures to report
+    if (hasFindings) {
+      const reason = [
+        newFindings.length > 0 ? `${newFindings.length} orchestra finding(s)` : "",
+        newPlaybillFindings.length > 0 ? `${newPlaybillFindings.length} Playbill finding(s)` : "",
+        probeFailures.length > 0 ? `${probeFailures.length} URL issue(s)` : "",
+      ].filter(Boolean).join(" + ");
+      console.log(`\n📬 Sending email (${reason})...`);
+      await sendEmail(newFindings, probeFailures, newPlaybillFindings);
+
+      // Mark Playbill findings as notified only after successful email send
+      for (const finding of newPlaybillFindings) {
+        if (state.playbillListings[finding.listingUrl]) {
+          state.playbillListings[finding.listingUrl].notified = true;
+        }
+      }
+      // Save state again with updated notified flags
+      saveState(state);
+    } else {
+      console.log("\n✅ No new relevant auditions found. No email sent.");
+    }
   }
 
   console.log("\n🏁 Done.");
