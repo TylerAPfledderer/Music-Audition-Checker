@@ -1,5 +1,5 @@
 {
-  "lastRun": "2026-03-09T08:22:20.820Z",
+  "lastRun": "2026-03-12T20:06:22.884Z",
   "pages": {
     "https://www.chamberorchestraofthetriangle.org/employment": {
       "url": "https://www.chamberorchestraofthetriangle.org/employment",
@@ -20,9 +20,9 @@
     "https://www.fayettevillesymphony.org/auditions-and-employment/": {
       "url": "https://www.fayettevillesymphony.org/auditions-and-employment/",
       "name": "Fayetteville Symphony Orchestra",
-      "lastChecked": "2026-03-09T08:22:09.337Z",
-      "contentHash": "e3ee05de2722e43c",
-      "extractedSummary": "The Fayetteville Symphony Orchestra currently has no active formal auditions, but they are accepting musicians for their substitute list. Interested players can email the Operations Manager to join the sub list, which would be open to trumpet players.",
+      "lastChecked": "2026-03-12T20:06:02.266Z",
+      "contentHash": "b0f6b4d5396b0ebf",
+      "extractedSummary": "The Fayetteville Symphony Orchestra currently has no active formal auditions, but they are accepting musicians for their substitute list via email to their Operations Manager. This would be relevant for trumpet players looking for orchestral work opportunities.",
       "hasRelevantAuditions": true
     },
     "https://www.raleighsymphony.org/auditions": {
@@ -52,10 +52,10 @@
     "https://charlestonsymphony.org/employment/": {
       "url": "https://charlestonsymphony.org/employment/",
       "name": "Charleston Symphony Orchestra",
-      "lastChecked": "2026-03-05T23:53:08.990Z",
-      "contentHash": "ff5e69e1b207631f",
-      "extractedSummary": "The Charleston Symphony Orchestra has a 'GUEST MUSICIANS' position listed, which would typically be open to musicians of various instruments including trumpet players. This appears to be an ongoing opportunity for substitute/guest work with the orchestra.",
-      "hasRelevantAuditions": true
+      "lastChecked": "2026-03-12T20:06:05.468Z",
+      "contentHash": "8f343f90348d2acc",
+      "extractedSummary": null,
+      "hasRelevantAuditions": false
     },
     "https://rhsymphony.org/auditions": {
       "url": "https://rhsymphony.org/auditions",
@@ -88,9 +88,17 @@
       "contentHash": "6ab1be56ca3885e1",
       "extractedSummary": null,
       "hasRelevantAuditions": false
+    },
+    "https://www.charlottesymphony.org/about/employment-auditions/": {
+      "url": "https://www.charlottesymphony.org/about/employment-auditions/",
+      "name": "Charlotte Symphony",
+      "lastChecked": "2026-03-12T20:06:08.130Z",
+      "contentHash": "3899ca44e40bb167",
+      "extractedSummary": "The Charlotte Symphony has a Second Trumpet audition scheduled for May 31 - June 2, 2026, with applications due May 1, 2026. This is a full-time, tenure track position starting September 2026 with a minimum weekly salary of $1,377.15.",
+      "hasRelevantAuditions": true
     }
   },
-  "playbillIndexHash": "f52c668ea13781d4",
+  "playbillIndexHash": "5f8c23dabae098ec",
   "playbillListings": {
     "https://playbill.com/job/mrs-doubtfire-national-tour-drums-percussion/a0380083-fa6a-4e35-9549-bb35933d6694": {
       "url": "https://playbill.com/job/mrs-doubtfire-national-tour-drums-percussion/a0380083-fa6a-4e35-9549-bb35933d6694",
@@ -198,6 +206,36 @@
       "organization": "Hear Your Song, Inc.",
       "firstSeen": "2026-03-09T08:22:09.339Z",
       "lastChecked": "2026-03-09T08:22:09.339Z",
+      "hasTrumpet": false,
+      "notified": true,
+      "summary": null
+    },
+    "https://playbill.com/job/musician-guitar-vocals-a-taste-of-ireland-spring-2026-na-tour/e7be0d1e-434f-4464-8d5c-9783ad629bee": {
+      "url": "https://playbill.com/job/musician-guitar-vocals-a-taste-of-ireland-spring-2026-na-tour/e7be0d1e-434f-4464-8d5c-9783ad629bee",
+      "title": "Musician (Guitar and Vocals) - A Taste of Ireland Spring 2026 NA Tour",
+      "organization": "Pace Live Corporation",
+      "firstSeen": "2026-03-12T20:06:08.131Z",
+      "lastChecked": "2026-03-12T20:06:08.131Z",
+      "hasTrumpet": false,
+      "notified": true,
+      "summary": null
+    },
+    "https://playbill.com/job/drummer/f443b7a0-d45d-4923-92d5-57a097b4770f": {
+      "url": "https://playbill.com/job/drummer/f443b7a0-d45d-4923-92d5-57a097b4770f",
+      "title": "Drummer",
+      "organization": "Mac-Haydn Theatre",
+      "firstSeen": "2026-03-12T20:06:08.131Z",
+      "lastChecked": "2026-03-12T20:06:08.131Z",
+      "hasTrumpet": false,
+      "notified": true,
+      "summary": null
+    },
+    "https://playbill.com/job/seeking-a-pianist-for-a-performance-at-the-greenroom-42/014fa9b7-3d17-439b-a5b1-38a88f30d400": {
+      "url": "https://playbill.com/job/seeking-a-pianist-for-a-performance-at-the-greenroom-42/014fa9b7-3d17-439b-a5b1-38a88f30d400",
+      "title": "Seeking a Pianist for A Performance at The GreenRoom 42",
+      "organization": "Truth and Justice Productions",
+      "firstSeen": "2026-03-12T20:06:08.131Z",
+      "lastChecked": "2026-03-12T20:06:08.131Z",
       "hasTrumpet": false,
       "notified": true,
       "summary": null
