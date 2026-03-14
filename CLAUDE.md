@@ -88,6 +88,7 @@ Tests live in `tests/` and mirror `src/`. Run with `npm test`.
 | `GMAIL_CLIENT_SECRET` | Gmail OAuth2 client secret |
 | `GMAIL_REFRESH_TOKEN` | Gmail OAuth2 refresh token |
 | `NOTIFY_EMAIL` | Recipient email address |
+| `GMAIL_LABEL_NAME` | (Optional) Gmail label name to apply via `messages.insert`. Only works when `NOTIFY_EMAIL` is the same account as the OAuth credentials (`GMAIL_USER`). Label is created automatically if it doesn't exist. |
 | `DRY_RUN` | Set to `true` to skip email and state writes |
 | `GH_TOKEN` | GitHub token for creating issues on failures |
 
