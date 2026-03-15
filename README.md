@@ -142,6 +142,24 @@ Just add entries to `urls.json`. Good sources:
 
 ---
 
+## What I Learned Building This
+
+This project was built primarily with the assistance of Claude AI. Beyond the automation itself, the process surfaced a few things worth documenting.
+
+### Using AI as a semantic filter, not just a chatbot
+The core motivation was a personal RSS-style feed that was *thoughtful* — one that understood context rather than just pattern-matching keywords. A regex search for "trumpet" would catch past auditions, administrative roles, and irrelevant mentions equally. Using Claude as a classifier inside an automated pipeline meant the notifications could reflect actual intent. This was the primary reason the project exists at all.
+
+### Preflight as an isolated phase
+Without a clear mental model of the steps involved, I would likely have entangled validation, fetching, and state updates together as the logic evolved. Seeing preflight implemented as a completely isolated phase made the distinction clear: initialize and validate everything first, before touching any state. If anything fails — an expired OAuth token, an unreachable URL — it surfaces cleanly. Without that separation, a mid-run failure risks leaving `audition-state.json` partially updated, silently corrupting future runs.
+
+### Node's built-in `http`/`https` modules
+I hadn't worked directly with Node's built-in HTTP modules before. In a CI script, reaching for `axios` or `node-fetch` adds a dependency that needs installing. The built-in modules handle raw HTTP requests with no overhead — no rendering, no parsing, just the response body — which is all this script needs.
+
+### Reviewing code through conversation
+Talking through a codebase with AI is a lot like rubber-duck debugging — except the duck talks back. When AI explains what the code is actually doing in clear, unbiased terms, it offers a different perspective on the logic — one that can prompt you to consider possibilities and gaps you hadn't thought to look for. One specific example surfaced here: when Claude fails to parse a page's JSON response, the script logs a warning and moves on silently — no email, no GitHub issue. That's a guardrail worth adding.
+
+---
+
 ## Troubleshooting
 
 | Issue | Fix |
