@@ -65,6 +65,26 @@ export function buildEmailRaw(params: {
 }
 
 /**
+ * Looks up a Gmail label by name. If it doesn't exist, creates it and returns the new ID.
+ * Uses the Gmail API labels.list + labels.create endpoints.
+ */
+async function getOrCreateLabel(
+  gmail: ReturnType<typeof google.gmail>,
+  name: string
+): Promise<string> {
+  const { data } = await gmail.users.labels.list({ userId: "me" });
+  const existing = (data.labels ?? []).find((l) => l.name === name);
+  if (existing?.id) return existing.id;
+
+  const { data: created } = await gmail.users.labels.create({
+    userId: "me",
+    requestBody: { name },
+  });
+  if (!created.id) throw new Error(`Failed to create Gmail label "${name}"`);
+  return created.id;
+}
+
+/**
  * Digest email that aggregates all finding types into a single send.
  * Sending one email per run (rather than one per finding) is intentional:
  * it avoids inbox flooding when multiple sources become relevant simultaneously.
@@ -165,10 +185,19 @@ export async function sendEmail(
     html,
   });
 
-  await gmail.users.messages.send({
-    userId: "me",
-    requestBody: { raw },
-  });
-
-  console.log(`✉️  Email sent to ${notifyEmail}`);
+  const labelName = process.env.GMAIL_LABEL_NAME;
+  if (labelName) {
+    const labelId = await getOrCreateLabel(gmail, labelName);
+    await gmail.users.messages.insert({
+      userId: "me",
+      requestBody: { raw, labelIds: [labelId, "INBOX"] },
+    });
+    console.log(`✉️  Email inserted into mailbox with label "${labelName}" for ${notifyEmail}`);
+  } else {
+    await gmail.users.messages.send({
+      userId: "me",
+      requestBody: { raw },
+    });
+    console.log(`✉️  Email sent to ${notifyEmail}`);
+  }
 }
