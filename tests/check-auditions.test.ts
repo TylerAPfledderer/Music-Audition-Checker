@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { encodeSubjectRfc2047, buildEmailRaw } from "../src/email";
+import { shouldNotify } from "../src/check-auditions";
 
 // Helper: decode base64url MIME message back to UTF-8 text
 function decodeMime(raw: string): string {
@@ -109,5 +110,39 @@ describe("buildEmailRaw", () => {
   it("emojis in HTML body are not corrupted", () => {
     const mime = decodeMime(buildEmailRaw(params));
     expect(mime).toContain("🎺 Trumpet Audition Alert — Saturday, March 7, 2026");
+  });
+});
+
+describe("shouldNotify", () => {
+  it("returns false when page is not relevant", () => {
+    expect(shouldNotify(false, false, [], [])).toBe(false);
+    expect(shouldNotify(false, true, ["Principal Trumpet"], ["Principal Trumpet"])).toBe(false);
+  });
+
+  it("returns true on rising edge (false → true)", () => {
+    expect(shouldNotify(true, false, ["Principal Trumpet"], [])).toBe(true);
+  });
+
+  it("returns false when still relevant with same items (suppress re-notification)", () => {
+    expect(shouldNotify(true, true, ["Principal Trumpet"], ["Principal Trumpet"])).toBe(false);
+  });
+
+  it("returns true when still relevant and a new trumpet item was added (bug fix case)", () => {
+    expect(
+      shouldNotify(true, true, ["Principal Trumpet", "Second Trumpet"], ["Principal Trumpet"])
+    ).toBe(true);
+  });
+
+  it("returns false when still relevant but only non-trumpet content changed (same relevant items)", () => {
+    // Claude re-analyzed after a non-trumpet audition was added, but relevantItems is unchanged
+    expect(shouldNotify(true, true, ["Principal Trumpet"], ["Principal Trumpet"])).toBe(false);
+  });
+
+  it("returns true when still relevant but notifiedItems is empty (never notified before)", () => {
+    expect(shouldNotify(true, true, ["Principal Trumpet"], [])).toBe(true);
+  });
+
+  it("returns true on rising edge when notifiedItems is empty (new page, first notification)", () => {
+    expect(shouldNotify(true, false, ["Principal Trumpet"], [])).toBe(true);
   });
 });
