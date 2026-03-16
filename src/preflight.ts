@@ -1,7 +1,7 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { google } from "googleapis";
 
-import { MIN_CONTENT_LENGTH, fetchPage, fetchWithPuppeteer, stripHtml } from "./scraper";
+import { MIN_CONTENT_LENGTH, fetchPage, fetchWithPuppeteer, stripHtml, extractMainContent } from "./scraper";
 import { UrlConfig, ProbeFailure } from "./email";
 import { probeIsAuditionPage } from "./claude";
 
@@ -107,14 +107,14 @@ export async function preflightUrls(
 
       try {
         const html = await fetchPage(urlConfig.url);
-        text = stripHtml(html);
+        text = stripHtml(extractMainContent(html));
         if (text.length < MIN_CONTENT_LENGTH) {
           throw new Error(`Content too short (${text.length} chars)`);
         }
       } catch (fetchErr) {
         console.log(`    ↳ Fetch insufficient, trying Puppeteer...`);
         const html = await fetchWithPuppeteer(urlConfig.url);
-        text = stripHtml(html);
+        text = stripHtml(extractMainContent(html));
         usedPuppeteer = true;
       }
 

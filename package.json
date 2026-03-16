@@ -5,10 +5,12 @@
   "scripts": {
     "check": "ts-node src/check-auditions.ts",
     "check:dry": "DRY_RUN=true ts-node src/check-auditions.ts",
+    "check:debug": "DRY_RUN=true CHECKER_DEBUG=true ts-node src/check-auditions.ts",
     "test": "vitest run"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.39.0",
+    "dotenv": "^17.3.1",
     "googleapis": "^144.0.0",
     "puppeteer": "^22.0.0"
   },
