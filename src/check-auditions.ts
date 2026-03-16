@@ -44,6 +44,9 @@ import { createGitHubIssue } from "./github";
  * actual page changes rather than run frequency.
  * `hasRelevantAuditions` persists the previous relevance verdict so the system
  * can distinguish "newly relevant" (notify) from "still relevant" (suppress).
+ * `notifiedRelevantItems` records the specific audition items present when the
+ * user was last notified, enabling re-notification when a new item appears while
+ * the page remains relevant (e.g. a second trumpet audition is added later).
  */
 interface PageState {
   url: string;
@@ -52,6 +55,7 @@ interface PageState {
   contentHash: string;
   extractedSummary: string | null;
   hasRelevantAuditions: boolean;
+  notifiedRelevantItems: string[];
 }
 
 /**
@@ -100,6 +104,32 @@ function loadState(): StateFile {
 
 function saveState(state: StateFile): void {
   fs.writeFileSync(STATE_FILE, JSON.stringify(state, null, 2), "utf-8");
+}
+
+// ─── Notification predicate ───────────────────────────────────────────────────
+
+/**
+ * Determines whether a standard page should trigger a new user notification.
+ *
+ * Fires on two conditions:
+ *   1. Rising edge — page was not relevant before, is now.
+ *   2. New relevant item — page was already relevant, but Claude returned at least
+ *      one item not present when the user was last notified (e.g. a second trumpet
+ *      audition was added). Non-trumpet content changes won't fire because Claude's
+ *      `relevantItems` list will be unchanged.
+ *
+ * `notifiedItems` being empty means no notification was ever sent, which always
+ * counts as "new" when the page is relevant.
+ */
+export function shouldNotify(
+  isNowRelevant: boolean,
+  wasRelevant: boolean,
+  currentItems: string[],
+  notifiedItems: string[]
+): boolean {
+  if (!isNowRelevant) return false;
+  if (!wasRelevant) return true; // rising edge
+  return currentItems.some((item) => !notifiedItems.includes(item));
 }
 
 // ─── Main ─────────────────────────────────────────────────────────────────────
@@ -202,16 +232,25 @@ async function main(): Promise<void> {
         contentHash: hash,
         extractedSummary: analysis.summary,
         hasRelevantAuditions: analysis.hasRelevantAuditions,
+        notifiedRelevantItems: previousState?.notifiedRelevantItems ?? [],
       };
 
-      // Rising-edge notification: only alert on the transition from not-relevant → relevant.
-      // This prevents re-alerting on every subsequent run while a listing remains posted.
+      // Notify on:
+      //   1. Rising edge (false → true): the page just became relevant.
+      //   2. New items while still relevant: a new trumpet audition appeared on an
+      //      already-relevant page. Non-trumpet content changes (different instrument
+      //      added) won't fire here because Claude's relevantItems list stays the same.
       const wasRelevant = previousState?.hasRelevantAuditions ?? false;
-      if (analysis.hasRelevantAuditions && !wasRelevant) {
-        console.log(`  🎺 NEW relevant audition found!`);
+      const notifiedItems = previousState?.notifiedRelevantItems ?? [];
+      if (shouldNotify(analysis.hasRelevantAuditions, wasRelevant, analysis.relevantItems, notifiedItems)) {
+        const reason = !wasRelevant ? "NEW relevant audition found" : "Relevant content updated";
+        console.log(`  🎺 ${reason}!`);
         newFindings.push({ config: urlConfig, analysis });
-      } else if (analysis.hasRelevantAuditions && wasRelevant) {
-        console.log(`  ℹ️  Still relevant (already notified previously)`);
+        // Record the items we're notifying about so future runs can detect new additions.
+        // Written to in-memory state here; persisted by saveState() after email send.
+        state.pages[urlConfig.url].notifiedRelevantItems = analysis.relevantItems;
+      } else if (analysis.hasRelevantAuditions) {
+        console.log(`  ℹ️  Still relevant, no new items since last notification`);
       }
     } catch (err) {
       console.error(`  ❌ Error processing ${urlConfig.url}:`, err);

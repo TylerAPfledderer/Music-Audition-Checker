@@ -44,7 +44,7 @@ npm test               # Run vitest test suite
 2. **MAIN RUN** — dispatches each URL by `crawlMode`. Skips unchanged pages (content hash), calls Claude for relevance analysis, sends a single digest email with all findings.
 
 ### Crawl Modes
-- **Standard** (`crawlMode` absent): fetch → hash check → Claude analysis → rising-edge notification
+- **Standard** (`crawlMode` absent): fetch → hash check → Claude analysis → notify on new relevant items
 - **Playbill** (`crawlMode: "playbill"`): index fetch → URL extraction → per-listing detail validation
 
 ### State Persistence
@@ -66,7 +66,7 @@ npm test               # Run vitest test suite
 
 - **No external HTTP library** — `scraper.ts` uses Node's native `http`/`https` modules
 - **Puppeteer imported dynamically** — only loaded if plain HTTP fails, so script runs without it installed
-- **Rising-edge notifications** — email sent only when a page transitions from non-relevant to relevant
+- **Rising-edge notifications** — email sent when a page first becomes relevant, or when new relevant items appear on an already-relevant page (`shouldNotify()` in `check-auditions.ts`); non-trumpet content changes are ignored
 - **At-least-once delivery** — Playbill `notified` flags written only after successful email send
 - **Content hashing** — SHA256 (16-char prefix) via `contentHash()` to skip unchanged pages
 
