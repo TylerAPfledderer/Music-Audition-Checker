@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { stripHtml, contentHash, normalizeForHash, MIN_CONTENT_LENGTH } from "../src/scraper";
+import { stripHtml, contentHash, normalizeForHash, extractAuditionSignals, MIN_CONTENT_LENGTH } from "../src/scraper";
 
 describe("MIN_CONTENT_LENGTH", () => {
   it("is 500", () => {
@@ -87,6 +87,70 @@ describe("contentHash", () => {
     const hash = contentHash("");
     expect(hash).toHaveLength(16);
     expect(hash).toMatch(/^[0-9a-f]{16}$/);
+  });
+});
+
+describe("extractAuditionSignals", () => {
+  it("returns empty string for navigation/footer-only text with no audition keywords", () => {
+    const navText = "Home About Concerts Season Support Contact Donate Login";
+    expect(extractAuditionSignals(navText)).toBe("");
+  });
+
+  it("retains a sentence containing the word 'substitute'", () => {
+    const text = "We are accepting musicians for our substitute list.";
+    expect(extractAuditionSignals(text)).toBe(text);
+  });
+
+  it("retains a sentence containing the word 'audition'", () => {
+    const text = "Auditions are now open for all positions.";
+    expect(extractAuditionSignals(text)).toBe(text);
+  });
+
+  it("retains a sentence containing the expanded keyword 'trumpet'", () => {
+    const text = "The orchestra seeks a principal trumpet player.";
+    expect(extractAuditionSignals(text)).toBe(text);
+  });
+
+  it("retains a sentence containing the expanded keyword 'principal'", () => {
+    const text = "Applications for the principal chair close May 1.";
+    expect(extractAuditionSignals(text)).toBe(text);
+  });
+
+  it("retains a sentence containing the expanded keyword 'orchestra'", () => {
+    const text = "The orchestra is hiring for the upcoming season.";
+    expect(extractAuditionSignals(text)).toBe(text);
+  });
+
+  it("filters out short non-audition phrases that previously caused hash churn", () => {
+    // These are the kinds of nav/UI fragments that the old <120 char fallback
+    // was inadvertently including, causing spurious hash changes.
+    const noiseText = "View all events Follow us Copyright 2026";
+    expect(extractAuditionSignals(noiseText)).toBe("");
+  });
+
+  it("keeps only audition sentences from mixed page content", () => {
+    // Sentence split happens on '. ' followed by capital
+    const mixed =
+      "Welcome to our website. We are thrilled to announce our 2026 season. " +
+      "Auditions for trumpet are open through May 15. Tickets are on sale now. " +
+      "We accept substitute musicians on a rolling basis.";
+    const result = extractAuditionSignals(mixed);
+    expect(result).toContain("Auditions for trumpet");
+    expect(result).toContain("substitute musicians");
+    expect(result).not.toContain("thrilled to announce");
+    expect(result).not.toContain("Tickets are on sale");
+  });
+
+  it("returns empty string for empty input", () => {
+    expect(extractAuditionSignals("")).toBe("");
+  });
+
+  it("produces a stable hash for content with only non-audition text changing", () => {
+    const auditContent = "Submit your resume to apply for the trumpet position.";
+    const withNoise1 = auditContent + " Home About Donate";
+    const withNoise2 = auditContent + " Home About Donate Join Us";
+    // Both should produce the same signals output (noise filtered out)
+    expect(extractAuditionSignals(withNoise1)).toBe(extractAuditionSignals(withNoise2));
   });
 });
 

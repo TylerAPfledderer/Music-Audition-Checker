@@ -145,4 +145,31 @@ describe("shouldNotify", () => {
   it("returns true on rising edge when notifiedItems is empty (new page, first notification)", () => {
     expect(shouldNotify(true, false, ["Principal Trumpet"], [])).toBe(true);
   });
+
+  // Label-bounce loop prevention: after notifying, notifiedRelevantItems is updated
+  // to the union of old + new items. The tests below validate that once both label
+  // variants are in the union, shouldNotify correctly returns false for either.
+  it("returns false when a synonym label is present in notifiedItems union (prevents label-bounce)", () => {
+    // Simulate: Claude said "Sub list for all instruments" on run 1 (notified),
+    // then "Substitute list for all instruments" on run 2 (false positive fired),
+    // so notifiedItems now holds the union of both.
+    const unionNotified = ["Sub list for all instruments", "Substitute list for all instruments"];
+    // Run 3: Claude returns the original label — should NOT re-notify.
+    expect(shouldNotify(true, true, ["Sub list for all instruments"], unionNotified)).toBe(false);
+    // Run 4: Claude returns the synonym label — should NOT re-notify.
+    expect(shouldNotify(true, true, ["Substitute list for all instruments"], unionNotified)).toBe(false);
+  });
+
+  it("still notifies when a genuinely new item appears alongside a previously-notified synonym", () => {
+    const unionNotified = ["Sub list for all instruments", "Substitute list for all instruments"];
+    // A new Principal Trumpet audition was added — not in union → should notify.
+    expect(
+      shouldNotify(
+        true,
+        true,
+        ["Substitute list for all instruments", "Principal Trumpet"],
+        unionNotified
+      )
+    ).toBe(true);
+  });
 });

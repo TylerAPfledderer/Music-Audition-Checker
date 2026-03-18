@@ -206,6 +206,13 @@ async function main(): Promise<void> {
       const hash = computePageHash(text);
       const previousState = state.pages[urlConfig.url];
 
+      // Capture whether the notifiedRelevantItems field existed BEFORE state is
+      // overwritten below. undefined means the field was never written (old schema);
+      // [] means it was written but empty. We use this to suppress a spurious
+      // notification when a page was already known-relevant before item tracking
+      // was introduced (schema evolution guard — Fix 3).
+      const hadNotifiedItemsField = previousState?.notifiedRelevantItems !== undefined;
+
       // Skip if content unchanged and we already checked it recently
       if (previousState && previousState.contentHash === hash) {
         console.log(`  ✓ No content change since last check`);
@@ -242,14 +249,30 @@ async function main(): Promise<void> {
       //      added) won't fire here because Claude's relevantItems list stays the same.
       const wasRelevant = previousState?.hasRelevantAuditions ?? false;
       const notifiedItems = previousState?.notifiedRelevantItems ?? [];
-      if (shouldNotify(analysis.hasRelevantAuditions, wasRelevant, analysis.relevantItems, notifiedItems)) {
+
+      if (wasRelevant && !hadNotifiedItemsField && analysis.hasRelevantAuditions) {
+        // Schema evolution: this page was known-relevant before notifiedRelevantItems
+        // was introduced. Silently initialize the field from the current Claude output
+        // so the next run has a populated baseline to compare against.
+        console.log(`  ℹ️  Initializing item tracking for already-relevant page (no email sent)`);
+        state.pages[urlConfig.url].notifiedRelevantItems = [...new Set(analysis.relevantItems)];
+      } else if (shouldNotify(analysis.hasRelevantAuditions, wasRelevant, analysis.relevantItems, notifiedItems)) {
         const reason = !wasRelevant ? "NEW relevant audition found" : "Relevant content updated";
         console.log(`  🎺 ${reason}!`);
         newFindings.push({ config: urlConfig, analysis });
-        // Record the items we're notifying about so future runs can detect new additions.
-        // Written to in-memory state here; persisted by saveState() after email send.
-        state.pages[urlConfig.url].notifiedRelevantItems = analysis.relevantItems;
+        // Merge old and new items (union, deduped) rather than replacing. Claude's
+        // relevantItems labels are non-deterministic — a synonym label on the next run
+        // should not re-trigger a notification. Accumulating all ever-seen labels
+        // prevents that bounce loop while still detecting genuinely new items.
+        state.pages[urlConfig.url].notifiedRelevantItems = [
+          ...new Set([...notifiedItems, ...analysis.relevantItems]),
+        ];
       } else if (analysis.hasRelevantAuditions) {
+        // Still relevant, no new items. Absorb any synonym labels Claude returned
+        // so a future hash change won't rediscover them and fire a false positive.
+        state.pages[urlConfig.url].notifiedRelevantItems = [
+          ...new Set([...notifiedItems, ...analysis.relevantItems]),
+        ];
         console.log(`  ℹ️  Still relevant, no new items since last notification`);
       }
     } catch (err) {
