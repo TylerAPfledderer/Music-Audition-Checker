@@ -1,5 +1,5 @@
 {
-  "lastRun": "2026-03-16T23:54:51.630Z",
+  "lastRun": "2026-03-18T13:35:45.829Z",
   "pages": {
     "https://www.chamberorchestraofthetriangle.org/employment": {
       "url": "https://www.chamberorchestraofthetriangle.org/employment",
@@ -20,12 +20,12 @@
     "https://www.fayettevillesymphony.org/auditions-and-employment/": {
       "url": "https://www.fayettevillesymphony.org/auditions-and-employment/",
       "name": "Fayetteville Symphony Orchestra",
-      "lastChecked": "2026-03-16T23:54:51.584Z",
-      "contentHash": "6c11eb0b408ad658",
-      "extractedSummary": "The Fayetteville Symphony Orchestra currently has no active audition submissions, but they are accepting musicians for their substitute list. Interested musicians can email the Operations Manager to join the sub list, which would be open to trumpet players.",
+      "lastChecked": "2026-03-18T13:34:43.804Z",
+      "contentHash": "685a5e7f45615a5c",
+      "extractedSummary": "The Fayetteville Symphony Orchestra currently has no active formal auditions but is accepting musicians for their substitute list. Interested trumpet players can email the Operations Manager to join the sub list, which would provide opportunities for future performances.",
       "hasRelevantAuditions": true,
       "notifiedRelevantItems": [
-        "Sub list - open to any instrument"
+        "Sub list for all instruments"
       ]
     },
     "https://www.raleighsymphony.org/auditions": {
@@ -102,9 +102,18 @@
       "notifiedRelevantItems": [
         "Second Trumpet"
       ]
+    },
+    "https://ashevillesymphony.org/employment/": {
+      "url": "https://ashevillesymphony.org/employment/",
+      "name": "Asheville Symphony",
+      "lastChecked": "2026-03-18T13:34:48.549Z",
+      "contentHash": "3f475bb55d4adc78",
+      "extractedSummary": null,
+      "hasRelevantAuditions": false,
+      "notifiedRelevantItems": []
     }
   },
-  "playbillIndexHash": "1ebb83cca2a85c01",
+  "playbillIndexHash": "0547d535eda8d67d",
   "playbillListings": {
     "https://playbill.com/job/mrs-doubtfire-national-tour-drums-percussion/a0380083-fa6a-4e35-9549-bb35933d6694": {
       "url": "https://playbill.com/job/mrs-doubtfire-national-tour-drums-percussion/a0380083-fa6a-4e35-9549-bb35933d6694",
@@ -254,6 +263,16 @@
       "lastChecked": "2026-03-16T08:33:07.125Z",
       "hasTrumpet": false,
       "notified": true,
+      "summary": null
+    },
+    "https://playbill.com/job/musicians-virtual-submissions-medora-musical/130a8fe8-a332-402c-b35a-f12c5cfd14f6": {
+      "url": "https://playbill.com/job/musicians-virtual-submissions-medora-musical/130a8fe8-a332-402c-b35a-f12c5cfd14f6",
+      "title": "Musicians | Virtual Submissions | Medora Musical",
+      "organization": "RWS Global",
+      "firstSeen": "2026-03-18T13:34:48.550Z",
+      "lastChecked": "",
+      "hasTrumpet": false,
+      "notified": false,
       "summary": null
     }
   }
