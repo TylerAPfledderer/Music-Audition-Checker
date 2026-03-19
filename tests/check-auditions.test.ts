@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { encodeSubjectRfc2047, buildEmailRaw } from "../src/email";
-import { shouldNotify } from "../src/check-auditions";
+import { shouldNotify, normalizeItemLabel } from "../src/check-auditions";
 
 // Helper: decode base64url MIME message back to UTF-8 text
 function decodeMime(raw: string): string {
@@ -171,5 +171,67 @@ describe("shouldNotify", () => {
         unionNotified
       )
     ).toBe(true);
+  });
+
+  // Normalized matching: parentheticals and " - suffix" qualifiers should not cause re-notification
+  it("does not re-notify when Claude adds a parenthetical to a previously-notified label", () => {
+    // Stored: "Sub list for all instruments"
+    // Claude returns: "Sub list for all instruments (contact operations manager)"
+    expect(
+      shouldNotify(
+        true,
+        true,
+        ["Sub list for all instruments (contact operations manager)"],
+        ["Sub list for all instruments"]
+      )
+    ).toBe(false);
+  });
+
+  it("does not re-notify when Claude adds a dash-suffix qualifier to a previously-notified label", () => {
+    // Stored: "Substitute musician positions"
+    // Claude returns: "Substitute musician positions - general orchestral"
+    expect(
+      shouldNotify(
+        true,
+        true,
+        ["Substitute musician positions - general orchestral"],
+        ["Substitute musician positions (ongoing applications accepted)"]
+      )
+    ).toBe(false);
+  });
+
+  it("still notifies for a genuinely different item despite normalization", () => {
+    // "Principal Trumpet" does not normalize to the same string as "Sub list for all instruments"
+    expect(
+      shouldNotify(true, true, ["Principal Trumpet"], ["Sub list for all instruments"])
+    ).toBe(true);
+  });
+});
+
+describe("normalizeItemLabel", () => {
+  it("lowercases the label", () => {
+    expect(normalizeItemLabel("Principal Trumpet")).toBe("principal trumpet");
+  });
+
+  it("strips parenthetical remarks", () => {
+    expect(normalizeItemLabel("Sub list for all instruments (contact operations manager)")).toBe(
+      "sub list for all instruments"
+    );
+  });
+
+  it("strips dash-suffix qualifiers", () => {
+    expect(normalizeItemLabel("Substitute musician positions - general orchestral")).toBe(
+      "substitute musician positions"
+    );
+  });
+
+  it("strips both parenthetical and dash-suffix", () => {
+    expect(normalizeItemLabel("Open positions (all instruments) - ongoing")).toBe(
+      "open positions"
+    );
+  });
+
+  it("leaves a plain label unchanged (modulo case)", () => {
+    expect(normalizeItemLabel("Second Trumpet")).toBe("second trumpet");
   });
 });

@@ -27,16 +27,7 @@
       "extractedSummary": "The Fayetteville Symphony Orchestra currently has no active formal auditions, but they are accepting submissions for their substitute musician list. Musicians interested in joining the sub list can contact the Operations Manager via email.",
       "hasRelevantAuditions": true,
       "notifiedRelevantItems": [
-        "Sub list for all instruments",
-        "Sub list for any instrument",
-        "Sub list - open to any instrument",
-        "Substitute list",
-        "Substitute list for all instruments",
-        "Substitute list for any instrument",
-        "Substitute musician list",
-        "Open substitute list",
-        "Sub list",
-        "Sub list for all instruments (contact operations manager)"
+        "Sub list for all instruments"
       ]
     },
     "https://www.raleighsymphony.org/auditions": {
@@ -67,8 +58,7 @@
       "extractedSummary": "The Williamsburg Symphony Orchestra accepts resumes from musicians interested in substitute work. They are looking for highly skilled musicians with professional orchestral experience, and resumes are kept on file for consideration.",
       "hasRelevantAuditions": true,
       "notifiedRelevantItems": [
-        "Substitute musician positions (ongoing applications accepted)",
-        "Substitute musician positions - general orchestral"
+        "Substitute musician positions"
       ]
     },
     "https://charlestonsymphony.org/employment/": {

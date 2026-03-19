@@ -109,6 +109,24 @@ function saveState(state: StateFile): void {
 // ─── Notification predicate ───────────────────────────────────────────────────
 
 /**
+ * Normalizes a Claude-generated item label for fuzzy comparison.
+ *
+ * Claude's labels are non-deterministic: the same underlying item can appear as
+ * "Sub list for all instruments", "Sub list for all instruments (contact operations manager)",
+ * or "Substitute musician positions - general orchestral" across different runs.
+ *
+ * Normalization strips the variable parts — parenthetical remarks and " - descriptor"
+ * suffixes — so that synonym labels resolve to the same canonical string.
+ */
+export function normalizeItemLabel(label: string): string {
+  return label
+    .toLowerCase()
+    .replace(/\s*\([^)]*\)/g, "") // strip "(contact operations manager)" etc.
+    .replace(/\s*-\s+\S.*$/, "") // strip " - general orchestral" etc.
+    .trim();
+}
+
+/**
  * Determines whether a standard page should trigger a new user notification.
  *
  * Fires on two conditions:
@@ -120,6 +138,9 @@ function saveState(state: StateFile): void {
  *
  * `notifiedItems` being empty means no notification was ever sent, which always
  * counts as "new" when the page is relevant.
+ *
+ * Comparison uses `normalizeItemLabel` so that minor wording variants of the same
+ * item (parentheticals, suffix qualifiers) don't trigger spurious re-notifications.
  */
 export function shouldNotify(
   isNowRelevant: boolean,
@@ -129,7 +150,8 @@ export function shouldNotify(
 ): boolean {
   if (!isNowRelevant) return false;
   if (!wasRelevant) return true; // rising edge
-  return currentItems.some((item) => !notifiedItems.includes(item));
+  const normalizedNotified = notifiedItems.map(normalizeItemLabel);
+  return currentItems.some((item) => !normalizedNotified.includes(normalizeItemLabel(item)));
 }
 
 // ─── Main ─────────────────────────────────────────────────────────────────────
