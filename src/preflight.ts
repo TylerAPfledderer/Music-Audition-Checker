@@ -105,17 +105,32 @@ export async function preflightUrls(
       let text: string;
       let usedPuppeteer = false;
 
+      let shortHttpText: string | null = null;
       try {
         const html = await fetchPage(urlConfig.url);
-        text = stripHtml(extractMainContent(html));
-        if (text.length < MIN_CONTENT_LENGTH) {
-          throw new Error(`Content too short (${text.length} chars)`);
+        const candidate = stripHtml(extractMainContent(html));
+        if (candidate.length < MIN_CONTENT_LENGTH) {
+          shortHttpText = candidate; // save for fallback before throwing
+          throw new Error(`Content too short (${candidate.length} chars)`);
         }
+        text = candidate;
       } catch (fetchErr) {
         console.log(`    ↳ Fetch insufficient, trying Puppeteer...`);
-        const html = await fetchWithPuppeteer(urlConfig.url);
-        text = stripHtml(extractMainContent(html));
-        usedPuppeteer = true;
+        try {
+          const html = await fetchWithPuppeteer(urlConfig.url);
+          text = stripHtml(extractMainContent(html));
+          usedPuppeteer = true;
+        } catch (puppeteerErr) {
+          if (shortHttpText !== null) {
+            // HTTP returned something but it was short; Puppeteer timed out (bot
+            // detection). Use the short HTTP content rather than marking as failed.
+            console.log(`    ↳ Puppeteer also failed — using short HTTP content`);
+            text = shortHttpText;
+          } else {
+            // Both HTTP and Puppeteer failed entirely — no content at all.
+            throw puppeteerErr;
+          }
+        }
       }
 
       result.method = usedPuppeteer ? "puppeteer" : "fetch";
