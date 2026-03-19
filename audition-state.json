@@ -1,5 +1,5 @@
 {
-  "lastRun": "2026-03-19T22:00:01.436Z",
+  "lastRun": "2026-03-19T22:52:07.234Z",
   "pages": {
     "https://www.chamberorchestraofthetriangle.org/employment": {
       "url": "https://www.chamberorchestraofthetriangle.org/employment",
@@ -22,9 +22,9 @@
     "https://www.fayettevillesymphony.org/auditions-and-employment/": {
       "url": "https://www.fayettevillesymphony.org/auditions-and-employment/",
       "name": "Fayetteville Symphony Orchestra",
-      "lastChecked": "2026-03-19T21:59:34.625Z",
-      "contentHash": "dc4f96fd83e1ffbf",
-      "extractedSummary": "The Fayetteville Symphony Orchestra currently has no active formal auditions, but they are accepting submissions for their substitute musician list. Musicians interested in joining the sub list can contact the Operations Manager via email.",
+      "lastChecked": "2026-03-19T22:52:07.177Z",
+      "contentHash": "a160e10e30e723d5",
+      "extractedSummary": "The Fayetteville Symphony Orchestra currently has no active formal auditions, but they are accepting applications for their substitute musician list. Musicians interested in joining the sub list can contact the Operations Manager via email, and trumpet players would reasonably qualify for orchestral substitute work.",
       "hasRelevantAuditions": true,
       "notifiedRelevantItems": [
         "substitute list"
