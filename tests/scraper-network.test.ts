@@ -63,6 +63,8 @@ describe("fetchWithPuppeteer", () => {
     mockContent.mockResolvedValue("<html><body>loaded page content</body></html>");
     mockNewPage.mockResolvedValue({
       setUserAgent: vi.fn().mockResolvedValue(undefined),
+      setRequestInterception: vi.fn().mockResolvedValue(undefined),
+      on: vi.fn(),
       goto: mockGoto,
       content: mockContent,
     });

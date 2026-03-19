@@ -75,6 +75,20 @@ export async function fetchWithPuppeteer(url: string): Promise<string> {
     await page.setUserAgent(
       "Mozilla/5.0 (compatible; AuditionChecker/1.0; +https://github.com)"
     );
+
+    // Block heavy assets that don't affect text content — images, fonts, media,
+    // and stylesheets can add many seconds of load time on orchestra websites.
+    // Scripts and XHR/fetch are kept so JS-rendered content still hydrates.
+    await page.setRequestInterception(true);
+    page.on("request", (req: any) => {
+      const type: string = req.resourceType();
+      if (["image", "stylesheet", "font", "media"].includes(type)) {
+        req.abort();
+      } else {
+        req.continue();
+      }
+    });
+
     await page.goto(url, { waitUntil: "domcontentloaded", timeout: 60000 });
     // Wait a bit more for lazy-loaded content
     await new Promise((r) => setTimeout(r, 2000));
