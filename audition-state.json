@@ -27,7 +27,7 @@
       "extractedSummary": "The Fayetteville Symphony Orchestra currently has no active formal auditions, but they are accepting submissions for their substitute musician list. Musicians interested in joining the sub list can contact the Operations Manager via email.",
       "hasRelevantAuditions": true,
       "notifiedRelevantItems": [
-        "Sub list for all instruments"
+        "substitute list"
       ]
     },
     "https://www.raleighsymphony.org/auditions": {
@@ -38,8 +38,8 @@
       "extractedSummary": "The Raleigh Symphony Orchestra holds annual auditions in late summer for both open positions and substitute positions on all instruments, including trumpet. The next audition date is pending and they will notify interested musicians in early summer.",
       "hasRelevantAuditions": true,
       "notifiedRelevantItems": [
-        "substitute positions on all instruments",
-        "open positions annually in late summer"
+        "substitute list",
+        "open positions"
       ]
     },
     "https://rso.com/auditions/": {
@@ -58,7 +58,7 @@
       "extractedSummary": "The Williamsburg Symphony Orchestra accepts resumes from musicians interested in substitute work. They are looking for highly skilled musicians with professional orchestral experience, and resumes are kept on file for consideration.",
       "hasRelevantAuditions": true,
       "notifiedRelevantItems": [
-        "Substitute musician positions"
+        "substitute list"
       ]
     },
     "https://charlestonsymphony.org/employment/": {
@@ -77,7 +77,7 @@
       "extractedSummary": "The Rock Hill Symphony Orchestra has open auditions for section and sub positions for all instruments, submitted via YouTube video. These are general orchestral auditions that would include trumpet positions, with no specified closing date mentioned.",
       "hasRelevantAuditions": true,
       "notifiedRelevantItems": [
-        "Section and sub positions for all instruments"
+        "substitute list"
       ]
     },
     "https://greensborosymphony.org/about-the-symphony/auditions/": {
@@ -114,7 +114,7 @@
       "extractedSummary": "The Charlotte Symphony has a Second Trumpet audition scheduled for May 31 - June 2, 2026, with applications due May 1, 2026. This is a full-time, tenure track position starting September 2026 with a minimum weekly salary of $1,377.15.",
       "hasRelevantAuditions": true,
       "notifiedRelevantItems": [
-        "Second Trumpet"
+        "second trumpet"
       ]
     },
     "https://ashevillesymphony.org/employment/": {

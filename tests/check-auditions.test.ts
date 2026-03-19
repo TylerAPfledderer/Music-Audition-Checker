@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { encodeSubjectRfc2047, buildEmailRaw } from "../src/email";
-import { shouldNotify, normalizeItemLabel } from "../src/check-auditions";
+import { shouldNotify, canonicalizeLabel } from "../src/check-auditions";
 
 // Helper: decode base64url MIME message back to UTF-8 text
 function decodeMime(raw: string): string {
@@ -124,18 +124,19 @@ describe("shouldNotify", () => {
   });
 
   it("returns false when still relevant with same items (suppress re-notification)", () => {
-    expect(shouldNotify(true, true, ["Principal Trumpet"], ["Principal Trumpet"])).toBe(false);
+    // notifiedItems holds canonical form as written by canonicalizeLabel at store time
+    expect(shouldNotify(true, true, ["Principal Trumpet"], ["principal trumpet"])).toBe(false);
   });
 
   it("returns true when still relevant and a new trumpet item was added (bug fix case)", () => {
     expect(
-      shouldNotify(true, true, ["Principal Trumpet", "Second Trumpet"], ["Principal Trumpet"])
+      shouldNotify(true, true, ["Principal Trumpet", "Second Trumpet"], ["principal trumpet"])
     ).toBe(true);
   });
 
   it("returns false when still relevant but only non-trumpet content changed (same relevant items)", () => {
     // Claude re-analyzed after a non-trumpet audition was added, but relevantItems is unchanged
-    expect(shouldNotify(true, true, ["Principal Trumpet"], ["Principal Trumpet"])).toBe(false);
+    expect(shouldNotify(true, true, ["Principal Trumpet"], ["principal trumpet"])).toBe(false);
   });
 
   it("returns true when still relevant but notifiedItems is empty (never notified before)", () => {
@@ -146,92 +147,93 @@ describe("shouldNotify", () => {
     expect(shouldNotify(true, false, ["Principal Trumpet"], [])).toBe(true);
   });
 
-  // Label-bounce loop prevention: after notifying, notifiedRelevantItems is updated
-  // to the union of old + new items. The tests below validate that once both label
-  // variants are in the union, shouldNotify correctly returns false for either.
-  it("returns false when a synonym label is present in notifiedItems union (prevents label-bounce)", () => {
-    // Simulate: Claude said "Sub list for all instruments" on run 1 (notified),
-    // then "Substitute list for all instruments" on run 2 (false positive fired),
-    // so notifiedItems now holds the union of both.
-    const unionNotified = ["Sub list for all instruments", "Substitute list for all instruments"];
-    // Run 3: Claude returns the original label — should NOT re-notify.
-    expect(shouldNotify(true, true, ["Sub list for all instruments"], unionNotified)).toBe(false);
-    // Run 4: Claude returns the synonym label — should NOT re-notify.
-    expect(shouldNotify(true, true, ["Substitute list for all instruments"], unionNotified)).toBe(false);
-  });
-
-  it("still notifies when a genuinely new item appears alongside a previously-notified synonym", () => {
-    const unionNotified = ["Sub list for all instruments", "Substitute list for all instruments"];
-    // A new Principal Trumpet audition was added — not in union → should notify.
-    expect(
-      shouldNotify(
-        true,
-        true,
-        ["Substitute list for all instruments", "Principal Trumpet"],
-        unionNotified
-      )
-    ).toBe(true);
-  });
-
-  // Normalized matching: parentheticals and " - suffix" qualifiers should not cause re-notification
-  it("does not re-notify when Claude adds a parenthetical to a previously-notified label", () => {
-    // Stored: "Sub list for all instruments"
-    // Claude returns: "Sub list for all instruments (contact operations manager)"
+  // Canonical label matching: all wording variants of the same opportunity share
+  // one canonical string, so no wording change can trigger a spurious re-notification.
+  it("does not re-notify when Claude uses a different phrasing for the same sub-list opportunity", () => {
+    // Stored canonical: "substitute list" (written by canonicalizeLabel on first notify)
+    // Claude returns a wording variant on the next run — all should canonicalize to "substitute list"
+    const storedCanonical = ["substitute list"];
+    expect(shouldNotify(true, true, ["Sub list for all instruments"], storedCanonical)).toBe(false);
+    expect(shouldNotify(true, true, ["Substitute musician positions"], storedCanonical)).toBe(false);
     expect(
       shouldNotify(
         true,
         true,
         ["Sub list for all instruments (contact operations manager)"],
-        ["Sub list for all instruments"]
+        storedCanonical
       )
     ).toBe(false);
-  });
-
-  it("does not re-notify when Claude adds a dash-suffix qualifier to a previously-notified label", () => {
-    // Stored: "Substitute musician positions"
-    // Claude returns: "Substitute musician positions - general orchestral"
     expect(
       shouldNotify(
         true,
         true,
         ["Substitute musician positions - general orchestral"],
-        ["Substitute musician positions (ongoing applications accepted)"]
+        storedCanonical
       )
     ).toBe(false);
   });
 
-  it("still notifies for a genuinely different item despite normalization", () => {
-    // "Principal Trumpet" does not normalize to the same string as "Sub list for all instruments"
+  it("still notifies when a genuinely new item appears alongside an already-notified canonical", () => {
+    // Sub list was previously notified; a new Principal Trumpet position just appeared.
     expect(
-      shouldNotify(true, true, ["Principal Trumpet"], ["Sub list for all instruments"])
+      shouldNotify(true, true, ["Substitute musician positions", "Principal Trumpet"], [
+        "substitute list",
+      ])
     ).toBe(true);
+  });
+
+  it("still notifies for a genuinely different canonical category", () => {
+    expect(shouldNotify(true, true, ["Principal Trumpet"], ["substitute list"])).toBe(true);
   });
 });
 
-describe("normalizeItemLabel", () => {
-  it("lowercases the label", () => {
-    expect(normalizeItemLabel("Principal Trumpet")).toBe("principal trumpet");
+describe("canonicalizeLabel", () => {
+  // Trumpet positions — most-specific first
+  it("maps principal/associate/1st/first trumpet variants to 'principal trumpet'", () => {
+    expect(canonicalizeLabel("Principal Trumpet")).toBe("principal trumpet");
+    expect(canonicalizeLabel("Associate Principal Trumpet")).toBe("principal trumpet");
+    expect(canonicalizeLabel("1st Trumpet")).toBe("principal trumpet");
   });
 
-  it("strips parenthetical remarks", () => {
-    expect(normalizeItemLabel("Sub list for all instruments (contact operations manager)")).toBe(
-      "sub list for all instruments"
+  it("maps second/2nd trumpet variants to 'second trumpet'", () => {
+    expect(canonicalizeLabel("Second Trumpet")).toBe("second trumpet");
+    expect(canonicalizeLabel("2nd Trumpet")).toBe("second trumpet");
+  });
+
+  it("maps section trumpet to 'section trumpet'", () => {
+    expect(canonicalizeLabel("Section Trumpet")).toBe("section trumpet");
+  });
+
+  it("maps generic trumpet mention to 'trumpet'", () => {
+    expect(canonicalizeLabel("Trumpet (extra)")).toBe("trumpet");
+  });
+
+  // Substitute list — covers all real-world label variants seen in production
+  it("maps sub/substitute list variants to 'substitute list'", () => {
+    expect(canonicalizeLabel("Sub list for all instruments")).toBe("substitute list");
+    expect(canonicalizeLabel("Sub list for all instruments (contact operations manager)")).toBe(
+      "substitute list"
     );
-  });
-
-  it("strips dash-suffix qualifiers", () => {
-    expect(normalizeItemLabel("Substitute musician positions - general orchestral")).toBe(
-      "substitute musician positions"
+    expect(canonicalizeLabel("Substitute musician positions")).toBe("substitute list");
+    expect(canonicalizeLabel("Substitute musician positions - general orchestral")).toBe(
+      "substitute list"
     );
-  });
-
-  it("strips both parenthetical and dash-suffix", () => {
-    expect(normalizeItemLabel("Open positions (all instruments) - ongoing")).toBe(
-      "open positions"
+    expect(canonicalizeLabel("Section and sub positions for all instruments")).toBe(
+      "substitute list"
     );
+    expect(canonicalizeLabel("substitute positions on all instruments")).toBe("substitute list");
   });
 
-  it("leaves a plain label unchanged (modulo case)", () => {
-    expect(normalizeItemLabel("Second Trumpet")).toBe("second trumpet");
+  // Open/annual positions
+  it("maps open/annual/general audition variants to 'open positions'", () => {
+    expect(canonicalizeLabel("open positions annually in late summer")).toBe("open positions");
+    expect(canonicalizeLabel("General orchestral audition")).toBe("open positions");
+    expect(canonicalizeLabel("Annual auditions")).toBe("open positions");
+  });
+
+  // Fallback
+  it("returns lowercased, stripped fallback for unknown labels", () => {
+    expect(canonicalizeLabel("Some Unique Label (extra info) - detail")).toBe("some unique label");
+    expect(canonicalizeLabel("Resume file")).toBe("resume file");
   });
 });
