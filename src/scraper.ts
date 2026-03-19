@@ -68,13 +68,19 @@ export async function fetchWithPuppeteer(url: string): Promise<string> {
 
   const browser = await puppeteer.default.launch({
     headless: true,
-    args: ["--no-sandbox", "--disable-setuid-sandbox"],
+    args: ["--no-sandbox", "--disable-setuid-sandbox", "--disable-blink-features=AutomationControlled"],
   });
   try {
     const page = await browser.newPage();
     await page.setUserAgent(
       "Mozilla/5.0 (compatible; AuditionChecker/1.0; +https://github.com)"
     );
+
+    // Remove the navigator.webdriver flag that identifies headless Chrome to
+    // bot-detection systems. Must be set before navigation begins.
+    await page.evaluateOnNewDocument(() => {
+      Object.defineProperty(navigator, "webdriver", { get: () => undefined });
+    });
 
     // Block heavy assets that don't affect text content — images, fonts, media,
     // and stylesheets can add many seconds of load time on orchestra websites.
@@ -204,7 +210,14 @@ export async function scrapeUrlRaw(url: string): Promise<{ text: string; html: s
     console.log(
       `  Content too short (${html.length} chars), falling back to Puppeteer...`
     );
-    html = await fetchWithPuppeteer(url);
+    try {
+      html = await fetchWithPuppeteer(url);
+    } catch (puppeteerErr) {
+      // Puppeteer failed (e.g. bot-detection timeout) — use the short HTTP
+      // content as a last resort rather than propagating a hard failure.
+      // Minimal content is better than nothing: Claude can still analyze it.
+      console.log(`  ↳ Puppeteer also failed (${puppeteerErr}) — using short HTTP content`);
+    }
   }
 
   return { text: stripHtml(html), html };

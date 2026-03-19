@@ -7,13 +7,14 @@ import { vi, describe, it, expect, beforeEach } from "vitest";
 
 // vi.hoisted ensures these refs are available inside the vi.mock() factories,
 // which are hoisted to the top of the file before any imports.
-const { mockGoto, mockContent, mockNewPage, mockBrowserClose, mockLaunch } =
+const { mockGoto, mockContent, mockNewPage, mockBrowserClose, mockLaunch, mockEvaluateOnNewDocument } =
   vi.hoisted(() => ({
     mockGoto: vi.fn(),
     mockContent: vi.fn(),
     mockNewPage: vi.fn(),
     mockBrowserClose: vi.fn(),
     mockLaunch: vi.fn(),
+    mockEvaluateOnNewDocument: vi.fn(),
   }));
 
 vi.mock("puppeteer", () => ({
@@ -25,7 +26,7 @@ vi.mock("https", () => ({
 }));
 
 import * as https from "https";
-import { fetchPage, fetchWithPuppeteer } from "../src/scraper";
+import { fetchPage, fetchWithPuppeteer, scrapeUrlRaw } from "../src/scraper";
 
 // ─── fetchPage ────────────────────────────────────────────────────────────────
 
@@ -61,8 +62,10 @@ describe("fetchWithPuppeteer", () => {
 
     mockGoto.mockResolvedValue(undefined);
     mockContent.mockResolvedValue("<html><body>loaded page content</body></html>");
+    mockEvaluateOnNewDocument.mockResolvedValue(undefined);
     mockNewPage.mockResolvedValue({
       setUserAgent: vi.fn().mockResolvedValue(undefined),
+      evaluateOnNewDocument: mockEvaluateOnNewDocument,
       setRequestInterception: vi.fn().mockResolvedValue(undefined),
       on: vi.fn(),
       goto: mockGoto,
@@ -84,6 +87,15 @@ describe("fetchWithPuppeteer", () => {
     );
   });
 
+  it("removes navigator.webdriver before navigation (anti-bot)", async () => {
+    await fetchWithPuppeteer("https://playbill.com/jobs");
+    expect(mockEvaluateOnNewDocument).toHaveBeenCalled();
+    // evaluateOnNewDocument must be called before goto
+    const evalOrder = mockEvaluateOnNewDocument.mock.invocationCallOrder[0];
+    const gotoOrder = mockGoto.mock.invocationCallOrder[0];
+    expect(evalOrder).toBeLessThan(gotoOrder);
+  });
+
   it("always closes the browser, even on error", async () => {
     mockGoto.mockRejectedValue(new Error("Navigation timeout"));
 
@@ -92,5 +104,39 @@ describe("fetchWithPuppeteer", () => {
     ).rejects.toThrow("Navigation timeout");
 
     expect(mockBrowserClose).toHaveBeenCalled();
+  });
+});
+
+// ─── scrapeUrlRaw graceful fallback ──────────────────────────────────────────
+
+describe("scrapeUrlRaw — Puppeteer graceful fallback", () => {
+  beforeEach(() => vi.clearAllMocks());
+
+  it("resolves with short HTTP content when Puppeteer fails (bot-detection scenario)", async () => {
+    // Simulate: HTTP fetch returns short content (< MIN_CONTENT_LENGTH),
+    // then Puppeteer navigation hangs/times out.
+    const shortHtml = "<html><body>No auditions</body></html>"; // < 500 chars
+
+    const mockRes = {
+      statusCode: 200,
+      headers: {},
+      on: vi.fn().mockImplementation(function (this: any, event: string, cb: (...args: any[]) => void) {
+        if (event === "data") cb(shortHtml);
+        if (event === "end") cb();
+        return this;
+      }),
+    };
+    const mockReq = { on: vi.fn(), setTimeout: vi.fn() };
+    vi.mocked(https.get).mockImplementation((_u: any, _o: any, cb?: any) => {
+      if (typeof cb === "function") cb(mockRes);
+      return mockReq as any;
+    });
+
+    // Puppeteer times out
+    mockGoto.mockRejectedValue(new Error("Navigation timeout of 60000 ms exceeded"));
+
+    // Should resolve (not throw) and return stripped text from the short HTML
+    const result = await scrapeUrlRaw("https://example.com");
+    expect(result.text).toContain("No auditions");
   });
 });
