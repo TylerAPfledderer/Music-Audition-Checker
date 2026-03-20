@@ -102,36 +102,36 @@ export async function preflightUrls(
     };
 
     try {
-      let text: string;
+      // Mirror the scrapeUrlRaw pattern: rawHtml lives in the outer scope so it
+      // retains its value even if a subsequent Puppeteer assignment throws.
+      let rawHtml = "";
       let usedPuppeteer = false;
 
-      let shortHttpText: string | null = null;
       try {
-        const html = await fetchPage(urlConfig.url);
-        const candidate = stripHtml(extractMainContent(html));
-        if (candidate.length < MIN_CONTENT_LENGTH) {
-          shortHttpText = candidate; // save for fallback before throwing
-          throw new Error(`Content too short (${candidate.length} chars)`);
-        }
-        text = candidate;
-      } catch (fetchErr) {
-        console.log(`    ↳ Fetch insufficient, trying Puppeteer...`);
+        rawHtml = await fetchPage(urlConfig.url);
+      } catch (_httpErr) {
+        // fetchPage completely failed — rawHtml stays ""
+      }
+
+      if (rawHtml.length < MIN_CONTENT_LENGTH) {
+        console.log(`    ↳ Fetch insufficient (${rawHtml.length} chars), trying Puppeteer...`);
         try {
-          const html = await fetchWithPuppeteer(urlConfig.url);
-          text = stripHtml(extractMainContent(html));
+          rawHtml = await fetchWithPuppeteer(urlConfig.url);
           usedPuppeteer = true;
         } catch (puppeteerErr) {
-          if (shortHttpText !== null) {
-            // HTTP returned something but it was short; Puppeteer timed out (bot
-            // detection). Use the short HTTP content rather than marking as failed.
-            console.log(`    ↳ Puppeteer also failed — using short HTTP content`);
-            text = shortHttpText;
+          if (rawHtml.length > 0) {
+            // HTTP returned something (e.g. 403 response body); Puppeteer timed
+            // out due to bot detection. Use the short HTTP content — better than
+            // marking the URL as a hard failure.
+            console.log(`    ↳ Puppeteer also failed — using short HTTP content (${rawHtml.length} chars)`);
           } else {
-            // Both HTTP and Puppeteer failed entirely — no content at all.
+            // Both HTTP and Puppeteer completely failed — no content at all.
             throw puppeteerErr;
           }
         }
       }
+
+      const text = stripHtml(extractMainContent(rawHtml));
 
       result.method = usedPuppeteer ? "puppeteer" : "fetch";
       result.charCount = text.length;
