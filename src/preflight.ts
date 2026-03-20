@@ -1,7 +1,7 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { google } from "googleapis";
 
-import { MIN_CONTENT_LENGTH, fetchPage, fetchWithPuppeteer, stripHtml, extractMainContent } from "./scraper";
+import { MIN_CONTENT_LENGTH, fetchPage, fetchWithFirecrawl, stripHtml, extractMainContent } from "./scraper";
 import { UrlConfig, ProbeFailure } from "./email";
 import { probeIsAuditionPage } from "./claude";
 
@@ -55,7 +55,7 @@ interface ProbeResult {
   name: string;
   url: string;
   ok: boolean;
-  method: "fetch" | "puppeteer";
+  method: "fetch" | "firecrawl";
   charCount: number;
   isAuditionPage: boolean;
   claudeReason: string;
@@ -103,7 +103,7 @@ export async function preflightUrls(
 
     try {
       let text: string;
-      let usedPuppeteer = false;
+      let usedFirecrawl = false;
 
       try {
         const html = await fetchPage(urlConfig.url);
@@ -112,13 +112,13 @@ export async function preflightUrls(
           throw new Error(`Content too short (${text.length} chars)`);
         }
       } catch (fetchErr) {
-        console.log(`    ↳ Fetch insufficient, trying Puppeteer...`);
-        const html = await fetchWithPuppeteer(urlConfig.url);
-        text = stripHtml(extractMainContent(html));
-        usedPuppeteer = true;
+        console.log(`    ↳ Fetch insufficient, trying Firecrawl...`);
+        const fc = await fetchWithFirecrawl(urlConfig.url);
+        text = fc.text; // already clean markdown
+        usedFirecrawl = true;
       }
 
-      result.method = usedPuppeteer ? "puppeteer" : "fetch";
+      result.method = usedFirecrawl ? "firecrawl" : "fetch";
       result.charCount = text.length;
       result.text = text; // retain for main run
       result.ok = true;

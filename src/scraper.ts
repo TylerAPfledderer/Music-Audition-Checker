@@ -46,42 +46,45 @@ export function fetchPage(url: string): Promise<string> {
   });
 }
 
-// ─── Puppeteer fallback ───────────────────────────────────────────────────────
+// ─── Firecrawl fallback ───────────────────────────────────────────────────────
 
 /**
- * JS-rendered pages (SPAs, lazy-loaded content) return near-empty HTML via plain HTTP.
- * Puppeteer is the escape hatch for those cases. The dynamic import keeps this optional:
- * the script starts and runs standard URLs even if puppeteer isn't installed, only
- * failing at the point a JS-rendered page is actually needed.
+ * Firecrawl fallback for JS-rendered and bot-protected pages. Handles JS rendering,
+ * bot detection bypass, and proxy rotation. The dynamic import keeps this optional:
+ * the script starts and runs standard URLs even without the package or API key,
+ * only engaging Firecrawl when FIRECRAWL_API_KEY is set and plain HTTP falls short.
+ *
+ * Returns markdown (already LLM-ready, no stripHtml needed), rendered HTML,
+ * and an extracted links array for downstream URL discovery.
  */
-export async function fetchWithPuppeteer(url: string): Promise<string> {
-  // Dynamically import so the script still runs if puppeteer isn't installed
+export async function fetchWithFirecrawl(
+  url: string
+): Promise<{ text: string; html: string; links: string[] }> {
+  const apiKey = process.env.FIRECRAWL_API_KEY;
+  if (!apiKey) throw new Error("FIRECRAWL_API_KEY is not set — Firecrawl unavailable");
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let puppeteer: any;
+  let FirecrawlModule: any;
   try {
-    puppeteer = await import("puppeteer");
+    FirecrawlModule = await import("@mendable/firecrawl-js");
   } catch {
     throw new Error(
-      "Puppeteer not installed. Run: npm install puppeteer  (or add to package.json)"
+      "@mendable/firecrawl-js not installed. Run: npm install @mendable/firecrawl-js"
     );
   }
 
-  const browser = await puppeteer.default.launch({
-    headless: true,
-    args: ["--no-sandbox", "--disable-setuid-sandbox"],
+  // Default export is `Firecrawl` (v2 client); fall back to named `FirecrawlAppV1` for older installs
+  const FirecrawlClass = FirecrawlModule.default ?? FirecrawlModule.FirecrawlClient;
+  const app = new FirecrawlClass({ apiKey });
+  const result = await app.scrape(url, {
+    formats: ["markdown", "html", "links"],
   });
-  try {
-    const page = await browser.newPage();
-    await page.setUserAgent(
-      "Mozilla/5.0 (compatible; AuditionChecker/1.0; +https://github.com)"
-    );
-    await page.goto(url, { waitUntil: "domcontentloaded", timeout: 60000 });
-    // Wait a bit more for lazy-loaded content
-    await new Promise((r) => setTimeout(r, 2000));
-    return await page.content();
-  } finally {
-    await browser.close();
-  }
+
+  return {
+    text: result.markdown ?? "",
+    html: result.html ?? "",
+    links: result.links ?? [],
+  };
 }
 
 // ─── HTML stripper ────────────────────────────────────────────────────────────
@@ -171,25 +174,38 @@ export function extractMainContent(html: string): string {
 // ─── Scrape with fallback ─────────────────────────────────────────────────────
 
 /**
- * Chain of Responsibility: plain HTTP → Puppeteer, with a content-length gate as
- * the second fallback trigger. Returns both raw HTML and stripped text so callers
- * that need href extraction can get it without a second fetch.
+ * Chain of Responsibility: plain HTTP → Firecrawl (when FIRECRAWL_API_KEY is set),
+ * with a content-length gate as the Firecrawl trigger. Returns both the text content
+ * and raw HTML so callers that need href extraction can get it without a second fetch.
+ * When Firecrawl is used, also returns a `links` array of extracted URLs.
  */
-export async function scrapeUrlRaw(url: string): Promise<{ text: string; html: string }> {
+export async function scrapeUrlRaw(
+  url: string
+): Promise<{ text: string; html: string; links?: string[] }> {
   console.log(`  Fetching: ${url}`);
-  let html: string;
+  let html = "";
+
+  // Tier 1: native HTTP
   try {
     html = await fetchPage(url);
   } catch (err) {
-    console.log(`  Fetch failed (${err}), trying Puppeteer...`);
-    html = await fetchWithPuppeteer(url);
+    console.log(`  Fetch failed (${err}), trying Firecrawl...`);
   }
 
-  if (html.length < MIN_CONTENT_LENGTH) {
-    console.log(
-      `  Content too short (${html.length} chars), falling back to Puppeteer...`
-    );
-    html = await fetchWithPuppeteer(url);
+  // Tier 2: Firecrawl — on fetch failure OR content too short
+  if (html.length < MIN_CONTENT_LENGTH && process.env.FIRECRAWL_API_KEY) {
+    if (html.length > 0) {
+      console.log(`  Content too short (${html.length} chars), falling back to Firecrawl...`);
+    }
+    try {
+      const fc = await fetchWithFirecrawl(url);
+      console.log(`  Firecrawl succeeded`);
+      // Firecrawl markdown is already clean — skip stripHtml
+      return { text: fc.text, html: fc.html, links: fc.links };
+    } catch (fcErr) {
+      console.warn(`  Firecrawl failed: ${fcErr}`);
+      // Fall through — return whatever plain HTTP gave us
+    }
   }
 
   return { text: stripHtml(html), html };

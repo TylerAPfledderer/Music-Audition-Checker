@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { stripHtml, contentHash, normalizeForHash, extractAuditionSignals, MIN_CONTENT_LENGTH } from "../src/scraper";
 
 describe("MIN_CONTENT_LENGTH", () => {
@@ -180,5 +180,30 @@ describe("normalizeForHash", () => {
   it("collapses whitespace after stripping", () => {
     const result = normalizeForHash("Open positions  3 hours ago  apply now");
     expect(result).toBe("Open positions apply now");
+  });
+});
+
+// ─── fetchWithFirecrawl — key gate ───────────────────────────────────────────
+// Full Firecrawl integration tests (with mocked client) live in scraper-network.test.ts.
+// This block covers only the pure env-guard that requires no module mocking.
+
+describe("fetchWithFirecrawl — key gate", () => {
+  const savedKey = process.env.FIRECRAWL_API_KEY;
+
+  afterEach(() => {
+    if (savedKey === undefined) {
+      delete process.env.FIRECRAWL_API_KEY;
+    } else {
+      process.env.FIRECRAWL_API_KEY = savedKey;
+    }
+    vi.resetModules();
+  });
+
+  it("throws immediately when FIRECRAWL_API_KEY is not set", async () => {
+    delete process.env.FIRECRAWL_API_KEY;
+    const { fetchWithFirecrawl } = await import("../src/scraper");
+    await expect(fetchWithFirecrawl("https://example.com")).rejects.toThrow(
+      "FIRECRAWL_API_KEY is not set"
+    );
   });
 });

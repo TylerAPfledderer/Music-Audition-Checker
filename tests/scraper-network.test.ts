@@ -1,31 +1,16 @@
 /**
- * Tests for network timeout configuration in scraper.ts.
- * These guard against accidentally reducing timeouts that caused real CI failures
- * (e.g., Playbill's JS-rendered SPA timing out in GitHub Actions).
+ * Tests for network timeout configuration and Firecrawl fallback in scraper.ts.
+ * These guard against accidentally breaking the HTTP timeout and the Firecrawl
+ * API key gate.
  */
-import { vi, describe, it, expect, beforeEach } from "vitest";
-
-// vi.hoisted ensures these refs are available inside the vi.mock() factories,
-// which are hoisted to the top of the file before any imports.
-const { mockGoto, mockContent, mockNewPage, mockBrowserClose, mockLaunch } =
-  vi.hoisted(() => ({
-    mockGoto: vi.fn(),
-    mockContent: vi.fn(),
-    mockNewPage: vi.fn(),
-    mockBrowserClose: vi.fn(),
-    mockLaunch: vi.fn(),
-  }));
-
-vi.mock("puppeteer", () => ({
-  default: { launch: mockLaunch },
-}));
+import { vi, describe, it, expect, beforeEach, afterEach } from "vitest";
 
 vi.mock("https", () => ({
   get: vi.fn(),
 }));
 
 import * as https from "https";
-import { fetchPage, fetchWithPuppeteer } from "../src/scraper";
+import { fetchPage } from "../src/scraper";
 
 // ─── fetchPage ────────────────────────────────────────────────────────────────
 
@@ -53,42 +38,66 @@ describe("fetchPage", () => {
   });
 });
 
-// ─── fetchWithPuppeteer ───────────────────────────────────────────────────────
+// ─── fetchWithFirecrawl ───────────────────────────────────────────────────────
 
-describe("fetchWithPuppeteer", () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
+describe("fetchWithFirecrawl", () => {
+  const savedKey = process.env.FIRECRAWL_API_KEY;
 
-    mockGoto.mockResolvedValue(undefined);
-    mockContent.mockResolvedValue("<html><body>loaded page content</body></html>");
-    mockNewPage.mockResolvedValue({
-      setUserAgent: vi.fn().mockResolvedValue(undefined),
-      goto: mockGoto,
-      content: mockContent,
-    });
-    mockBrowserClose.mockResolvedValue(undefined);
-    mockLaunch.mockResolvedValue({
-      newPage: mockNewPage,
-      close: mockBrowserClose,
-    });
+  afterEach(() => {
+    if (savedKey === undefined) {
+      delete process.env.FIRECRAWL_API_KEY;
+    } else {
+      process.env.FIRECRAWL_API_KEY = savedKey;
+    }
+    vi.resetModules();
   });
 
-  it("uses a 60-second navigation timeout", async () => {
-    await fetchWithPuppeteer("https://playbill.com/jobs");
-
-    expect(mockGoto).toHaveBeenCalledWith(
-      "https://playbill.com/jobs",
-      expect.objectContaining({ timeout: 60000 })
+  it("throws immediately when FIRECRAWL_API_KEY is not set", async () => {
+    delete process.env.FIRECRAWL_API_KEY;
+    const { fetchWithFirecrawl } = await import("../src/scraper");
+    await expect(fetchWithFirecrawl("https://example.com")).rejects.toThrow(
+      "FIRECRAWL_API_KEY is not set"
     );
   });
 
-  it("always closes the browser, even on error", async () => {
-    mockGoto.mockRejectedValue(new Error("Navigation timeout"));
+  it("calls scrape() with markdown, html, and links formats", async () => {
+    process.env.FIRECRAWL_API_KEY = "fc-test-key";
 
-    await expect(
-      fetchWithPuppeteer("https://example.com")
-    ).rejects.toThrow("Navigation timeout");
+    const mockScrape = vi.fn().mockResolvedValue({
+      markdown: "# Audition page",
+      html: "<h1>Audition page</h1>",
+      links: ["https://playbill.com/job/trumpet-abc"],
+    });
+    vi.doMock("@mendable/firecrawl-js", () => ({
+      default: class MockFirecrawl {
+        scrape = mockScrape;
+      },
+    }));
 
-    expect(mockBrowserClose).toHaveBeenCalled();
+    const { fetchWithFirecrawl } = await import("../src/scraper");
+    const result = await fetchWithFirecrawl("https://example.com");
+
+    expect(mockScrape).toHaveBeenCalledWith(
+      "https://example.com",
+      expect.objectContaining({ formats: expect.arrayContaining(["markdown", "html", "links"]) })
+    );
+    expect(result.text).toBe("# Audition page");
+    expect(result.html).toBe("<h1>Audition page</h1>");
+    expect(result.links).toEqual(["https://playbill.com/job/trumpet-abc"]);
+  });
+
+  it("propagates errors thrown by the Firecrawl client", async () => {
+    process.env.FIRECRAWL_API_KEY = "fc-test-key";
+
+    vi.doMock("@mendable/firecrawl-js", () => ({
+      default: class MockFirecrawl {
+        scrape = vi.fn().mockRejectedValue(new Error("Page blocked by anti-bot"));
+      },
+    }));
+
+    const { fetchWithFirecrawl } = await import("../src/scraper");
+    await expect(fetchWithFirecrawl("https://example.com")).rejects.toThrow(
+      "Page blocked by anti-bot"
+    );
   });
 });

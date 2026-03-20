@@ -9,7 +9,7 @@ A GitHub Actions cron job that monitors symphony orchestra audition pages weekly
 - TypeScript + Node.js (CommonJS, ES2022 target)
 - Anthropic Claude API (`@anthropic-ai/sdk`) — content classification
 - Google Gmail API (`googleapis`) — OAuth2 email delivery
-- Puppeteer — headless browser fallback for JS-rendered pages
+- Firecrawl (`@mendable/firecrawl-js`) — managed scraping fallback for JS-rendered and bot-protected pages
 - Vitest — test suite
 - GitHub Actions — weekly cron scheduler and CI
 
@@ -19,7 +19,7 @@ A GitHub Actions cron job that monitors symphony orchestra audition pages weekly
 src/
   check-auditions.ts   # Main orchestrator (preflight + main run)
   playbill-crawler.ts  # Two-stage Playbill job board crawler
-  scraper.ts           # HTTP/Puppeteer fetch utilities
+  scraper.ts           # HTTP/Firecrawl fetch utilities
   setup-oauth.ts       # One-time Gmail OAuth2 token setup script
 tests/
   check-auditions.test.ts
@@ -64,8 +64,8 @@ npm test               # Run vitest test suite
 
 ## Key Conventions
 
-- **No external HTTP library** — `scraper.ts` uses Node's native `http`/`https` modules
-- **Puppeteer imported dynamically** — only loaded if plain HTTP fails, so script runs without it installed
+- **No external HTTP library** — `scraper.ts` uses Node's native `http`/`https` modules for the primary fetch
+- **Firecrawl imported dynamically** — only engaged when `FIRECRAWL_API_KEY` is set and plain HTTP returns insufficient content; script runs without it
 - **Rising-edge notifications** — email sent when a page first becomes relevant, or when new relevant items appear on an already-relevant page (`shouldNotify()` in `check-auditions.ts`); non-trumpet content changes are ignored
 - **At-least-once delivery** — Playbill `notified` flags written only after successful email send
 - **Content hashing** — SHA256 (16-char prefix) via `contentHash()` to skip unchanged pages
@@ -91,6 +91,7 @@ Tests live in `tests/` and mirror `src/`. Run with `npm test`.
 | `GMAIL_LABEL_NAME` | (Optional) Gmail label name to apply via `messages.insert`. Only works when `NOTIFY_EMAIL` is the same account as the OAuth credentials (`GMAIL_USER`). Label is created automatically if it doesn't exist. |
 | `DRY_RUN` | Set to `true` to skip email and state writes |
 | `GH_TOKEN` | GitHub token for creating issues on failures |
+| `FIRECRAWL_API_KEY` | (Optional) Firecrawl API key. When set, enables Firecrawl as a fallback scraper after native HTTP fails or returns too-short content. Also surfaces a `links` array for higher-quality Playbill job URL extraction. |
 
 Locally, store in `.env.local` (gitignored). In Actions, store as GitHub Secrets.
 
