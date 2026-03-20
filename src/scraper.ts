@@ -133,13 +133,14 @@ export function normalizeForHash(text: string): string {
  * hash input.
  */
 export function extractAuditionSignals(text: string): string {
-  // Expanded to include instrument/orchestral terms so short headings like
-  // "Principal Trumpet" are captured by keyword match rather than a length
-  // heuristic. The length-based fallback (<120 chars) has been removed because
-  // it also captured rotating UI fragments (nav items, event counters, copyright
-  // notices) that caused spurious hash changes when audition content was unchanged.
+  // Keyword set is intentionally narrow: only terms that are specific to audition
+  // and employment content. Broad orchestral terms like "orchestra", "symphony",
+  // "musician", "ensemble", "section", and "associate" have been excluded because
+  // they appear throughout orchestra websites in news articles, bios, and event
+  // listings, causing those rotating sentences to pollute the hash input and
+  // produce spurious hash changes when audition content is unchanged.
   const AUDITION_SIGNALS =
-    /\b(audition|auditions|vacancy|vacancies|position|opening|application|applications|apply|deadline|excerpt|substitute|employment|hiring|compensation|pay|trumpet|brass|horn|trombone|tuba|percussion|strings|woodwind|principal|section|associate|musician|orchestra|symphony|ensemble|resume)\b/i;
+    /\b(audition|auditions|vacancy|vacancies|position|opening|application|applications|apply|deadline|excerpt|substitute|employment|hiring|compensation|pay|trumpet|brass|horn|trombone|tuba|percussion|strings|woodwind|principal|resume)\b/i;
 
   // Split on sentence-ending punctuation followed by a capital letter (new sentence)
   const sentences = text.split(/(?<=[.!?;])\s+(?=[A-Z])/);
