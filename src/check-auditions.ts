@@ -109,6 +109,37 @@ function saveState(state: StateFile): void {
 // ─── Notification predicate ───────────────────────────────────────────────────
 
 /**
+ * Maps a Claude-generated item label to a stable canonical form.
+ *
+ * Claude's output is non-deterministic — "Sub list for all instruments",
+ * "Substitute musician positions", and "Section and sub positions for all
+ * instruments" are all the same underlying opportunity. This funnel maps
+ * semantically equivalent labels to a single canonical string so that
+ * wording variation across runs never triggers a spurious re-notification.
+ *
+ * Rules are ordered most-specific first (trumpet qualifiers before generic
+ * "trumpet", so "Principal Trumpet" hits the right bucket). The fallback
+ * lowercases and strips parentheticals/dash-suffixes so punctuation noise
+ * is eliminated for any label that doesn't match a known category.
+ */
+export function canonicalizeLabel(label: string): string {
+  const l = label
+    .toLowerCase()
+    .replace(/\s*\([^)]*\)/g, "") // strip "(contact operations manager)" etc.
+    .replace(/\s*-\s+\S.*$/, "") // strip " - general orchestral" etc.
+    .trim();
+
+  if (/\b(principal|associate|1st|first)\s+trumpet\b/.test(l)) return "principal trumpet";
+  if (/\b(second|2nd|co.?principal)\s+trumpet\b/.test(l)) return "second trumpet";
+  if (/\bsection\s+trumpet\b/.test(l)) return "section trumpet";
+  if (/\btrumpet\b/.test(l)) return "trumpet";
+  if (/\bsub(stitute)?\b/.test(l)) return "substitute list";
+  if (/\b(open|annual|general)\s+(position|audition|orch)/.test(l)) return "open positions";
+
+  return l; // fallback: lowercase + stripped
+}
+
+/**
  * Determines whether a standard page should trigger a new user notification.
  *
  * Fires on two conditions:
@@ -120,6 +151,10 @@ function saveState(state: StateFile): void {
  *
  * `notifiedItems` being empty means no notification was ever sent, which always
  * counts as "new" when the page is relevant.
+ *
+ * `notifiedItems` are stored in canonical form (via `canonicalizeLabel`). Incoming
+ * `currentItems` are canonicalized before comparison so wording variants of the
+ * same opportunity are treated as already-seen.
  */
 export function shouldNotify(
   isNowRelevant: boolean,
@@ -129,7 +164,7 @@ export function shouldNotify(
 ): boolean {
   if (!isNowRelevant) return false;
   if (!wasRelevant) return true; // rising edge
-  return currentItems.some((item) => !notifiedItems.includes(item));
+  return currentItems.some((item) => !notifiedItems.includes(canonicalizeLabel(item)));
 }
 
 // ─── Main ─────────────────────────────────────────────────────────────────────
@@ -255,23 +290,24 @@ async function main(): Promise<void> {
         // was introduced. Silently initialize the field from the current Claude output
         // so the next run has a populated baseline to compare against.
         console.log(`  ℹ️  Initializing item tracking for already-relevant page (no email sent)`);
-        state.pages[urlConfig.url].notifiedRelevantItems = [...new Set(analysis.relevantItems)];
+        state.pages[urlConfig.url].notifiedRelevantItems = [
+          ...new Set(analysis.relevantItems.map(canonicalizeLabel)),
+        ];
       } else if (shouldNotify(analysis.hasRelevantAuditions, wasRelevant, analysis.relevantItems, notifiedItems)) {
         const reason = !wasRelevant ? "NEW relevant audition found" : "Relevant content updated";
         console.log(`  🎺 ${reason}!`);
         newFindings.push({ config: urlConfig, analysis });
-        // Merge old and new items (union, deduped) rather than replacing. Claude's
-        // relevantItems labels are non-deterministic — a synonym label on the next run
-        // should not re-trigger a notification. Accumulating all ever-seen labels
-        // prevents that bounce loop while still detecting genuinely new items.
+        // Canonicalize and merge: store the union of previously-notified canonical
+        // labels and the current run's canonical labels. This prevents any future
+        // wording variant from being treated as a new item.
         state.pages[urlConfig.url].notifiedRelevantItems = [
-          ...new Set([...notifiedItems, ...analysis.relevantItems]),
+          ...new Set([...notifiedItems, ...analysis.relevantItems.map(canonicalizeLabel)]),
         ];
       } else if (analysis.hasRelevantAuditions) {
-        // Still relevant, no new items. Absorb any synonym labels Claude returned
-        // so a future hash change won't rediscover them and fire a false positive.
+        // Still relevant, no new items. Absorb canonical labels from this run
+        // so the state stays current without triggering a notification.
         state.pages[urlConfig.url].notifiedRelevantItems = [
-          ...new Set([...notifiedItems, ...analysis.relevantItems]),
+          ...new Set([...notifiedItems, ...analysis.relevantItems.map(canonicalizeLabel)]),
         ];
         console.log(`  ℹ️  Still relevant, no new items since last notification`);
       }

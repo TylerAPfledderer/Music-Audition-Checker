@@ -116,9 +116,17 @@ describe("extractAuditionSignals", () => {
     expect(extractAuditionSignals(text)).toBe(text);
   });
 
-  it("retains a sentence containing the expanded keyword 'orchestra'", () => {
+  it("retains a sentence containing the keyword 'hiring'", () => {
     const text = "The orchestra is hiring for the upcoming season.";
     expect(extractAuditionSignals(text)).toBe(text);
+  });
+
+  it("filters out orchestra/symphony/musician sentences that don't contain audition keywords", () => {
+    // These broad orchestral terms were removed from AUDITION_SIGNALS because they
+    // appear in news, bios, and event listings — causing hash churn on rotating content.
+    expect(extractAuditionSignals("The Fayetteville Symphony performed Beethoven's 9th.")).toBe("");
+    expect(extractAuditionSignals("Featured musician: Jane Doe, violin.")).toBe("");
+    expect(extractAuditionSignals("The orchestra announced its 2026-27 season.")).toBe("");
   });
 
   it("filters out short non-audition phrases that previously caused hash churn", () => {

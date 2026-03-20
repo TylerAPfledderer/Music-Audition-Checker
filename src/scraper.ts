@@ -68,13 +68,33 @@ export async function fetchWithPuppeteer(url: string): Promise<string> {
 
   const browser = await puppeteer.default.launch({
     headless: true,
-    args: ["--no-sandbox", "--disable-setuid-sandbox"],
+    args: ["--no-sandbox", "--disable-setuid-sandbox", "--disable-blink-features=AutomationControlled"],
   });
   try {
     const page = await browser.newPage();
     await page.setUserAgent(
       "Mozilla/5.0 (compatible; AuditionChecker/1.0; +https://github.com)"
     );
+
+    // Remove the navigator.webdriver flag that identifies headless Chrome to
+    // bot-detection systems. Must be set before navigation begins.
+    await page.evaluateOnNewDocument(() => {
+      Object.defineProperty(navigator, "webdriver", { get: () => undefined });
+    });
+
+    // Block heavy assets that don't affect text content — images, fonts, media,
+    // and stylesheets can add many seconds of load time on orchestra websites.
+    // Scripts and XHR/fetch are kept so JS-rendered content still hydrates.
+    await page.setRequestInterception(true);
+    page.on("request", (req: any) => {
+      const type: string = req.resourceType();
+      if (["image", "stylesheet", "font", "media"].includes(type)) {
+        req.abort();
+      } else {
+        req.continue();
+      }
+    });
+
     await page.goto(url, { waitUntil: "domcontentloaded", timeout: 60000 });
     // Wait a bit more for lazy-loaded content
     await new Promise((r) => setTimeout(r, 2000));
@@ -130,13 +150,14 @@ export function normalizeForHash(text: string): string {
  * hash input.
  */
 export function extractAuditionSignals(text: string): string {
-  // Expanded to include instrument/orchestral terms so short headings like
-  // "Principal Trumpet" are captured by keyword match rather than a length
-  // heuristic. The length-based fallback (<120 chars) has been removed because
-  // it also captured rotating UI fragments (nav items, event counters, copyright
-  // notices) that caused spurious hash changes when audition content was unchanged.
+  // Keyword set is intentionally narrow: only terms that are specific to audition
+  // and employment content. Broad orchestral terms like "orchestra", "symphony",
+  // "musician", "ensemble", "section", and "associate" have been excluded because
+  // they appear throughout orchestra websites in news articles, bios, and event
+  // listings, causing those rotating sentences to pollute the hash input and
+  // produce spurious hash changes when audition content is unchanged.
   const AUDITION_SIGNALS =
-    /\b(audition|auditions|vacancy|vacancies|position|opening|application|applications|apply|deadline|excerpt|substitute|employment|hiring|compensation|pay|trumpet|brass|horn|trombone|tuba|percussion|strings|woodwind|principal|section|associate|musician|orchestra|symphony|ensemble|resume)\b/i;
+    /\b(audition|auditions|vacancy|vacancies|position|opening|application|applications|apply|deadline|excerpt|substitute|employment|hiring|compensation|pay|trumpet|brass|horn|trombone|tuba|percussion|strings|woodwind|principal|resume)\b/i;
 
   // Split on sentence-ending punctuation followed by a capital letter (new sentence)
   const sentences = text.split(/(?<=[.!?;])\s+(?=[A-Z])/);
@@ -189,7 +210,14 @@ export async function scrapeUrlRaw(url: string): Promise<{ text: string; html: s
     console.log(
       `  Content too short (${html.length} chars), falling back to Puppeteer...`
     );
-    html = await fetchWithPuppeteer(url);
+    try {
+      html = await fetchWithPuppeteer(url);
+    } catch (puppeteerErr) {
+      // Puppeteer failed (e.g. bot-detection timeout) — use the short HTTP
+      // content as a last resort rather than propagating a hard failure.
+      // Minimal content is better than nothing: Claude can still analyze it.
+      console.log(`  ↳ Puppeteer also failed (${puppeteerErr}) — using short HTTP content`);
+    }
   }
 
   return { text: stripHtml(html), html };
