@@ -70,6 +70,37 @@ export function extractJobUrlsFromHtml(html: string): string[] {
   return results;
 }
 
+// ─── Playbill: smart job URL extraction ──────────────────────────────────────
+
+/**
+ * Prefers Firecrawl's fully-resolved links array for URL extraction when available —
+ * these are absolute, deduplicated URLs with no regex fragility. Falls back to the
+ * existing regex approach when Firecrawl was not used (links is undefined or empty).
+ */
+export function extractPlaybillJobUrls(
+  html: string,
+  firecrawlLinks?: string[]
+): string[] {
+  if (firecrawlLinks && firecrawlLinks.length > 0) {
+    const seen = new Set<string>();
+    const results: string[] = [];
+    for (const link of firecrawlLinks) {
+      if (
+        /^https?:\/\/(?:www\.)?playbill\.com\/job\/[^?#]+$/i.test(link) &&
+        !seen.has(link)
+      ) {
+        seen.add(link);
+        results.push(link);
+      }
+    }
+    if (results.length > 0) {
+      console.log(`  Using ${results.length} job URL(s) from Firecrawl links array`);
+      return results;
+    }
+  }
+  return extractJobUrlsFromHtml(html);
+}
+
 // ─── Playbill: extract musician listings from index page ──────────────────────
 
 /**
@@ -230,8 +261,9 @@ export async function processPlaybillUrl(
   // 1. Fetch and hash the index page
   let indexText: string;
   let indexHtml: string;
+  let firecrawlLinks: string[] | undefined;
   try {
-    ({ text: indexText, html: indexHtml } = await scrapeUrlRaw(urlConfig.url));
+    ({ text: indexText, html: indexHtml, links: firecrawlLinks } = await scrapeUrlRaw(urlConfig.url));
   } catch (err) {
     console.error(`  ❌ Failed to fetch Playbill index: ${err}`);
     return findings;
@@ -244,8 +276,8 @@ export async function processPlaybillUrl(
     console.log(`  🔍 Index page changed — extracting musician listings...`);
     state.playbillIndexHash = indexHash;
 
-    // 2. Extract job URLs from raw HTML (preserves full slugs including UUID hashes)
-    const jobUrls = extractJobUrlsFromHtml(indexHtml);
+    // 2. Extract job URLs — prefer Firecrawl's resolved links, fall back to HTML regex
+    const jobUrls = extractPlaybillJobUrls(indexHtml, firecrawlLinks);
     console.log(`  → Found ${jobUrls.length} job URL(s) in page HTML`);
 
     // 3. Extract musician listings from the index

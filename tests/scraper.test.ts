@@ -1,5 +1,5 @@
-import { describe, it, expect } from "vitest";
-import { stripHtml, contentHash, normalizeForHash, extractAuditionSignals, MIN_CONTENT_LENGTH } from "../src/scraper";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { stripHtml, contentHash, normalizeForHash, extractAuditionSignals, extractAuditionLinks, MIN_CONTENT_LENGTH } from "../src/scraper";
 
 describe("MIN_CONTENT_LENGTH", () => {
   it("is 500", () => {
@@ -188,5 +188,138 @@ describe("normalizeForHash", () => {
   it("collapses whitespace after stripping", () => {
     const result = normalizeForHash("Open positions  3 hours ago  apply now");
     expect(result).toBe("Open positions apply now");
+  });
+});
+
+// ─── extractAuditionLinks ─────────────────────────────────────────────────────
+
+describe("extractAuditionLinks", () => {
+  const BASE = "https://orchestra.example.com/auditions";
+
+  it("returns empty array when no audition keywords in HTML links", () => {
+    const html = '<a href="/about">About Us</a> <a href="/concerts">Concerts</a>';
+    expect(extractAuditionLinks(html, BASE)).toEqual([]);
+  });
+
+  it("extracts a link when anchor text contains 'Auditions'", () => {
+    const html = '<a href="/auditions/winds">Winds Auditions</a>';
+    expect(extractAuditionLinks(html, BASE)).toEqual([
+      "https://orchestra.example.com/auditions/winds",
+    ]);
+  });
+
+  it("extracts a link when href path contains 'audition'", () => {
+    const html = '<a href="/audition/trumpet">Apply here</a>';
+    expect(extractAuditionLinks(html, BASE)).toEqual([
+      "https://orchestra.example.com/audition/trumpet",
+    ]);
+  });
+
+  it("extracts a link when anchor text contains 'position'", () => {
+    const html = '<a href="/section/open">Principal Violin Position Available</a>';
+    expect(extractAuditionLinks(html, BASE)).toEqual([
+      "https://orchestra.example.com/section/open",
+    ]);
+  });
+
+  it("excludes external links (different hostname)", () => {
+    const html = '<a href="https://playbill.com/job/trumpet">Trumpet Audition</a>';
+    expect(extractAuditionLinks(html, BASE)).toEqual([]);
+  });
+
+  it("excludes self-links (same pathname as baseUrl)", () => {
+    const html = '<a href="/auditions">Back to Auditions</a>';
+    expect(extractAuditionLinks(html, BASE)).toEqual([]);
+  });
+
+  it("excludes .pdf links", () => {
+    const html = '<a href="/docs/audition-requirements.pdf">Audition Requirements</a>';
+    expect(extractAuditionLinks(html, BASE)).toEqual([]);
+  });
+
+  it("excludes image and media file links", () => {
+    const html = [
+      '<a href="/img/audition-poster.jpg">Audition Poster</a>',
+      '<a href="/media/audition-recording.mp4">Audition Recording</a>',
+    ].join(" ");
+    expect(extractAuditionLinks(html, BASE)).toEqual([]);
+  });
+
+  it("caps results at 3 links", () => {
+    const html = [
+      '<a href="/audition/1">Audition 1</a>',
+      '<a href="/audition/2">Audition 2</a>',
+      '<a href="/audition/3">Audition 3</a>',
+      '<a href="/audition/4">Audition 4</a>',
+    ].join(" ");
+    const result = extractAuditionLinks(html, BASE);
+    expect(result).toHaveLength(3);
+  });
+
+  it("deduplicates links that appear multiple times in HTML", () => {
+    const html = [
+      '<a href="/audition/winds">Winds Audition</a>',
+      '<a href="/audition/winds">Winds Audition (again)</a>',
+    ].join(" ");
+    expect(extractAuditionLinks(html, BASE)).toHaveLength(1);
+  });
+
+  it("normalizes relative hrefs to absolute URLs using baseUrl", () => {
+    const html = '<a href="/careers/opening">Career Opening</a>';
+    expect(extractAuditionLinks(html, BASE)).toEqual([
+      "https://orchestra.example.com/careers/opening",
+    ]);
+  });
+
+  it("uses firecrawlLinks when provided, filtered by keyword", () => {
+    const firecrawlLinks = [
+      "https://orchestra.example.com/audition/trumpet",
+      "https://orchestra.example.com/about",
+      "https://orchestra.example.com/jobs/principal-bass",
+    ];
+    const result = extractAuditionLinks("", BASE, firecrawlLinks);
+    expect(result).toEqual([
+      "https://orchestra.example.com/audition/trumpet",
+      "https://orchestra.example.com/jobs/principal-bass",
+    ]);
+  });
+
+  it("ignores HTML when firecrawlLinks is provided", () => {
+    // HTML has audition links but firecrawlLinks is an empty array — still use firecrawl path
+    const html = '<a href="/audition/winds">Winds Audition</a>';
+    // Empty firecrawlLinks array: still activates the firecrawl path, yields no results
+    expect(extractAuditionLinks(html, BASE, [])).toEqual([]);
+  });
+
+  it("strips query strings and fragments when normalizing URLs", () => {
+    const html = '<a href="/auditions/winds?ref=homepage#details">Winds Auditions</a>';
+    expect(extractAuditionLinks(html, BASE)).toEqual([
+      "https://orchestra.example.com/auditions/winds",
+    ]);
+  });
+});
+
+// ─── fetchWithFirecrawl — key gate ───────────────────────────────────────────
+// Full Firecrawl integration tests (with mocked client) live in scraper-network.test.ts.
+// This block covers only the pure env-guard that requires no module mocking.
+
+describe("fetchWithFirecrawl — key gate", () => {
+  const savedKey = process.env.FIRECRAWL_API_KEY;
+
+  afterEach(() => {
+    if (savedKey === undefined) {
+      delete process.env.FIRECRAWL_API_KEY;
+    } else {
+      process.env.FIRECRAWL_API_KEY = savedKey;
+    }
+    vi.resetModules();
+  });
+
+  it("throws immediately when FIRECRAWL_API_KEY is not set", async () => {
+    delete process.env.FIRECRAWL_API_KEY;
+    const { fetchWithFirecrawl } = await import("../src/scraper");
+    await expect(fetchWithFirecrawl("https://example.com")).rejects.toThrow(
+      "FIRECRAWL_API_KEY is not set"
+    );
   });
 });

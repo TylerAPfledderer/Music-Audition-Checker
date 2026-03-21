@@ -28,7 +28,7 @@ import dotenv from "dotenv";
 dotenv.config({ path: ".env.local" });
 import Anthropic from "@anthropic-ai/sdk";
 
-import { computePageHash, normalizeForHash, extractAuditionSignals } from "./scraper";
+import { computePageHash, normalizeForHash, extractAuditionSignals, extractAuditionLinks, scrapeUrl } from "./scraper";
 import { PlaybillFinding, PlaybillState, processPlaybillUrl } from "./playbill-crawler";
 import { UrlConfig, AuditionAnalysis, sendEmail } from "./email";
 import { analyzeWithClaude } from "./claude";
@@ -233,11 +233,12 @@ async function main(): Promise<void> {
 
       // Standard single-page flow
       // Reuse content fetched during preflight — no second HTTP request
-      const text = pageContentCache.get(urlConfig.url);
-      if (!text) {
+      const cached = pageContentCache.get(urlConfig.url);
+      if (!cached) {
         console.log(`  ⏭️  Skipping (failed preflight)`);
         continue;
       }
+      const { text, html: cachedHtml, links: cachedFirecrawlLinks } = cached;
       const hash = computePageHash(text);
       const previousState = state.pages[urlConfig.url];
 
@@ -260,7 +261,31 @@ async function main(): Promise<void> {
         debugLog(`[${urlConfig.name}] hash input (${signals.length} chars):\n${signals}`);
       }
       console.log(`  🔍 Content changed — analyzing with Claude...`);
-      const analysis = await analyzeWithClaude(claude, text, urlConfig.url, urlConfig.name);
+
+      // Drill into internal audition-detail links to avoid false positives from
+      // pages that list auditions as navigable link labels (e.g. "Winds Auditions"
+      // → sub-page). Without this, Claude must infer from the label alone, which
+      // causes over-notification when the actual instrument list excludes trumpet.
+      let analysisText = text;
+      const subLinks = extractAuditionLinks(cachedHtml, urlConfig.url, cachedFirecrawlLinks);
+      if (subLinks.length > 0) {
+        console.log(`  ↳ Found ${subLinks.length} audition sub-page(s) — fetching for context...`);
+        const subTexts: string[] = [];
+        for (const subUrl of subLinks) {
+          try {
+            const subText = await scrapeUrl(subUrl);
+            subTexts.push(`--- Sub-page: ${subUrl} ---\n${subText.slice(0, 2000)}`);
+            console.log(`    ✓ Fetched: ${subUrl}`);
+          } catch (err) {
+            console.warn(`    ⚠️  Could not fetch sub-page ${subUrl}: ${err}`);
+          }
+        }
+        if (subTexts.length > 0) {
+          analysisText = `${text}\n\n${subTexts.join("\n\n")}`;
+        }
+      }
+
+      const analysis = await analyzeWithClaude(claude, analysisText, urlConfig.url, urlConfig.name);
 
       console.log(
         `  → Relevant: ${analysis.hasRelevantAuditions} | Items: ${analysis.relevantItems.length}`
