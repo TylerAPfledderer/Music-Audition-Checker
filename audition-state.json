@@ -1,5 +1,5 @@
 {
-  "lastRun": "2026-03-21T02:56:07.396Z",
+  "lastRun": "2026-03-21T03:02:15.185Z",
   "pages": {
     "https://www.chamberorchestraofthetriangle.org/employment": {
       "url": "https://www.chamberorchestraofthetriangle.org/employment",
@@ -115,6 +115,15 @@
       "name": "Asheville Symphony",
       "lastChecked": "2026-03-19T21:59:47.908Z",
       "contentHash": "e89ec9d1e7265247",
+      "extractedSummary": null,
+      "hasRelevantAuditions": false,
+      "notifiedRelevantItems": []
+    },
+    "https://rso.com/auditions/": {
+      "url": "https://rso.com/auditions/",
+      "name": "Roanoke Symphony Orchestra",
+      "lastChecked": "2026-03-21T03:02:15.117Z",
+      "contentHash": "1b1e8f5f0307b649",
       "extractedSummary": null,
       "hasRelevantAuditions": false,
       "notifiedRelevantItems": []
