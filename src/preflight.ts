@@ -59,12 +59,14 @@ interface ProbeResult {
   charCount: number;
   isAuditionPage: boolean;
   claudeReason: string;
-  text?: string; // retained for reuse in main run
+  text?: string;   // retained for reuse in main run
+  html?: string;   // main-content-scoped HTML for sub-link extraction
+  links?: string[]; // Firecrawl links array when Firecrawl was used
   error?: string;
 }
 
 export interface PreflightUrlsResult {
-  contentCache: Map<string, string>; // url → text for passing URLs
+  contentCache: Map<string, { text: string; html: string; links?: string[] }>;
   failures: ProbeFailure[];
 }
 
@@ -104,10 +106,12 @@ export async function preflightUrls(
     try {
       let text: string;
       let usedFirecrawl = false;
+      let rawHtml = "";
+      let firecrawlLinks: string[] | undefined;
 
       try {
-        const html = await fetchPage(urlConfig.url);
-        text = stripHtml(extractMainContent(html));
+        rawHtml = await fetchPage(urlConfig.url);
+        text = stripHtml(extractMainContent(rawHtml));
         if (text.length < MIN_CONTENT_LENGTH) {
           throw new Error(`Content too short (${text.length} chars)`);
         }
@@ -115,12 +119,16 @@ export async function preflightUrls(
         console.log(`    ↳ Fetch insufficient, trying Firecrawl...`);
         const fc = await fetchWithFirecrawl(urlConfig.url);
         text = fc.text; // already clean markdown
+        rawHtml = fc.html;
+        firecrawlLinks = fc.links;
         usedFirecrawl = true;
       }
 
       result.method = usedFirecrawl ? "firecrawl" : "fetch";
       result.charCount = text.length;
-      result.text = text; // retain for main run
+      result.text = text;
+      result.html = extractMainContent(rawHtml); // scope to main content for link extraction
+      result.links = firecrawlLinks;
       result.ok = true;
 
       if (urlConfig.crawlMode === "playbill") {
@@ -191,7 +199,9 @@ export async function preflightUrls(
 
   return {
     contentCache: new Map(
-      results.filter((r) => r.ok && r.isAuditionPage).map((r) => [r.url, r.text!])
+      results
+        .filter((r) => r.ok && r.isAuditionPage)
+        .map((r) => [r.url, { text: r.text!, html: r.html!, links: r.links }])
     ),
     failures,
   };

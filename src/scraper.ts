@@ -172,6 +172,72 @@ export function extractMainContent(html: string): string {
   return html;
 }
 
+// ─── Audition sub-link extraction ────────────────────────────────────────────
+
+const MAX_SUBPAGE_LINKS = 3;
+
+const SUBPAGE_AUDITION_KEYWORDS =
+  /audition|position|opening|vacancy|vacancies|employment|career|job/i;
+const EXCLUDED_EXTENSIONS = /\.(pdf|jpe?g|png|gif|mp4|mp3|docx?|xlsx?)$/i;
+
+/**
+ * Extracts internal links from an orchestra auditions page that likely lead to
+ * audition detail sub-pages. Used before calling Claude so the analysis covers
+ * the full content tree, not just index-level link labels (e.g. "Winds Auditions").
+ *
+ * Prefers Firecrawl's resolved links array when available (already absolute +
+ * deduplicated). Falls back to regex extraction from raw HTML otherwise.
+ * Caps results at MAX_SUBPAGE_LINKS to bound extra fetch latency.
+ */
+export function extractAuditionLinks(
+  html: string,
+  baseUrl: string,
+  firecrawlLinks?: string[]
+): string[] {
+  const base = new URL(baseUrl);
+  const seen = new Set<string>();
+  const results: string[] = [];
+
+  const addLink = (href: string) => {
+    if (results.length >= MAX_SUBPAGE_LINKS) return;
+    try {
+      const url = new URL(href, baseUrl);
+      if (url.hostname !== base.hostname) return; // external — skip
+      const normalized = url.origin + url.pathname; // strip fragment + query
+      if (normalized === base.origin + base.pathname) return; // self-link
+      if (EXCLUDED_EXTENSIONS.test(url.pathname)) return;
+      if (!url.protocol.startsWith("http")) return;
+      if (seen.has(normalized)) return;
+      seen.add(normalized);
+      results.push(normalized);
+    } catch {
+      /* invalid URL — skip */
+    }
+  };
+
+  if (firecrawlLinks !== undefined) {
+    for (const link of firecrawlLinks) {
+      if (SUBPAGE_AUDITION_KEYWORDS.test(link)) addLink(link);
+    }
+  } else {
+    // Extract anchor elements: match keyword in href path OR visible anchor text
+    const pattern = /<a\s[^>]*href="([^"#][^"]*)"[^>]*>([\s\S]*?)<\/a>/gi;
+    let m: RegExpExecArray | null;
+    while ((m = pattern.exec(html)) !== null) {
+      const [, href, rawText] = m;
+      const anchorText = rawText.replace(/<[^>]+>/g, " ").trim();
+      if (
+        SUBPAGE_AUDITION_KEYWORDS.test(href) ||
+        SUBPAGE_AUDITION_KEYWORDS.test(anchorText)
+      ) {
+        addLink(href);
+      }
+    }
+  }
+
+  return results;
+}
+
 // ─── Scrape with fallback ─────────────────────────────────────────────────────
 
 /**
