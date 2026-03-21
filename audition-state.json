@@ -42,17 +42,6 @@
         "open positions"
       ]
     },
-    "https://rso.com/auditions/": {
-      "url": "https://rso.com/auditions/",
-      "name": "Roanoke Symphony Orchestra",
-      "lastChecked": "2026-03-20T22:27:09.474Z",
-      "contentHash": "1b1e8f5f0307b649",
-      "extractedSummary": "The Roanoke Symphony Orchestra has a \"Winds Auditions\" section available, which would typically include trumpet positions as trumpet is a standard wind instrument in orchestral settings. However, no specific dates or detailed information about the auditions are provided on this main auditions page.",
-      "hasRelevantAuditions": true,
-      "notifiedRelevantItems": [
-        "winds auditions"
-      ]
-    },
     "https://williamsburgsymphony.org/careers/": {
       "url": "https://williamsburgsymphony.org/careers/",
       "name": "Williamsburg Symphony Orchestra",
