@@ -1,5 +1,5 @@
 {
-  "lastRun": "2026-03-20T22:27:28.810Z",
+  "lastRun": "2026-03-21T02:56:07.396Z",
   "pages": {
     "https://www.chamberorchestraofthetriangle.org/employment": {
       "url": "https://www.chamberorchestraofthetriangle.org/employment",
@@ -22,9 +22,9 @@
     "https://www.fayettevillesymphony.org/auditions-and-employment/": {
       "url": "https://www.fayettevillesymphony.org/auditions-and-employment/",
       "name": "Fayetteville Symphony Orchestra",
-      "lastChecked": "2026-03-20T22:27:01.752Z",
-      "contentHash": "a8150e3b0694a3b1",
-      "extractedSummary": "The Fayetteville Symphony Orchestra currently has no active formal auditions, but they are accepting musicians for their substitute list. Interested trumpet players can email the Operations Manager to be considered for sub opportunities.",
+      "lastChecked": "2026-03-21T02:56:04.480Z",
+      "contentHash": "ab1bdc60f19f36bb",
+      "extractedSummary": "The Fayetteville Symphony Orchestra currently has no active audition submissions, but musicians interested in joining their substitute list can contact the Operations Manager via email. This would be relevant for trumpet players as sub lists typically include all orchestral instruments.",
       "hasRelevantAuditions": true,
       "notifiedRelevantItems": [
         "substitute list"
@@ -113,9 +113,9 @@
     "https://www.charlottesymphony.org/about/employment-auditions/": {
       "url": "https://www.charlottesymphony.org/about/employment-auditions/",
       "name": "Charlotte Symphony",
-      "lastChecked": "2026-03-19T21:59:51.770Z",
-      "contentHash": "64eda45ef52857ac",
-      "extractedSummary": "The Charlotte Symphony has a Second Trumpet audition scheduled for May 31 - June 2, 2026, with applications due May 1, 2026. This is a full-time, tenure track position starting September 2026 with a minimum weekly salary of $1,377.15.",
+      "lastChecked": "2026-03-21T02:56:07.293Z",
+      "contentHash": "baae268ce8d724b7",
+      "extractedSummary": "The Charlotte Symphony has a Second Trumpet audition scheduled for May 31 - June 2, 2026, which is after today's date. This is a full-time, tenure track position with employment starting September 2026, and applications are due May 1, 2026.",
       "hasRelevantAuditions": true,
       "notifiedRelevantItems": [
         "second trumpet"
