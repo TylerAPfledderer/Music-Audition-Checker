@@ -1,5 +1,5 @@
 {
-  "lastRun": "2026-03-23T08:28:01.137Z",
+  "lastRun": "2026-03-26T10:12:14.241Z",
   "pages": {
     "https://www.chamberorchestraofthetriangle.org/employment": {
       "url": "https://www.chamberorchestraofthetriangle.org/employment",
@@ -22,9 +22,9 @@
     "https://www.fayettevillesymphony.org/auditions-and-employment/": {
       "url": "https://www.fayettevillesymphony.org/auditions-and-employment/",
       "name": "Fayetteville Symphony Orchestra",
-      "lastChecked": "2026-03-23T08:27:52.319Z",
-      "contentHash": "4ae8b1da3b0852f5",
-      "extractedSummary": "The Fayetteville Symphony Orchestra currently has no active formal auditions, but they are accepting submissions for their substitute musician list. Musicians interested in joining the sub list can contact the Operations Manager via email, and this would include trumpet players.",
+      "lastChecked": "2026-03-26T10:12:03.421Z",
+      "contentHash": "3bd8a9a462ddedf1",
+      "extractedSummary": "While there are no active formal auditions currently posted, the Fayetteville Symphony Orchestra is accepting applications for their substitute musician list via email. Musicians interested in subbing should contact the Operations Manager, and this would include trumpet players since it's an orchestral sub list.",
       "hasRelevantAuditions": true,
       "notifiedRelevantItems": [
         "substitute list"
@@ -102,9 +102,9 @@
     "https://www.charlottesymphony.org/about/employment-auditions/": {
       "url": "https://www.charlottesymphony.org/about/employment-auditions/",
       "name": "Charlotte Symphony",
-      "lastChecked": "2026-03-21T02:56:07.293Z",
-      "contentHash": "baae268ce8d724b7",
-      "extractedSummary": "The Charlotte Symphony has a Second Trumpet audition scheduled for May 31 - June 2, 2026, which is after today's date. This is a full-time, tenure track position with employment starting September 2026, and applications are due May 1, 2026.",
+      "lastChecked": "2026-03-26T10:12:05.902Z",
+      "contentHash": "50241cba8fa06ef4",
+      "extractedSummary": "The Charlotte Symphony has a Second Trumpet audition scheduled for May 31 - June 2, 2026, with applications due May 1, 2026. This is a full-time, tenure track position starting September 2026 with a minimum weekly salary of $1,377.15.",
       "hasRelevantAuditions": true,
       "notifiedRelevantItems": [
         "second trumpet"
@@ -129,7 +129,7 @@
       "notifiedRelevantItems": []
     }
   },
-  "playbillIndexHash": "9a4315c9630be8d7",
+  "playbillIndexHash": "4d7b836885450a6a",
   "playbillListings": {
     "https://playbill.com/job/mrs-doubtfire-national-tour-drums-percussion/a0380083-fa6a-4e35-9549-bb35933d6694": {
       "url": "https://playbill.com/job/mrs-doubtfire-national-tour-drums-percussion/a0380083-fa6a-4e35-9549-bb35933d6694",
