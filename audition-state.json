@@ -1,5 +1,5 @@
 {
-  "lastRun": "2026-03-26T10:12:14.241Z",
+  "lastRun": "2026-03-26T20:07:40.960Z",
   "pages": {
     "https://www.chamberorchestraofthetriangle.org/employment": {
       "url": "https://www.chamberorchestraofthetriangle.org/employment",
@@ -22,9 +22,9 @@
     "https://www.fayettevillesymphony.org/auditions-and-employment/": {
       "url": "https://www.fayettevillesymphony.org/auditions-and-employment/",
       "name": "Fayetteville Symphony Orchestra",
-      "lastChecked": "2026-03-26T10:12:03.421Z",
-      "contentHash": "3bd8a9a462ddedf1",
-      "extractedSummary": "While there are no active formal auditions currently posted, the Fayetteville Symphony Orchestra is accepting applications for their substitute musician list via email. Musicians interested in subbing should contact the Operations Manager, and this would include trumpet players since it's an orchestral sub list.",
+      "lastChecked": "2026-03-26T20:07:16.108Z",
+      "contentHash": "6387c220cecd98e3",
+      "extractedSummary": "The Fayetteville Symphony Orchestra currently has no active formal auditions but maintains an open substitute list for musicians. Interested musicians, including trumpet players, can email their information to join the sub list with no specified closing date.",
       "hasRelevantAuditions": true,
       "notifiedRelevantItems": [
         "substitute list"
@@ -56,10 +56,11 @@
     "https://charlestonsymphony.org/employment/": {
       "url": "https://charlestonsymphony.org/employment/",
       "name": "Charleston Symphony Orchestra",
-      "lastChecked": "2026-03-16T08:32:48.536Z",
-      "contentHash": "a428b9dbcdc82ed8",
+      "lastChecked": "2026-03-26T20:07:22.754Z",
+      "contentHash": "fefe1c4529e9fe55",
       "extractedSummary": null,
-      "hasRelevantAuditions": false
+      "hasRelevantAuditions": false,
+      "notifiedRelevantItems": []
     },
     "https://rhsymphony.org/auditions": {
       "url": "https://rhsymphony.org/auditions",
@@ -102,9 +103,9 @@
     "https://www.charlottesymphony.org/about/employment-auditions/": {
       "url": "https://www.charlottesymphony.org/about/employment-auditions/",
       "name": "Charlotte Symphony",
-      "lastChecked": "2026-03-26T10:12:05.902Z",
-      "contentHash": "50241cba8fa06ef4",
-      "extractedSummary": "The Charlotte Symphony has a Second Trumpet audition scheduled for May 31 - June 2, 2026, with applications due May 1, 2026. This is a full-time, tenure track position starting September 2026 with a minimum weekly salary of $1,377.15.",
+      "lastChecked": "2026-03-26T20:07:25.315Z",
+      "contentHash": "0e3485bf4081bfb1",
+      "extractedSummary": "The Charlotte Symphony has a Second Trumpet audition scheduled for May 31 - June 2, 2026, with applications due May 1, 2026. This is for a full-time, tenure track position starting September 2026 with a minimum weekly salary of $1,377.15.",
       "hasRelevantAuditions": true,
       "notifiedRelevantItems": [
         "second trumpet"
@@ -129,7 +130,7 @@
       "notifiedRelevantItems": []
     }
   },
-  "playbillIndexHash": "4d7b836885450a6a",
+  "playbillIndexHash": "3def669a455095ad",
   "playbillListings": {
     "https://playbill.com/job/mrs-doubtfire-national-tour-drums-percussion/a0380083-fa6a-4e35-9549-bb35933d6694": {
       "url": "https://playbill.com/job/mrs-doubtfire-national-tour-drums-percussion/a0380083-fa6a-4e35-9549-bb35933d6694",
@@ -287,6 +288,36 @@
       "organization": "RWS Global",
       "firstSeen": "2026-03-18T13:34:48.550Z",
       "lastChecked": "2026-03-18T15:17:20.197Z",
+      "hasTrumpet": false,
+      "notified": true,
+      "summary": null
+    },
+    "https://playbill.com/job/bass-player-needed-medora-musical/f65c14cc-beb8-4e73-ad05-0affa3de1246": {
+      "url": "https://playbill.com/job/bass-player-needed-medora-musical/f65c14cc-beb8-4e73-ad05-0affa3de1246",
+      "title": "Bass Player Needed | Medora Musical",
+      "organization": "RWS Global",
+      "firstSeen": "2026-03-26T20:07:25.315Z",
+      "lastChecked": "2026-03-26T20:07:25.315Z",
+      "hasTrumpet": false,
+      "notified": true,
+      "summary": null
+    },
+    "https://playbill.com/job/keys-player-needed-medora-musical/3afdb056-0d70-48d3-b9bf-dfb95da0325e": {
+      "url": "https://playbill.com/job/keys-player-needed-medora-musical/3afdb056-0d70-48d3-b9bf-dfb95da0325e",
+      "title": "Keys Player Needed | Medora Musical",
+      "organization": "RWS Global",
+      "firstSeen": "2026-03-26T20:07:25.315Z",
+      "lastChecked": "2026-03-26T20:07:25.315Z",
+      "hasTrumpet": false,
+      "notified": true,
+      "summary": null
+    },
+    "https://playbill.com/job/summer-accompanist/f195cf7b-47b9-45e8-9bc1-38297540202d": {
+      "url": "https://playbill.com/job/summer-accompanist/f195cf7b-47b9-45e8-9bc1-38297540202d",
+      "title": "Summer Accompanist",
+      "organization": "Aloha Foundation--Camp Lanakila",
+      "firstSeen": "2026-03-26T20:07:25.315Z",
+      "lastChecked": "2026-03-26T20:07:25.315Z",
       "hasTrumpet": false,
       "notified": true,
       "summary": null
