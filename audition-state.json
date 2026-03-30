@@ -1,5 +1,5 @@
 {
-  "lastRun": "2026-03-26T20:07:40.960Z",
+  "lastRun": "2026-03-30T08:42:09.120Z",
   "pages": {
     "https://www.chamberorchestraofthetriangle.org/employment": {
       "url": "https://www.chamberorchestraofthetriangle.org/employment",
@@ -13,8 +13,8 @@
     "https://wpsymphony.org/employment/": {
       "url": "https://wpsymphony.org/employment/",
       "name": "Western Piedmont Symphony",
-      "lastChecked": "2026-03-20T22:26:54.406Z",
-      "contentHash": "5eb722b3c8ea77ea",
+      "lastChecked": "2026-03-30T08:41:52.388Z",
+      "contentHash": "6127250b366961e8",
       "extractedSummary": null,
       "hasRelevantAuditions": false,
       "notifiedRelevantItems": []
@@ -22,9 +22,9 @@
     "https://www.fayettevillesymphony.org/auditions-and-employment/": {
       "url": "https://www.fayettevillesymphony.org/auditions-and-employment/",
       "name": "Fayetteville Symphony Orchestra",
-      "lastChecked": "2026-03-26T20:07:16.108Z",
-      "contentHash": "6387c220cecd98e3",
-      "extractedSummary": "The Fayetteville Symphony Orchestra currently has no active formal auditions but maintains an open substitute list for musicians. Interested musicians, including trumpet players, can email their information to join the sub list with no specified closing date.",
+      "lastChecked": "2026-03-30T08:41:55.241Z",
+      "contentHash": "54031850c1513e2e",
+      "extractedSummary": "The Fayetteville Symphony Orchestra currently has no active formal auditions, but they are accepting applications for their substitute musician list. Musicians interested in joining the sub list can email the Operations Manager, and this would be open to trumpet players.",
       "hasRelevantAuditions": true,
       "notifiedRelevantItems": [
         "substitute list"
@@ -130,7 +130,7 @@
       "notifiedRelevantItems": []
     }
   },
-  "playbillIndexHash": "3def669a455095ad",
+  "playbillIndexHash": "00a03ff5c506b59c",
   "playbillListings": {
     "https://playbill.com/job/mrs-doubtfire-national-tour-drums-percussion/a0380083-fa6a-4e35-9549-bb35933d6694": {
       "url": "https://playbill.com/job/mrs-doubtfire-national-tour-drums-percussion/a0380083-fa6a-4e35-9549-bb35933d6694",
@@ -318,6 +318,26 @@
       "organization": "Aloha Foundation--Camp Lanakila",
       "firstSeen": "2026-03-26T20:07:25.315Z",
       "lastChecked": "2026-03-26T20:07:25.315Z",
+      "hasTrumpet": false,
+      "notified": true,
+      "summary": null
+    },
+    "https://playbill.com/job/mrs-doubtfire-national-tour-keys-2-amd/18e0f34a-8276-4ccf-854e-12007391ca7a": {
+      "url": "https://playbill.com/job/mrs-doubtfire-national-tour-keys-2-amd/18e0f34a-8276-4ccf-854e-12007391ca7a",
+      "title": "Mrs. Doubtfire National Tour - Keys 2/AMD",
+      "organization": "Work Light Productions",
+      "firstSeen": "2026-03-30T08:41:55.244Z",
+      "lastChecked": "2026-03-30T08:41:55.244Z",
+      "hasTrumpet": false,
+      "notified": true,
+      "summary": null
+    },
+    "https://playbill.com/job/seeking-accompanist-for-royal-caribbean-hairspray-auditions-in-atlanta-ga/fc788bea-b6ac-4c04-8d44-2c48f2cc5878": {
+      "url": "https://playbill.com/job/seeking-accompanist-for-royal-caribbean-hairspray-auditions-in-atlanta-ga/fc788bea-b6ac-4c04-8d44-2c48f2cc5878",
+      "title": "Seeking Accompanist for Royal Caribbean Hairspray Auditions in Atlanta, GA",
+      "organization": "Royal Caribbean Entertainment",
+      "firstSeen": "2026-03-30T08:41:55.244Z",
+      "lastChecked": "2026-03-30T08:41:55.244Z",
       "hasTrumpet": false,
       "notified": true,
       "summary": null
