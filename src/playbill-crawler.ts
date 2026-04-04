@@ -1,5 +1,6 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { scrapeUrl, scrapeUrlRaw, contentHash } from "./scraper";
+import { CrawlResult } from "./email";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -21,14 +22,7 @@ export interface PlaybillListing {
   hasTrumpet: boolean;
   notified: boolean;
   summary: string | null;
-}
-
-/** Carries confirmed trumpet hits into the email layer, decoupled from the full PlaybillListing state. */
-export interface PlaybillFinding {
-  listingUrl: string;
-  title: string;
-  organization: string;
-  summary: string | null;
+  contentHash?: string; // hash of detail page text at last check; absent = never fetched
 }
 
 /**
@@ -253,9 +247,9 @@ export async function processPlaybillUrl(
   client: Anthropic,
   urlConfig: PlaybillUrlConfig,
   state: PlaybillState
-): Promise<PlaybillFinding[]> {
+): Promise<CrawlResult[]> {
   console.log(`\n📋 Playbill Job Board`);
-  const findings: PlaybillFinding[] = [];
+  const findings: CrawlResult[] = [];
   const now = new Date().toISOString();
 
   // 1. Fetch and hash the index page
@@ -311,12 +305,15 @@ export async function processPlaybillUrl(
   for (const listing of pending) {
     // Already confirmed trumpet on a prior run but email failed — collect without re-fetching
     if (listing.hasTrumpet) {
-      console.log(`    🎺 "${listing.title}" — trumpet confirmed (pending notification)`);
+      console.log(`[NEW][PLAYBILL] ${listing.title} — ${listing.organization} (pending notification)`);
       findings.push({
-        listingUrl: listing.url,
-        title: listing.title,
-        organization: listing.organization,
+        source: "playbill",
+        name: listing.title,
+        url: listing.url,
         summary: listing.summary,
+        relevantItems: ["Trumpet"],
+        futureDates: [],
+        organization: listing.organization,
       });
       continue;
     }
@@ -325,22 +322,34 @@ export async function processPlaybillUrl(
     console.log(`    Checking: "${listing.title}"`);
     try {
       const detailText = await scrapeUrl(listing.url);
+      const detailHash = contentHash(detailText);
+
+      // Skip if content unchanged and already classified as no-trumpet
+      if (listing.contentHash === detailHash && !listing.hasTrumpet) {
+        console.log(`[SKIP][STATE] Playbill — ${listing.title} — No Change`);
+        continue;
+      }
+
       const { hasTrumpet, summary } = await checkListingForTrumpet(client, detailText, listing.url);
 
       listing.lastChecked = now;
       listing.hasTrumpet = hasTrumpet;
       listing.summary = summary;
+      listing.contentHash = detailHash;
 
       if (hasTrumpet) {
-        console.log(`    🎺 Trumpet found! "${listing.title}"`);
+        console.log(`[NEW][PLAYBILL] ${listing.title} — ${listing.organization}`);
         findings.push({
-          listingUrl: listing.url,
-          title: listing.title,
-          organization: listing.organization,
+          source: "playbill",
+          name: listing.title,
+          url: listing.url,
           summary,
+          relevantItems: ["Trumpet"],
+          futureDates: [],
+          organization: listing.organization,
         });
       } else {
-        console.log(`    ✗ No trumpet mention`);
+        console.log(`[SKIP][PLAYBILL] ${listing.title} — No Trumpet`);
         // Mark notified=true to avoid rechecking non-trumpet listings every run
         listing.notified = true;
       }

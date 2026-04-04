@@ -20,39 +20,39 @@ export async function analyzeWithClaude(
 ): Promise<AuditionAnalysis> {
   const today = new Date().toISOString().split("T")[0];
 
-  const prompt = `You are helping a professional trumpet player monitor symphony orchestra audition pages.
+  const prompt = `Classify this orchestra page for trumpet audition relevance.
 
-Today's date: ${today}
-Page: ${pageName} (${pageUrl})
+RELEVANT: audition/position with a future date (after ${today}) that involves trumpet, brass, or an open orchestral audition where trumpet would qualify (e.g. a sub list open to any instrument).
+NOT RELEVANT: past auditions, admin/education-only roles, instruments that exclude brass.
 
-Analyze the following page content and determine if there are any RELEVANT audition opportunities.
-
-RELEVANT means ALL of the following must be true:
-1. The audition/position has a future date (after ${today}) or is currently open with no closing date yet
-2. AND at least one of:
-   a. It specifically mentions trumpet (any part: principal, associate, section, extra, sub)
-   b. It is for a sub list open to any instrument (and trumpet would reasonably qualify)
-   c. It is a general orchestral audition where brass/trumpet players would audition
-
-NOT relevant: past auditions, non-orchestral positions (admin, education-only), auditions for instruments that exclude brass.
-
-Return a JSON object with this exact shape:
+Return JSON only — no prose, no markdown fences:
 {
-  "hasRelevantAuditions": boolean,
+  "isRelevant": boolean,
+  "instrument": string[],
+  "deadline": string | null,
+  "location": string,
+  "confidenceScore": number,
   "summary": string | null,
   "futureDates": string[],
   "relevantItems": string[]
 }
 
-- summary: 2-3 sentence plain-English summary of what was found (null if nothing relevant)
-- futureDates: list of relevant future date strings found on the page
-- relevantItems: list of specific audition/position titles that are relevant
+- instrument: trumpet/brass-specific position titles only (e.g. "Principal Trumpet", "Section Trumpet", "Sub List"); empty array if none
+- deadline: earliest audition/application deadline string, null if none
+- location: city and state of the orchestra, empty string if unknown
+- confidenceScore: 0.0–1.0 confidence in isRelevant verdict
+- summary: 2-3 sentence plain-English summary if isRelevant, null otherwise
+- futureDates: all relevant future date strings found on the page
+- relevantItems: trumpet/brass position titles matching the relevance criteria
 
-Page content (truncated to first 8000 chars):
+Page: ${pageName} (${pageUrl})
+Today: ${today}
+
+Content (first 8000 chars):
 ${pageText.slice(0, 8000)}`;
 
   const response = await client.messages.create({
-    model: "claude-sonnet-4-20250514",
+    model: "claude-sonnet-4-6",
     max_tokens: 1000,
     messages: [{ role: "user", content: prompt }],
   });
@@ -65,11 +65,25 @@ ${pageText.slice(0, 8000)}`;
   try {
     const match = raw.match(/\{[\s\S]*\}/);
     if (!match) throw new Error("No JSON object found");
-    return JSON.parse(match[0]) as AuditionAnalysis;
+    const parsed = JSON.parse(match[0]);
+    return {
+      hasRelevantAuditions: parsed.isRelevant ?? false,
+      instrument: parsed.instrument ?? [],
+      deadline: parsed.deadline ?? null,
+      location: parsed.location ?? "",
+      confidenceScore: parsed.confidenceScore ?? 0,
+      summary: parsed.summary ?? null,
+      futureDates: parsed.futureDates ?? [],
+      relevantItems: parsed.relevantItems ?? [],
+    };
   } catch {
     console.warn("  Could not parse Claude response as JSON:", raw.slice(0, 200));
     return {
       hasRelevantAuditions: false,
+      instrument: [],
+      deadline: null,
+      location: "",
+      confidenceScore: 0,
       summary: null,
       futureDates: [],
       relevantItems: [],
@@ -84,7 +98,7 @@ export async function probeIsAuditionPage(
   name: string
 ): Promise<{ isAuditionPage: boolean; reason: string }> {
   const response = await client.messages.create({
-    model: "claude-sonnet-4-20250514",
+    model: "claude-sonnet-4-6",
     max_tokens: 200,
     messages: [
       {

@@ -1,7 +1,5 @@
 import { google } from "googleapis";
 
-import { PlaybillFinding } from "./playbill-crawler";
-
 // ─── Shared types ─────────────────────────────────────────────────────────────
 
 export interface UrlConfig {
@@ -15,6 +13,23 @@ export interface AuditionAnalysis {
   summary: string | null;
   futureDates: string[];
   relevantItems: string[];
+  // Structured-output fields from Claude
+  instrument: string[];
+  deadline: string | null;
+  location: string;
+  confidenceScore: number;
+}
+
+export type CrawlSource = "standard" | "playbill";
+
+export interface CrawlResult {
+  source: CrawlSource;
+  name: string;
+  url: string;
+  summary: string | null;
+  relevantItems: string[];
+  futureDates: string[];
+  organization?: string; // Playbill only
 }
 
 export interface ProbeFailure {
@@ -89,15 +104,13 @@ async function getOrCreateLabel(
  * Sending one email per run (rather than one per finding) is intentional:
  * it avoids inbox flooding when multiple sources become relevant simultaneously.
  *
- * The two finding types (`findings` for standard sources, `playbillFindings` for
- * the Playbill board) render as distinct sections with different visual treatments,
- * reflecting their different data shapes — standard findings link to an orchestra's
- * audition page while Playbill findings link to specific job listing URLs.
+ * Both standard orchestra findings and Playbill listings are passed as a unified
+ * `CrawlResult[]`, distinguished by `source`. This allows a single rendering loop
+ * instead of conditional sections per crawl type.
  */
 export async function sendEmail(
-  findings: Array<{ config: UrlConfig; analysis: AuditionAnalysis }>,
-  probeFailures: ProbeFailure[] = [],
-  playbillFindings: PlaybillFinding[] = []
+  findings: CrawlResult[],
+  probeFailures: ProbeFailure[] = []
 ): Promise<void> {
   const clientId = process.env.GMAIL_CLIENT_ID;
   const clientSecret = process.env.GMAIL_CLIENT_SECRET;
@@ -130,37 +143,33 @@ export async function sendEmail(
 <hr/>
 `;
 
-  for (const { config, analysis } of findings) {
-    html += `<h3><a href="${config.url}">${config.name}</a></h3>
-<p>${analysis.summary}</p>`;
-    if (analysis.relevantItems.length > 0) {
-      html += `<p><strong>Positions/Auditions:</strong></p><ul>`;
-      for (const item of analysis.relevantItems) {
-        html += `<li>${item}</li>`;
+  for (const finding of findings) {
+    if (finding.source === "standard") {
+      html += `<h3><a href="${finding.url}">${finding.name}</a></h3>
+<p>${finding.summary}</p>`;
+      if (finding.relevantItems.length > 0) {
+        html += `<p><strong>Positions/Auditions:</strong></p><ul>`;
+        for (const item of finding.relevantItems) {
+          html += `<li>${item}</li>`;
+        }
+        html += `</ul>`;
       }
-      html += `</ul>`;
-    }
-    if (analysis.futureDates.length > 0) {
-      html += `<p><strong>Dates:</strong> ${analysis.futureDates.join(", ")}</p>`;
-    }
-    html += `<p><a href="${config.url}">→ View page</a></p><hr/>`;
-  }
-
-  if (playbillFindings.length > 0) {
-    html += `<h3 style="margin-top:24px;">🎭 Playbill Job Board</h3>
-<p>The following Playbill listings mention trumpet:</p>`;
-    for (const f of playbillFindings) {
+      if (finding.futureDates.length > 0) {
+        html += `<p><strong>Dates:</strong> ${finding.futureDates.join(", ")}</p>`;
+      }
+      html += `<p><a href="${finding.url}">→ View page</a></p><hr/>`;
+    } else {
       html += `<div style="margin-bottom:16px;padding:12px;border-left:4px solid #c0392b;">
-<h4 style="margin:0 0 4px;"><a href="${f.listingUrl}">${f.title}</a></h4>
-<p style="margin:0 0 4px;color:#555;"><em>${f.organization}</em></p>`;
-      if (f.summary) {
-        html += `<p style="margin:0 0 8px;">${f.summary}</p>`;
+<h4 style="margin:0 0 4px;"><a href="${finding.url}">${finding.name}</a></h4>
+<p style="margin:0 0 4px;color:#555;"><em>${finding.organization ?? ""}</em></p>`;
+      if (finding.summary) {
+        html += `<p style="margin:0 0 8px;">${finding.summary}</p>`;
       }
-      html += `<p style="margin:0;"><a href="${f.listingUrl}">→ View listing on Playbill</a></p>
+      html += `<p style="margin:0;"><a href="${finding.url}">→ View listing on Playbill</a></p>
 </div>`;
     }
-    html += `<hr/>`;
   }
+  if (findings.some((f) => f.source === "playbill")) html += `<hr/>`;
 
   if (probeFailures.length > 0) {
     html += `<hr/><h3 style="color:#c0392b;">⚠️ URL Issues Detected</h3>
@@ -174,7 +183,7 @@ export async function sendEmail(
 
   html += `<p style="color:#888;font-size:12px;">Sent by <a href="https://github.com/TylerAPfledderer/Music-Audition-Checker">audition-checker</a></p>`;
 
-  const totalFindings = findings.length + playbillFindings.length;
+  const totalFindings = findings.length;
   const warningTag = probeFailures.length > 0 ? " ⚠️" : "";
   const subject = `🎺 ${totalFindings} new trumpet audition${totalFindings > 1 ? "s" : ""} found — ${today}${warningTag}`;
 

@@ -1,5 +1,5 @@
 {
-  "lastRun": "2026-04-02T20:09:15.633Z",
+  "lastRun": "2026-04-04T17:29:02.487Z",
   "pages": {
     "https://www.chamberorchestraofthetriangle.org/employment": {
       "url": "https://www.chamberorchestraofthetriangle.org/employment",
@@ -24,10 +24,10 @@
     "https://www.fayettevillesymphony.org/auditions-and-employment/": {
       "url": "https://www.fayettevillesymphony.org/auditions-and-employment/",
       "name": "Fayetteville Symphony Orchestra",
-      "lastChecked": "2026-04-02T20:09:01.989Z",
-      "contentHash": "ab1bdc60f19f36bb",
-      "extractedSummary": "The Fayetteville Symphony Orchestra currently has no active formal auditions, but they are accepting applications for their substitute musician list via email to their Operations Manager. This sub list opportunity would be open to trumpet players and other orchestral musicians.",
-      "hasRelevantAuditions": true,
+      "lastChecked": "2026-04-04T17:28:45.922Z",
+      "contentHash": "d726a970f9c55a7a",
+      "extractedSummary": null,
+      "hasRelevantAuditions": false,
       "notifiedRelevantItems": [
         "substitute list"
       ]
@@ -132,7 +132,7 @@
       "notifiedRelevantItems": []
     }
   },
-  "playbillIndexHash": "81c0e04980501302",
+  "playbillIndexHash": "d3f22e9d979f5bb0",
   "playbillListings": {
     "https://playbill.com/job/mrs-doubtfire-national-tour-drums-percussion/a0380083-fa6a-4e35-9549-bb35933d6694": {
       "url": "https://playbill.com/job/mrs-doubtfire-national-tour-drums-percussion/a0380083-fa6a-4e35-9549-bb35933d6694",
@@ -343,6 +343,39 @@
       "hasTrumpet": false,
       "notified": true,
       "summary": null
+    },
+    "https://playbill.com/job/local-musicians-near-chatham-ny/bb7c2b21-aa52-45a4-9581-2c8a31d50bf9": {
+      "url": "https://playbill.com/job/local-musicians-near-chatham-ny/bb7c2b21-aa52-45a4-9581-2c8a31d50bf9",
+      "title": "Local Musicians near Chatham, NY",
+      "organization": "Mac-Haydn Theatre",
+      "firstSeen": "2026-04-04T17:28:45.924Z",
+      "lastChecked": "2026-04-04T17:28:45.924Z",
+      "hasTrumpet": false,
+      "notified": true,
+      "summary": null,
+      "contentHash": "e1fe85ecba9d3fd1"
+    },
+    "https://playbill.com/job/pit-musicians/09b5b78b-f8f3-4dc7-91bc-73918df4a359": {
+      "url": "https://playbill.com/job/pit-musicians/09b5b78b-f8f3-4dc7-91bc-73918df4a359",
+      "title": "Pit Musicians",
+      "organization": "Mac-Haydn Theatre",
+      "firstSeen": "2026-04-04T17:28:45.924Z",
+      "lastChecked": "2026-04-04T17:28:45.924Z",
+      "hasTrumpet": false,
+      "notified": true,
+      "summary": null,
+      "contentHash": "9e925c4bb9458d99"
+    },
+    "https://playbill.com/job/accompanist-needed-royal-caribbean-hairspray-auditions-chicago/9a2a37c7-c2ce-46eb-adcf-77d2959fdee1": {
+      "url": "https://playbill.com/job/accompanist-needed-royal-caribbean-hairspray-auditions-chicago/9a2a37c7-c2ce-46eb-adcf-77d2959fdee1",
+      "title": "Accompanist Needed | Royal Caribbean Hairspray Auditions | Chicago",
+      "organization": "Royal Caribbean Entertainment",
+      "firstSeen": "2026-04-04T17:28:45.924Z",
+      "lastChecked": "2026-04-04T17:28:45.924Z",
+      "hasTrumpet": false,
+      "notified": true,
+      "summary": null,
+      "contentHash": "289202520d564e03"
     }
   }
 }

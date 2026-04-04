@@ -228,7 +228,7 @@ describe("processPlaybillUrl — index unchanged but pending listings exist", ()
 
     expect(scrapeUrl).toHaveBeenCalledWith("https://playbill.com/job/trumpet-pending");
     expect(findings).toHaveLength(1);
-    expect(findings[0].title).toBe("Principal Trumpet");
+    expect(findings[0].name).toBe("Principal Trumpet");
   });
 });
 
@@ -372,7 +372,7 @@ describe("processPlaybillUrl — trumpet-confirmed listing pending notification"
     expect(scrapeUrl).not.toHaveBeenCalled();
     expect(createFn).not.toHaveBeenCalled();
     expect(findings).toHaveLength(1);
-    expect(findings[0].title).toBe("Principal Trumpet");
+    expect(findings[0].name).toBe("Principal Trumpet");
     expect(findings[0].summary).toBe("Seeking a Principal Trumpet.");
   });
 });

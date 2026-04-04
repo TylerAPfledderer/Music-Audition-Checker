@@ -1,5 +1,5 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { stripHtml, contentHash, normalizeForHash, extractAuditionSignals, extractAuditionLinks, MIN_CONTENT_LENGTH } from "../src/scraper";
+import { describe, it, expect, vi, afterEach } from "vitest";
+import { stripHtml, contentHash, normalizeForHash, extractAuditionSignals, extractAuditionLinks, MIN_CONTENT_LENGTH, passesBrassKeywordGate } from "../src/scraper";
 
 describe("MIN_CONTENT_LENGTH", () => {
   it("is 500", () => {
@@ -191,6 +191,27 @@ describe("normalizeForHash", () => {
   });
 });
 
+describe("passesBrassKeywordGate", () => {
+  it("returns true for 'trumpet'", () => {
+    expect(passesBrassKeywordGate("Principal Trumpet audition")).toBe(true);
+  });
+  it("returns true for 'cornet'", () => {
+    expect(passesBrassKeywordGate("Cornet position available")).toBe(true);
+  });
+  it("is case-insensitive", () => {
+    expect(passesBrassKeywordGate("TRUMPET AUDITION")).toBe(true);
+  });
+  it("returns false for irrelevant text", () => {
+    expect(passesBrassKeywordGate("Violin solo competition")).toBe(false);
+  });
+  it("returns false when 'faculty' is present even with 'trumpet'", () => {
+    expect(passesBrassKeywordGate("Trumpet faculty position")).toBe(false);
+  });
+  it("returns false when 'instructor' is present even with 'trumpet'", () => {
+    expect(passesBrassKeywordGate("Trumpet instructor wanted")).toBe(false);
+  });
+});
+
 // ─── extractAuditionLinks ─────────────────────────────────────────────────────
 
 describe("extractAuditionLinks", () => {
@@ -285,9 +306,7 @@ describe("extractAuditionLinks", () => {
   });
 
   it("ignores HTML when firecrawlLinks is provided", () => {
-    // HTML has audition links but firecrawlLinks is an empty array — still use firecrawl path
     const html = '<a href="/audition/winds">Winds Audition</a>';
-    // Empty firecrawlLinks array: still activates the firecrawl path, yields no results
     expect(extractAuditionLinks(html, BASE, [])).toEqual([]);
   });
 
@@ -300,8 +319,6 @@ describe("extractAuditionLinks", () => {
 });
 
 // ─── fetchWithFirecrawl — key gate ───────────────────────────────────────────
-// Full Firecrawl integration tests (with mocked client) live in scraper-network.test.ts.
-// This block covers only the pure env-guard that requires no module mocking.
 
 describe("fetchWithFirecrawl — key gate", () => {
   const savedKey = process.env.FIRECRAWL_API_KEY;
