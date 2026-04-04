@@ -66,6 +66,7 @@ export async function fetchWithFirecrawl(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let FirecrawlModule: any;
   try {
+    // @ts-expect-error — optional peer dep, not listed in package.json
     FirecrawlModule = await import("@mendable/firecrawl-js");
   } catch {
     throw new Error(
