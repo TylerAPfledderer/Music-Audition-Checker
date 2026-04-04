@@ -28,7 +28,7 @@ import dotenv from "dotenv";
 dotenv.config({ path: ".env.local" });
 import Anthropic from "@anthropic-ai/sdk";
 
-import { computePageHash, normalizeForHash, extractAuditionSignals, passesBrassKeywordGate } from "./scraper";
+import { computePageHash, normalizeForHash, extractAuditionSignals, extractAuditionLinks, scrapeUrl, passesBrassKeywordGate } from "./scraper";
 import { PlaybillState, processPlaybillUrl } from "./playbill-crawler";
 import { UrlConfig, CrawlResult, sendEmail } from "./email";
 import { analyzeWithClaude } from "./claude";
@@ -109,6 +109,37 @@ function saveState(state: StateFile): void {
 // ─── Notification predicate ───────────────────────────────────────────────────
 
 /**
+ * Maps a Claude-generated item label to a stable canonical form.
+ *
+ * Claude's output is non-deterministic — "Sub list for all instruments",
+ * "Substitute musician positions", and "Section and sub positions for all
+ * instruments" are all the same underlying opportunity. This funnel maps
+ * semantically equivalent labels to a single canonical string so that
+ * wording variation across runs never triggers a spurious re-notification.
+ *
+ * Rules are ordered most-specific first (trumpet qualifiers before generic
+ * "trumpet", so "Principal Trumpet" hits the right bucket). The fallback
+ * lowercases and strips parentheticals/dash-suffixes so punctuation noise
+ * is eliminated for any label that doesn't match a known category.
+ */
+export function canonicalizeLabel(label: string): string {
+  const l = label
+    .toLowerCase()
+    .replace(/\s*\([^)]*\)/g, "") // strip "(contact operations manager)" etc.
+    .replace(/\s*-\s+\S.*$/, "") // strip " - general orchestral" etc.
+    .trim();
+
+  if (/\b(principal|associate|1st|first)\s+trumpet\b/.test(l)) return "principal trumpet";
+  if (/\b(second|2nd|co.?principal)\s+trumpet\b/.test(l)) return "second trumpet";
+  if (/\bsection\s+trumpet\b/.test(l)) return "section trumpet";
+  if (/\btrumpet\b/.test(l)) return "trumpet";
+  if (/\bsub(stitute)?\b/.test(l)) return "substitute list";
+  if (/\b(open|annual|general)\s+(position|audition|orch)/.test(l)) return "open positions";
+
+  return l; // fallback: lowercase + stripped
+}
+
+/**
  * Determines whether a standard page should trigger a new user notification.
  *
  * Fires on two conditions:
@@ -120,6 +151,10 @@ function saveState(state: StateFile): void {
  *
  * `notifiedItems` being empty means no notification was ever sent, which always
  * counts as "new" when the page is relevant.
+ *
+ * `notifiedItems` are stored in canonical form (via `canonicalizeLabel`). Incoming
+ * `currentItems` are canonicalized before comparison so wording variants of the
+ * same opportunity are treated as already-seen.
  */
 export function shouldNotify(
   isNowRelevant: boolean,
@@ -129,7 +164,7 @@ export function shouldNotify(
 ): boolean {
   if (!isNowRelevant) return false;
   if (!wasRelevant) return true; // rising edge
-  return currentItems.some((item) => !notifiedItems.includes(item));
+  return currentItems.some((item) => !notifiedItems.includes(canonicalizeLabel(item)));
 }
 
 // ─── Main ─────────────────────────────────────────────────────────────────────
@@ -199,13 +234,21 @@ async function main(): Promise<void> {
 
         // Standard single-page flow
         // Reuse content fetched during preflight — no second HTTP request
-        const text = pageContentCache.get(urlConfig.url);
-        if (!text) {
+        const cached = pageContentCache.get(urlConfig.url);
+        if (!cached) {
           console.log(`[SKIP][PREFLIGHT] ${urlConfig.name} — Failed Preflight`);
           continue;
         }
+        const { text, html: cachedHtml, links: cachedFirecrawlLinks } = cached;
         const hash = computePageHash(text);
         const previousState = state.pages[urlConfig.url];
+
+        // Capture whether the notifiedRelevantItems field existed BEFORE state is
+        // overwritten below. undefined means the field was never written (old schema);
+        // [] means it was written but empty. We use this to suppress a spurious
+        // notification when a page was already known-relevant before item tracking
+        // was introduced (schema evolution guard).
+        const hadNotifiedItemsField = previousState?.notifiedRelevantItems !== undefined;
 
         // Skip if content unchanged and we already checked it recently
         if (previousState && previousState.contentHash === hash) {
@@ -235,7 +278,31 @@ async function main(): Promise<void> {
           debugLog(`[${urlConfig.name}] hash input (${signals.length} chars):\n${signals}`);
         }
         console.log(`  🔍 Content changed — analyzing with Claude...`);
-        const analysis = await analyzeWithClaude(claude, text, urlConfig.url, urlConfig.name);
+
+        // Drill into internal audition-detail links to avoid false positives from
+        // pages that list auditions as navigable link labels (e.g. "Winds Auditions"
+        // → sub-page). Without this, Claude must infer from the label alone, which
+        // causes over-notification when the actual instrument list excludes trumpet.
+        let analysisText = text;
+        const subLinks = extractAuditionLinks(cachedHtml, urlConfig.url, cachedFirecrawlLinks);
+        if (subLinks.length > 0) {
+          console.log(`  ↳ Found ${subLinks.length} audition sub-page(s) — fetching for context...`);
+          const subTexts: string[] = [];
+          for (const subUrl of subLinks) {
+            try {
+              const subText = await scrapeUrl(subUrl);
+              subTexts.push(`--- Sub-page: ${subUrl} ---\n${subText.slice(0, 2000)}`);
+              console.log(`    ✓ Fetched: ${subUrl}`);
+            } catch (err) {
+              console.warn(`    ⚠️  Could not fetch sub-page ${subUrl}: ${err}`);
+            }
+          }
+          if (subTexts.length > 0) {
+            analysisText = `${text}\n\n${subTexts.join("\n\n")}`;
+          }
+        }
+
+        const analysis = await analyzeWithClaude(claude, analysisText, urlConfig.url, urlConfig.name);
 
         console.log(
           `  → Relevant: ${analysis.hasRelevantAuditions} | Items: ${analysis.relevantItems.length}`
@@ -252,14 +319,18 @@ async function main(): Promise<void> {
           notifiedRelevantItems: previousState?.notifiedRelevantItems ?? [],
         };
 
-        // Notify on:
-        //   1. Rising edge (false → true): the page just became relevant.
-        //   2. New items while still relevant: a new trumpet audition appeared on an
-        //      already-relevant page. Non-trumpet content changes won't fire here
-        //      because Claude's relevantItems list stays the same.
         const wasRelevant = previousState?.hasRelevantAuditions ?? false;
         const notifiedItems = previousState?.notifiedRelevantItems ?? [];
-        if (shouldNotify(analysis.hasRelevantAuditions, wasRelevant, analysis.relevantItems, notifiedItems)) {
+
+        if (wasRelevant && !hadNotifiedItemsField && analysis.hasRelevantAuditions) {
+          // Schema evolution: this page was known-relevant before notifiedRelevantItems
+          // was introduced. Silently initialize the field from the current Claude output
+          // so the next run has a populated baseline to compare against.
+          console.log(`  ℹ️  Initializing item tracking for already-relevant page (no email sent)`);
+          state.pages[urlConfig.url].notifiedRelevantItems = [
+            ...new Set(analysis.relevantItems.map(canonicalizeLabel)),
+          ];
+        } else if (shouldNotify(analysis.hasRelevantAuditions, wasRelevant, analysis.relevantItems, notifiedItems)) {
           const instrumentLabel = analysis.instrument.join(", ") || "Relevant";
           console.log(`[NEW][AI-MATCH] ${urlConfig.name} — ${instrumentLabel}`);
           allFindings.push({
@@ -270,10 +341,18 @@ async function main(): Promise<void> {
             relevantItems: analysis.relevantItems,
             futureDates: analysis.futureDates,
           });
-          // Record the items we're notifying about so future runs can detect new additions.
-          // Written to in-memory state here; persisted by saveState() after email send.
-          state.pages[urlConfig.url].notifiedRelevantItems = analysis.relevantItems;
+          // Canonicalize and merge: store the union of previously-notified canonical
+          // labels and the current run's canonical labels. This prevents any future
+          // wording variant from being treated as a new item.
+          state.pages[urlConfig.url].notifiedRelevantItems = [
+            ...new Set([...notifiedItems, ...analysis.relevantItems.map(canonicalizeLabel)]),
+          ];
         } else if (analysis.hasRelevantAuditions) {
+          // Still relevant, no new items. Absorb canonical labels from this run
+          // so the state stays current without triggering a notification.
+          state.pages[urlConfig.url].notifiedRelevantItems = [
+            ...new Set([...notifiedItems, ...analysis.relevantItems.map(canonicalizeLabel)]),
+          ];
           console.log(`[SKIP][STATE] ${urlConfig.name} — No New Items`);
         }
       } catch (err) {

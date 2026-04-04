@@ -9,7 +9,7 @@ vi.mock("../src/scraper", () => ({
 }));
 
 import { scrapeUrlRaw, scrapeUrl, contentHash } from "../src/scraper";
-import { extractJobUrlsFromHtml, processPlaybillUrl } from "../src/playbill-crawler";
+import { extractJobUrlsFromHtml, extractPlaybillJobUrls, processPlaybillUrl } from "../src/playbill-crawler";
 import type { PlaybillState } from "../src/playbill-crawler";
 
 // Factory for a fake Anthropic client
@@ -86,6 +86,69 @@ describe("extractJobUrlsFromHtml", () => {
     const html = '<a HREF="/job/trumpet-upper">Trumpet</a>';
     expect(extractJobUrlsFromHtml(html)).toEqual([
       "https://playbill.com/job/trumpet-upper",
+    ]);
+  });
+});
+
+// ─── extractPlaybillJobUrls ───────────────────────────────────────────────────
+
+describe("extractPlaybillJobUrls", () => {
+  it("returns Firecrawl links filtered to playbill.com /job/ paths", () => {
+    const firecrawlLinks = [
+      "https://playbill.com/job/principal-trumpet-abc",
+      "https://playbill.com/job/section-violin-xyz",
+      "https://playbill.com/article/news",  // should be excluded
+      "https://example.com/job/other",      // should be excluded (wrong domain)
+    ];
+    const result = extractPlaybillJobUrls("", firecrawlLinks);
+    expect(result).toEqual([
+      "https://playbill.com/job/principal-trumpet-abc",
+      "https://playbill.com/job/section-violin-xyz",
+    ]);
+  });
+
+  it("falls back to HTML regex when firecrawlLinks is undefined", () => {
+    const html = '<a href="/job/trumpet-fallback">Trumpet</a>';
+    const result = extractPlaybillJobUrls(html, undefined);
+    expect(result).toEqual(["https://playbill.com/job/trumpet-fallback"]);
+  });
+
+  it("falls back to HTML regex when firecrawlLinks is empty", () => {
+    const html = '<a href="/job/trumpet-fallback">Trumpet</a>';
+    const result = extractPlaybillJobUrls(html, []);
+    expect(result).toEqual(["https://playbill.com/job/trumpet-fallback"]);
+  });
+
+  it("falls back to HTML regex when Firecrawl links contain no /job/ matches", () => {
+    const firecrawlLinks = ["https://playbill.com/article/news", "https://playbill.com/shows"];
+    const html = '<a href="/job/trumpet-html">Trumpet</a>';
+    const result = extractPlaybillJobUrls(html, firecrawlLinks);
+    expect(result).toEqual(["https://playbill.com/job/trumpet-html"]);
+  });
+
+  it("deduplicates Firecrawl links", () => {
+    const firecrawlLinks = [
+      "https://playbill.com/job/trumpet-abc",
+      "https://playbill.com/job/trumpet-abc",
+    ];
+    expect(extractPlaybillJobUrls("", firecrawlLinks)).toHaveLength(1);
+  });
+
+  it("accepts www.playbill.com variants in Firecrawl links", () => {
+    const firecrawlLinks = ["https://www.playbill.com/job/trumpet-www"];
+    expect(extractPlaybillJobUrls("", firecrawlLinks)).toEqual([
+      "https://www.playbill.com/job/trumpet-www",
+    ]);
+  });
+
+  it("excludes Firecrawl links with query strings or fragments", () => {
+    const firecrawlLinks = [
+      "https://playbill.com/job/trumpet?ref=test",   // query string — excluded
+      "https://playbill.com/job/trumpet#section",    // fragment — excluded
+      "https://playbill.com/job/clean-url",          // clean — included
+    ];
+    expect(extractPlaybillJobUrls("", firecrawlLinks)).toEqual([
+      "https://playbill.com/job/clean-url",
     ]);
   });
 });
@@ -212,6 +275,31 @@ describe("processPlaybillUrl — index changed", () => {
     expect(state.playbillListings[jobUrl]).toBeDefined();
     expect(state.playbillListings[jobUrl].title).toBe("Section Horn");
     expect(state.playbillListings[jobUrl].organization).toBe("City Orchestra");
+  });
+
+  it("uses Firecrawl links from scrapeUrlRaw when available instead of HTML regex", async () => {
+    const firecrawlJobUrl = "https://playbill.com/job/firecrawl-only-url";
+    // The HTML has a different URL than the Firecrawl links array
+    const indexHtml = '<a href="/job/html-only-url">HTML Job</a>';
+    vi.mocked(scrapeUrlRaw).mockResolvedValue({
+      text: "Musicians page content",
+      html: indexHtml,
+      links: [firecrawlJobUrl, "https://playbill.com/article/news"],
+    });
+    vi.mocked(contentHash).mockReturnValue("changed-hash");
+    vi.mocked(scrapeUrl).mockResolvedValue("No trumpet mentioned.");
+
+    const extractedListings = [{ title: "Firecrawl Job", url: firecrawlJobUrl, organization: "Firecrawl Orchestra" }];
+    const createFn = vi.fn()
+      .mockReturnValueOnce(claudeResponse(JSON.stringify(extractedListings)))
+      .mockReturnValue(claudeResponse(JSON.stringify({ hasTrumpet: false, summary: null })));
+
+    const state = emptyState();
+    await processPlaybillUrl(makeClient(createFn), { name: "Playbill", url: "https://playbill.com/jobs" }, state);
+
+    // The listing from Firecrawl links should be registered; the HTML-only URL should not
+    expect(state.playbillListings[firecrawlJobUrl]).toBeDefined();
+    expect(state.playbillListings["https://playbill.com/job/html-only-url"]).toBeUndefined();
   });
 
   it("does not overwrite an existing listing entry when re-encountered", async () => {

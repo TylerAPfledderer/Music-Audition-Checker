@@ -1,110 +1,138 @@
 {
-  "lastRun": "2026-03-16T22:57:01.244Z",
+  "lastRun": "2026-04-02T20:09:15.633Z",
   "pages": {
     "https://www.chamberorchestraofthetriangle.org/employment": {
       "url": "https://www.chamberorchestraofthetriangle.org/employment",
       "name": "Chamber Orchestra of the Triangle",
-      "lastChecked": "2026-03-16T08:32:31.152Z",
-      "contentHash": "fe65876e4335bc6a",
+      "lastChecked": "2026-03-18T15:16:42.660Z",
+      "contentHash": "f97a435635971080",
       "extractedSummary": null,
-      "hasRelevantAuditions": false
+      "hasRelevantAuditions": false,
+      "notifiedRelevantItems": []
     },
     "https://wpsymphony.org/employment/": {
       "url": "https://wpsymphony.org/employment/",
       "name": "Western Piedmont Symphony",
-      "lastChecked": "2026-03-16T08:32:32.408Z",
-      "contentHash": "b7d13f2749017a02",
-      "extractedSummary": null,
-      "hasRelevantAuditions": false
+      "lastChecked": "2026-04-02T20:08:58.716Z",
+      "contentHash": "b9ced44ce1de0eb8",
+      "extractedSummary": "The Western Piedmont Symphony has a Third Trumpet audition scheduled for May 24, 2026, with an application deadline of May 15, 2026. This is a section position paying $80 per service plus travel allowance for their 26-27 season of approximately 35 services.",
+      "hasRelevantAuditions": true,
+      "notifiedRelevantItems": [
+        "trumpet"
+      ]
     },
     "https://www.fayettevillesymphony.org/auditions-and-employment/": {
       "url": "https://www.fayettevillesymphony.org/auditions-and-employment/",
       "name": "Fayetteville Symphony Orchestra",
-      "lastChecked": "2026-03-16T22:56:49.333Z",
-      "contentHash": "45f2315e2b9fc510",
-      "extractedSummary": "The Fayetteville Symphony Orchestra currently has no active formal auditions, but they are accepting musicians for their substitute list. Musicians interested in joining the sub list can contact the Operations Manager via email.",
+      "lastChecked": "2026-04-02T20:09:01.989Z",
+      "contentHash": "ab1bdc60f19f36bb",
+      "extractedSummary": "The Fayetteville Symphony Orchestra currently has no active formal auditions, but they are accepting applications for their substitute musician list via email to their Operations Manager. This sub list opportunity would be open to trumpet players and other orchestral musicians.",
       "hasRelevantAuditions": true,
       "notifiedRelevantItems": [
-        "Sub list - open to interested musicians"
+        "substitute list"
       ]
     },
     "https://www.raleighsymphony.org/auditions": {
       "url": "https://www.raleighsymphony.org/auditions",
       "name": "Raleigh Symphony Orchestra",
-      "lastChecked": "2026-03-16T08:32:37.835Z",
-      "contentHash": "2077137d388f2d80",
-      "extractedSummary": "The Raleigh Symphony Orchestra holds annual auditions in late summer for both open positions and substitute positions on all instruments, including trumpet. The next audition date is pending with details to be announced in early summer 2026.",
-      "hasRelevantAuditions": true
-    },
-    "https://rso.com/auditions/": {
-      "url": "https://rso.com/auditions/",
-      "name": "Roanoke Symphony Orchestra",
-      "lastChecked": "2026-03-16T08:32:41.030Z",
-      "contentHash": "6c9212ed16363310",
-      "extractedSummary": null,
-      "hasRelevantAuditions": false
+      "lastChecked": "2026-03-18T15:16:50.458Z",
+      "contentHash": "fca6db1e7a618b1f",
+      "extractedSummary": "The Raleigh Symphony Orchestra holds annual auditions in late summer for both open positions and substitute positions on all instruments, including trumpet. The next audition date is pending and they will notify interested musicians in early summer.",
+      "hasRelevantAuditions": true,
+      "notifiedRelevantItems": [
+        "substitute list",
+        "open positions"
+      ]
     },
     "https://williamsburgsymphony.org/careers/": {
       "url": "https://williamsburgsymphony.org/careers/",
       "name": "Williamsburg Symphony Orchestra",
-      "lastChecked": "2026-03-16T08:32:44.407Z",
-      "contentHash": "fe3b25bb71520dd2",
-      "extractedSummary": "The Williamsburg Symphony Orchestra is accepting resumes from musicians interested in substitute work. While no specific audition dates are listed, they maintain an ongoing file of qualified musicians for substitute positions, which would include trumpet players.",
-      "hasRelevantAuditions": true
+      "lastChecked": "2026-03-19T21:59:37.186Z",
+      "contentHash": "62bdaf825d0056b4",
+      "extractedSummary": "The Williamsburg Symphony Orchestra accepts resumes from musicians interested in substitute work. They are looking for highly skilled musicians with professional orchestral experience, and resumes are kept on file for consideration.",
+      "hasRelevantAuditions": true,
+      "notifiedRelevantItems": [
+        "substitute list"
+      ]
     },
     "https://charlestonsymphony.org/employment/": {
       "url": "https://charlestonsymphony.org/employment/",
       "name": "Charleston Symphony Orchestra",
-      "lastChecked": "2026-03-16T08:32:48.536Z",
-      "contentHash": "a428b9dbcdc82ed8",
+      "lastChecked": "2026-03-26T20:07:22.754Z",
+      "contentHash": "fefe1c4529e9fe55",
       "extractedSummary": null,
-      "hasRelevantAuditions": false
+      "hasRelevantAuditions": false,
+      "notifiedRelevantItems": []
     },
     "https://rhsymphony.org/auditions": {
       "url": "https://rhsymphony.org/auditions",
       "name": "Rock Hill Symphony Orchestra",
-      "lastChecked": "2026-03-16T08:32:54.845Z",
-      "contentHash": "804bfbfde4950da8",
-      "extractedSummary": null,
-      "hasRelevantAuditions": false
+      "lastChecked": "2026-03-18T15:16:57.099Z",
+      "contentHash": "29fddee0ea659bb7",
+      "extractedSummary": "The Rock Hill Symphony Orchestra has open auditions for section and sub positions for all instruments, submitted via YouTube video. These are general orchestral auditions that would include trumpet positions, with no specified closing date mentioned.",
+      "hasRelevantAuditions": true,
+      "notifiedRelevantItems": [
+        "substitute list"
+      ]
     },
     "https://greensborosymphony.org/about-the-symphony/auditions/": {
       "url": "https://greensborosymphony.org/about-the-symphony/auditions/",
       "name": "Greensboro Symphony Orchestra",
-      "lastChecked": "2026-03-16T08:32:56.303Z",
-      "contentHash": "d24c9b93eeec252b",
+      "lastChecked": "2026-03-20T22:27:16.801Z",
+      "contentHash": "71686022ed5f3919",
       "extractedSummary": null,
-      "hasRelevantAuditions": false
+      "hasRelevantAuditions": false,
+      "notifiedRelevantItems": []
     },
     "https://www.wssymphony.org/about/jobs-2/": {
       "url": "https://www.wssymphony.org/about/jobs-2/",
       "name": "Winston-Salem Symphony",
-      "lastChecked": "2026-03-16T08:32:59.642Z",
-      "contentHash": "e1f032b895cae62f",
+      "lastChecked": "2026-03-18T15:17:02.945Z",
+      "contentHash": "ece6dcfc77e949f1",
       "extractedSummary": null,
-      "hasRelevantAuditions": false
+      "hasRelevantAuditions": false,
+      "notifiedRelevantItems": []
     },
     "https://www.lynchburgsymphony.org/audition/": {
       "url": "https://www.lynchburgsymphony.org/audition/",
       "name": "Lynchburg Symphony Orchestra",
-      "lastChecked": "2026-03-16T08:33:04.088Z",
-      "contentHash": "3de78ee1ca94e966",
+      "lastChecked": "2026-03-19T21:59:45.046Z",
+      "contentHash": "ab5304e4c6e2f532",
       "extractedSummary": null,
-      "hasRelevantAuditions": false
+      "hasRelevantAuditions": false,
+      "notifiedRelevantItems": []
     },
     "https://www.charlottesymphony.org/about/employment-auditions/": {
       "url": "https://www.charlottesymphony.org/about/employment-auditions/",
       "name": "Charlotte Symphony",
-      "lastChecked": "2026-03-16T22:56:51.807Z",
-      "contentHash": "7c18260bcddf1d42",
-      "extractedSummary": "The Charlotte Symphony has a relevant Second Trumpet audition scheduled for May 31 - June 2, 2026, with applications due May 1, 2026. This is a full-time, tenure track position starting September 2026 with competitive salary and benefits.",
+      "lastChecked": "2026-04-02T20:09:05.343Z",
+      "contentHash": "940d4a36b47e2a34",
+      "extractedSummary": "The Charlotte Symphony has a Second Trumpet audition scheduled for May 31 - June 2, 2026, with applications due May 1, 2026. This is a full-time, tenure track position starting September 2026 with a minimum weekly salary of $1,377.15.",
       "hasRelevantAuditions": true,
       "notifiedRelevantItems": [
-        "Second Trumpet"
+        "second trumpet"
       ]
+    },
+    "https://ashevillesymphony.org/employment/": {
+      "url": "https://ashevillesymphony.org/employment/",
+      "name": "Asheville Symphony",
+      "lastChecked": "2026-03-19T21:59:47.908Z",
+      "contentHash": "e89ec9d1e7265247",
+      "extractedSummary": null,
+      "hasRelevantAuditions": false,
+      "notifiedRelevantItems": []
+    },
+    "https://rso.com/auditions/": {
+      "url": "https://rso.com/auditions/",
+      "name": "Roanoke Symphony Orchestra",
+      "lastChecked": "2026-03-21T03:02:15.117Z",
+      "contentHash": "1b1e8f5f0307b649",
+      "extractedSummary": null,
+      "hasRelevantAuditions": false,
+      "notifiedRelevantItems": []
     }
   },
-  "playbillIndexHash": "1ebb83cca2a85c01",
+  "playbillIndexHash": "81c0e04980501302",
   "playbillListings": {
     "https://playbill.com/job/mrs-doubtfire-national-tour-drums-percussion/a0380083-fa6a-4e35-9549-bb35933d6694": {
       "url": "https://playbill.com/job/mrs-doubtfire-national-tour-drums-percussion/a0380083-fa6a-4e35-9549-bb35933d6694",
@@ -252,6 +280,66 @@
       "organization": "Suncoast Broadway Dinner Theatre",
       "firstSeen": "2026-03-16T08:33:07.125Z",
       "lastChecked": "2026-03-16T08:33:07.125Z",
+      "hasTrumpet": false,
+      "notified": true,
+      "summary": null
+    },
+    "https://playbill.com/job/musicians-virtual-submissions-medora-musical/130a8fe8-a332-402c-b35a-f12c5cfd14f6": {
+      "url": "https://playbill.com/job/musicians-virtual-submissions-medora-musical/130a8fe8-a332-402c-b35a-f12c5cfd14f6",
+      "title": "Musicians | Virtual Submissions | Medora Musical",
+      "organization": "RWS Global",
+      "firstSeen": "2026-03-18T13:34:48.550Z",
+      "lastChecked": "2026-03-18T15:17:20.197Z",
+      "hasTrumpet": false,
+      "notified": true,
+      "summary": null
+    },
+    "https://playbill.com/job/bass-player-needed-medora-musical/f65c14cc-beb8-4e73-ad05-0affa3de1246": {
+      "url": "https://playbill.com/job/bass-player-needed-medora-musical/f65c14cc-beb8-4e73-ad05-0affa3de1246",
+      "title": "Bass Player Needed | Medora Musical",
+      "organization": "RWS Global",
+      "firstSeen": "2026-03-26T20:07:25.315Z",
+      "lastChecked": "2026-03-26T20:07:25.315Z",
+      "hasTrumpet": false,
+      "notified": true,
+      "summary": null
+    },
+    "https://playbill.com/job/keys-player-needed-medora-musical/3afdb056-0d70-48d3-b9bf-dfb95da0325e": {
+      "url": "https://playbill.com/job/keys-player-needed-medora-musical/3afdb056-0d70-48d3-b9bf-dfb95da0325e",
+      "title": "Keys Player Needed | Medora Musical",
+      "organization": "RWS Global",
+      "firstSeen": "2026-03-26T20:07:25.315Z",
+      "lastChecked": "2026-03-26T20:07:25.315Z",
+      "hasTrumpet": false,
+      "notified": true,
+      "summary": null
+    },
+    "https://playbill.com/job/summer-accompanist/f195cf7b-47b9-45e8-9bc1-38297540202d": {
+      "url": "https://playbill.com/job/summer-accompanist/f195cf7b-47b9-45e8-9bc1-38297540202d",
+      "title": "Summer Accompanist",
+      "organization": "Aloha Foundation--Camp Lanakila",
+      "firstSeen": "2026-03-26T20:07:25.315Z",
+      "lastChecked": "2026-03-26T20:07:25.315Z",
+      "hasTrumpet": false,
+      "notified": true,
+      "summary": null
+    },
+    "https://playbill.com/job/mrs-doubtfire-national-tour-keys-2-amd/18e0f34a-8276-4ccf-854e-12007391ca7a": {
+      "url": "https://playbill.com/job/mrs-doubtfire-national-tour-keys-2-amd/18e0f34a-8276-4ccf-854e-12007391ca7a",
+      "title": "Mrs. Doubtfire National Tour - Keys 2/AMD",
+      "organization": "Work Light Productions",
+      "firstSeen": "2026-03-30T08:41:55.244Z",
+      "lastChecked": "2026-03-30T08:41:55.244Z",
+      "hasTrumpet": false,
+      "notified": true,
+      "summary": null
+    },
+    "https://playbill.com/job/seeking-accompanist-for-royal-caribbean-hairspray-auditions-in-atlanta-ga/fc788bea-b6ac-4c04-8d44-2c48f2cc5878": {
+      "url": "https://playbill.com/job/seeking-accompanist-for-royal-caribbean-hairspray-auditions-in-atlanta-ga/fc788bea-b6ac-4c04-8d44-2c48f2cc5878",
+      "title": "Seeking Accompanist for Royal Caribbean Hairspray Auditions in Atlanta, GA",
+      "organization": "Royal Caribbean Entertainment",
+      "firstSeen": "2026-03-30T08:41:55.244Z",
+      "lastChecked": "2026-03-30T08:41:55.244Z",
       "hasTrumpet": false,
       "notified": true,
       "summary": null

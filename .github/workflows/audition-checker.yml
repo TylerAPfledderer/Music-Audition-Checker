@@ -28,10 +28,6 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Install Chromium for Puppeteer
-        run: npx puppeteer browsers install chrome
-        # Only needed for JS-rendered pages; safe to run even if not triggered
-
       - name: Run audition checker
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
@@ -42,6 +38,7 @@ jobs:
           NOTIFY_EMAIL: ${{ secrets.NOTIFY_EMAIL }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
+          FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
         run: npx ts-node src/check-auditions.ts
 
       - name: Commit updated state file
