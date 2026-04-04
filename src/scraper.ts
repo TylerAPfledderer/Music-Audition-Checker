@@ -204,3 +204,17 @@ export function contentHash(text: string): string {
 export function computePageHash(text: string): string {
   return contentHash(extractAuditionSignals(normalizeForHash(text)));
 }
+
+// ─── Deterministic pre-filter ─────────────────────────────────────────────────
+
+const BRASS_INCLUDE = /\b(trumpet|cornet)\b/i;
+const BRASS_EXCLUDE = /\b(faculty|instructor)\b/i;
+
+/**
+ * Fast keyword scan to skip Claude API calls for pages with no brass-relevant content.
+ * Returns true only if the text mentions trumpet or cornet AND does not appear to be
+ * an educational/teaching role (which would contain faculty or instructor).
+ */
+export function passesBrassKeywordGate(text: string): boolean {
+  return BRASS_INCLUDE.test(text) && !BRASS_EXCLUDE.test(text);
+}

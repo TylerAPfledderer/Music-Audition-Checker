@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { stripHtml, contentHash, normalizeForHash, MIN_CONTENT_LENGTH } from "../src/scraper";
+import { stripHtml, contentHash, normalizeForHash, MIN_CONTENT_LENGTH, passesBrassKeywordGate } from "../src/scraper";
 
 describe("MIN_CONTENT_LENGTH", () => {
   it("is 500", () => {
@@ -116,5 +116,26 @@ describe("normalizeForHash", () => {
   it("collapses whitespace after stripping", () => {
     const result = normalizeForHash("Open positions  3 hours ago  apply now");
     expect(result).toBe("Open positions apply now");
+  });
+});
+
+describe("passesBrassKeywordGate", () => {
+  it("returns true for 'trumpet'", () => {
+    expect(passesBrassKeywordGate("Principal Trumpet audition")).toBe(true);
+  });
+  it("returns true for 'cornet'", () => {
+    expect(passesBrassKeywordGate("Cornet position available")).toBe(true);
+  });
+  it("is case-insensitive", () => {
+    expect(passesBrassKeywordGate("TRUMPET AUDITION")).toBe(true);
+  });
+  it("returns false for irrelevant text", () => {
+    expect(passesBrassKeywordGate("Violin solo competition")).toBe(false);
+  });
+  it("returns false when 'faculty' is present even with 'trumpet'", () => {
+    expect(passesBrassKeywordGate("Trumpet faculty position")).toBe(false);
+  });
+  it("returns false when 'instructor' is present even with 'trumpet'", () => {
+    expect(passesBrassKeywordGate("Trumpet instructor wanted")).toBe(false);
   });
 });
