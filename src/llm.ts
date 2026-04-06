@@ -43,7 +43,7 @@ export function createGeminiClient(apiKey: string): LlmClient {
             err.status === 429 &&
             attempt < MAX_RETRIES
           ) {
-            const retryMs = parseRetryDelay(err.errorDetails) ?? BASE_DELAY_MS * 2 ** attempt;
+            const retryMs = parseRetryDelay(err.errorDetails) || BASE_DELAY_MS * 2 ** attempt;
             console.log(
               `  \u23F3 Gemini 429 \u2014 retry ${attempt + 1}/${MAX_RETRIES} in ${Math.round(retryMs / 1000)}s...`
             );
