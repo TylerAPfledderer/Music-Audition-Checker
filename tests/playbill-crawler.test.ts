@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import type Anthropic from "@anthropic-ai/sdk";
+import type { LlmClient } from "../src/llm";
 
 // Mock scraper module before importing the module under test
 vi.mock("../src/scraper", () => ({
@@ -12,16 +12,9 @@ import { scrapeUrlRaw, scrapeUrl, contentHash } from "../src/scraper";
 import { extractJobUrlsFromHtml, extractPlaybillJobUrls, processPlaybillUrl } from "../src/playbill-crawler";
 import type { PlaybillState } from "../src/playbill-crawler";
 
-// Factory for a fake Anthropic client
-function makeClient(createFn = vi.fn()) {
-  return { messages: { create: createFn } } as unknown as Anthropic;
-}
-
-// Build a Claude response envelope around a JSON string
-function claudeResponse(json: string) {
-  return Promise.resolve({
-    content: [{ type: "text", text: json }],
-  });
+// Factory for a fake LlmClient
+function makeClient(generateFn: LlmClient["generate"] = vi.fn()): LlmClient {
+  return { generate: generateFn };
 }
 
 // Build a fresh empty PlaybillState
@@ -175,7 +168,7 @@ describe("processPlaybillUrl — index unchanged, no pending listings", () => {
     const findings = await processPlaybillUrl(client, { name: "Playbill", url: "https://playbill.com/jobs" }, state);
 
     expect(findings).toEqual([]);
-    expect(client.messages.create).not.toHaveBeenCalled();
+    expect(client.generate).not.toHaveBeenCalled();
     expect(scrapeUrl).not.toHaveBeenCalled();
   });
 
@@ -203,10 +196,10 @@ describe("processPlaybillUrl — index unchanged but pending listings exist", ()
     vi.mocked(contentHash).mockReturnValue("same-hash");
     vi.mocked(scrapeUrl).mockResolvedValue("This position requires a Trumpet player.");
 
-    const createFn = vi.fn().mockReturnValue(
-      claudeResponse(JSON.stringify({ hasTrumpet: true, summary: "Principal Trumpet opening" }))
+    const generateFn = vi.fn().mockResolvedValue(
+      JSON.stringify({ hasTrumpet: true, summary: "Principal Trumpet opening" })
     );
-    const client = makeClient(createFn);
+    const client = makeClient(generateFn);
 
     const state: PlaybillState = {
       playbillIndexHash: "same-hash",
@@ -244,14 +237,14 @@ describe("processPlaybillUrl — index changed", () => {
     vi.mocked(contentHash).mockReturnValue("new-hash");
     vi.mocked(scrapeUrl).mockResolvedValue("No trumpet mentioned.");
 
-    const createFn = vi.fn()
-      .mockReturnValueOnce(claudeResponse("[]")) // extractPlaybillListings
-      .mockReturnValue(claudeResponse(JSON.stringify({ hasTrumpet: false, summary: null })));
+    const generateFn = vi.fn()
+      .mockResolvedValueOnce("[]") // extractPlaybillListings
+      .mockResolvedValue(JSON.stringify({ hasTrumpet: false, summary: null }));
 
     const state = emptyState();
     state.playbillIndexHash = "old-hash";
 
-    await processPlaybillUrl(makeClient(createFn), { name: "Playbill", url: "https://playbill.com/jobs" }, state);
+    await processPlaybillUrl(makeClient(generateFn), { name: "Playbill", url: "https://playbill.com/jobs" }, state);
 
     expect(state.playbillIndexHash).toBe("new-hash");
   });
@@ -264,13 +257,13 @@ describe("processPlaybillUrl — index changed", () => {
     vi.mocked(scrapeUrl).mockResolvedValue("Looking for a French Horn player.");
 
     const extractedListings = [{ title: "Section Horn", url: jobUrl, organization: "City Orchestra" }];
-    const createFn = vi.fn()
-      .mockReturnValueOnce(claudeResponse(JSON.stringify(extractedListings)))
-      .mockReturnValue(claudeResponse(JSON.stringify({ hasTrumpet: false, summary: null })));
+    const generateFn = vi.fn()
+      .mockResolvedValueOnce(JSON.stringify(extractedListings))
+      .mockResolvedValue(JSON.stringify({ hasTrumpet: false, summary: null }));
 
     const state = emptyState();
 
-    await processPlaybillUrl(makeClient(createFn), { name: "Playbill", url: "https://playbill.com/jobs" }, state);
+    await processPlaybillUrl(makeClient(generateFn), { name: "Playbill", url: "https://playbill.com/jobs" }, state);
 
     expect(state.playbillListings[jobUrl]).toBeDefined();
     expect(state.playbillListings[jobUrl].title).toBe("Section Horn");
@@ -290,12 +283,12 @@ describe("processPlaybillUrl — index changed", () => {
     vi.mocked(scrapeUrl).mockResolvedValue("No trumpet mentioned.");
 
     const extractedListings = [{ title: "Firecrawl Job", url: firecrawlJobUrl, organization: "Firecrawl Orchestra" }];
-    const createFn = vi.fn()
-      .mockReturnValueOnce(claudeResponse(JSON.stringify(extractedListings)))
-      .mockReturnValue(claudeResponse(JSON.stringify({ hasTrumpet: false, summary: null })));
+    const generateFn = vi.fn()
+      .mockResolvedValueOnce(JSON.stringify(extractedListings))
+      .mockResolvedValue(JSON.stringify({ hasTrumpet: false, summary: null }));
 
     const state = emptyState();
-    await processPlaybillUrl(makeClient(createFn), { name: "Playbill", url: "https://playbill.com/jobs" }, state);
+    await processPlaybillUrl(makeClient(generateFn), { name: "Playbill", url: "https://playbill.com/jobs" }, state);
 
     // The listing from Firecrawl links should be registered; the HTML-only URL should not
     expect(state.playbillListings[firecrawlJobUrl]).toBeDefined();
@@ -310,9 +303,9 @@ describe("processPlaybillUrl — index changed", () => {
     vi.mocked(scrapeUrl).mockResolvedValue("Trumpet player needed.");
 
     const extractedListings = [{ title: "Principal Trumpet", url: jobUrl, organization: "Symphony" }];
-    const createFn = vi.fn()
-      .mockReturnValueOnce(claudeResponse(JSON.stringify(extractedListings)))
-      .mockReturnValue(claudeResponse(JSON.stringify({ hasTrumpet: true, summary: "Trumpet" })));
+    const generateFn = vi.fn()
+      .mockResolvedValueOnce(JSON.stringify(extractedListings))
+      .mockResolvedValue(JSON.stringify({ hasTrumpet: true, summary: "Trumpet" }));
 
     const existingFirstSeen = "2025-12-01T00:00:00.000Z";
     const state: PlaybillState = {
@@ -331,7 +324,7 @@ describe("processPlaybillUrl — index changed", () => {
       },
     };
 
-    await processPlaybillUrl(makeClient(createFn), { name: "Playbill", url: "https://playbill.com/jobs" }, state);
+    await processPlaybillUrl(makeClient(generateFn), { name: "Playbill", url: "https://playbill.com/jobs" }, state);
 
     // firstSeen must not be overwritten
     expect(state.playbillListings[jobUrl].firstSeen).toBe(existingFirstSeen);
@@ -366,11 +359,11 @@ describe("processPlaybillUrl — trumpet-confirmed listing pending notification"
       },
     };
 
-    const createFn = vi.fn();
-    const findings = await processPlaybillUrl(makeClient(createFn), { name: "Playbill", url: "https://playbill.com/jobs" }, state);
+    const generateFn = vi.fn();
+    const findings = await processPlaybillUrl(makeClient(generateFn), { name: "Playbill", url: "https://playbill.com/jobs" }, state);
 
     expect(scrapeUrl).not.toHaveBeenCalled();
-    expect(createFn).not.toHaveBeenCalled();
+    expect(generateFn).not.toHaveBeenCalled();
     expect(findings).toHaveLength(1);
     expect(findings[0].name).toBe("Principal Trumpet");
     expect(findings[0].summary).toBe("Seeking a Principal Trumpet.");
@@ -390,8 +383,8 @@ describe("processPlaybillUrl — notification flag logic", () => {
     vi.mocked(contentHash).mockReturnValue("hash");
     vi.mocked(scrapeUrl).mockResolvedValue("Looking for a French Horn player.");
 
-    const createFn = vi.fn().mockReturnValue(
-      claudeResponse(JSON.stringify({ hasTrumpet: false, summary: null }))
+    const generateFn = vi.fn().mockResolvedValue(
+      JSON.stringify({ hasTrumpet: false, summary: null })
     );
 
     const state: PlaybillState = {
@@ -410,7 +403,7 @@ describe("processPlaybillUrl — notification flag logic", () => {
       },
     };
 
-    const findings = await processPlaybillUrl(makeClient(createFn), { name: "Playbill", url: "https://playbill.com/jobs" }, state);
+    const findings = await processPlaybillUrl(makeClient(generateFn), { name: "Playbill", url: "https://playbill.com/jobs" }, state);
 
     expect(findings).toHaveLength(0);
     expect(state.playbillListings[jobUrl].notified).toBe(true);
@@ -422,8 +415,8 @@ describe("processPlaybillUrl — notification flag logic", () => {
     vi.mocked(contentHash).mockReturnValue("hash");
     vi.mocked(scrapeUrl).mockResolvedValue("This position requires a Trumpet player.");
 
-    const createFn = vi.fn().mockReturnValue(
-      claudeResponse(JSON.stringify({ hasTrumpet: true, summary: "Principal Trumpet opening." }))
+    const generateFn = vi.fn().mockResolvedValue(
+      JSON.stringify({ hasTrumpet: true, summary: "Principal Trumpet opening." })
     );
 
     const state: PlaybillState = {
@@ -442,7 +435,7 @@ describe("processPlaybillUrl — notification flag logic", () => {
       },
     };
 
-    await processPlaybillUrl(makeClient(createFn), { name: "Playbill", url: "https://playbill.com/jobs" }, state);
+    await processPlaybillUrl(makeClient(generateFn), { name: "Playbill", url: "https://playbill.com/jobs" }, state);
 
     expect(state.playbillListings[jobUrl].notified).toBe(false);
     expect(state.playbillListings[jobUrl].hasTrumpet).toBe(true);
@@ -470,12 +463,12 @@ describe("processPlaybillUrl — error handling", () => {
     vi.mocked(scrapeUrlRaw).mockResolvedValue({ text: "page", html: `<a href="${jobUrl}">Job</a>` });
     vi.mocked(contentHash).mockReturnValue("new-hash");
 
-    // Claude returns non-JSON garbage
-    const createFn = vi.fn().mockReturnValue(claudeResponse("not valid JSON at all"));
+    // LLM returns non-JSON garbage
+    const generateFn = vi.fn().mockResolvedValue("not valid JSON at all");
     const state = emptyState();
 
     // Should not throw — extractPlaybillListings swallows errors
-    const findings = await processPlaybillUrl(makeClient(createFn), { name: "Playbill", url: "https://playbill.com/jobs" }, state);
+    const findings = await processPlaybillUrl(makeClient(generateFn), { name: "Playbill", url: "https://playbill.com/jobs" }, state);
 
     expect(findings).toEqual([]);
     expect(Object.keys(state.playbillListings)).toHaveLength(0);
@@ -487,8 +480,8 @@ describe("processPlaybillUrl — error handling", () => {
     vi.mocked(contentHash).mockReturnValue("hash");
     vi.mocked(scrapeUrl).mockResolvedValue("Some listing text.");
 
-    // Claude returns malformed JSON on the detail check
-    const createFn = vi.fn().mockReturnValue(claudeResponse("not json"));
+    // LLM returns malformed JSON on the detail check
+    const generateFn = vi.fn().mockResolvedValue("not json");
 
     const state: PlaybillState = {
       playbillIndexHash: "hash",
@@ -506,7 +499,7 @@ describe("processPlaybillUrl — error handling", () => {
       },
     };
 
-    const findings = await processPlaybillUrl(makeClient(createFn), { name: "Playbill", url: "https://playbill.com/jobs" }, state);
+    const findings = await processPlaybillUrl(makeClient(generateFn), { name: "Playbill", url: "https://playbill.com/jobs" }, state);
 
     expect(findings).toHaveLength(0);
     expect(state.playbillListings[jobUrl].hasTrumpet).toBe(false);

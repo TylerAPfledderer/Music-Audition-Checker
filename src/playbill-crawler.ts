@@ -1,4 +1,4 @@
-import Anthropic from "@anthropic-ai/sdk";
+import { LlmClient } from "./llm";
 import { scrapeUrl, scrapeUrlRaw, contentHash } from "./scraper";
 import { CrawlResult } from "./email";
 
@@ -108,7 +108,7 @@ export function extractPlaybillJobUrls(
  * should not halt the run or suppress notifications from other sources.
  */
 async function extractPlaybillListings(
-  client: Anthropic,
+  client: LlmClient,
   indexText: string,
   knownJobUrls: string[]
 ): Promise<PlaybillIndexListing[]> {
@@ -138,16 +138,7 @@ Page content (first 6000 chars):
 ${indexText.slice(0, 6000)}`;
 
   try {
-    const response = await client.messages.create({
-      model: "claude-sonnet-4-20250514",
-      max_tokens: 2000,
-      messages: [{ role: "user", content: prompt }],
-    });
-
-    const raw = response.content
-      .filter((b) => b.type === "text")
-      .map((b) => (b as { type: "text"; text: string }).text)
-      .join("");
+    const raw = await client.generate(prompt, 2000);
 
     const match = raw.match(/\[[\s\S]*\]/);
     if (!match) throw new Error("No JSON array found");
@@ -155,7 +146,7 @@ ${indexText.slice(0, 6000)}`;
     const listings = JSON.parse(match[0]) as PlaybillIndexListing[];
     const knownSet = new Set(knownJobUrls);
 
-    // Only keep entries whose URL is in the known set — drop anything Claude hallucinated
+    // Only keep entries whose URL is in the known set — drop anything the LLM hallucinated
     return listings.filter(
       (l) =>
         l &&
@@ -181,7 +172,7 @@ ${indexText.slice(0, 6000)}`;
  * even reach Stage 2 via the `notified` flag in state.
  */
 async function checkListingForTrumpet(
-  client: Anthropic,
+  client: LlmClient,
   listingText: string,
   listingUrl: string
 ): Promise<{ hasTrumpet: boolean; summary: string | null }> {
@@ -204,16 +195,7 @@ Content (first 4000 chars):
 ${listingText.slice(0, 4000)}`;
 
   try {
-    const response = await client.messages.create({
-      model: "claude-sonnet-4-20250514",
-      max_tokens: 400,
-      messages: [{ role: "user", content: prompt }],
-    });
-
-    const raw = response.content
-      .filter((b) => b.type === "text")
-      .map((b) => (b as { type: "text"; text: string }).text)
-      .join("");
+    const raw = await client.generate(prompt, 400);
 
     const match = raw.match(/\{[\s\S]*\}/);
     if (!match) throw new Error("No JSON object found");
@@ -244,7 +226,7 @@ ${listingText.slice(0, 4000)}`;
  * until a successful email delivery is confirmed by the caller.
  */
 export async function processPlaybillUrl(
-  client: Anthropic,
+  client: LlmClient,
   urlConfig: PlaybillUrlConfig,
   state: PlaybillState
 ): Promise<CrawlResult[]> {
