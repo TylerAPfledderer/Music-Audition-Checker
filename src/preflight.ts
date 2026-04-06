@@ -1,9 +1,9 @@
-import Anthropic from "@anthropic-ai/sdk";
+import { LlmClient } from "./llm";
 import { google } from "googleapis";
 
 import { MIN_CONTENT_LENGTH, fetchPage, fetchWithFirecrawl, stripHtml, extractMainContent } from "./scraper";
 import { UrlConfig, ProbeFailure } from "./email";
-import { probeIsAuditionPage } from "./claude";
+import { probeIsAuditionPage } from "./llm-classifiers";
 
 // ─── Preflight: secrets ───────────────────────────────────────────────────────
 
@@ -17,7 +17,7 @@ export async function preflightSecrets(): Promise<void> {
   console.log("🔐 Preflight: checking secrets...");
 
   const required: Record<string, string | undefined> = {
-    ANTHROPIC_API_KEY: process.env.ANTHROPIC_API_KEY,
+    GEMINI_API_KEY: process.env.GEMINI_API_KEY,
     GMAIL_CLIENT_ID: process.env.GMAIL_CLIENT_ID,
     GMAIL_CLIENT_SECRET: process.env.GMAIL_CLIENT_SECRET,
     GMAIL_REFRESH_TOKEN: process.env.GMAIL_REFRESH_TOKEN,
@@ -85,7 +85,7 @@ export interface PreflightUrlsResult {
  */
 export async function preflightUrls(
   urls: UrlConfig[],
-  claude: Anthropic
+  claude: LlmClient
 ): Promise<PreflightUrlsResult> {
   console.log(`\n🔍 Preflight: probing ${urls.length} URL(s)...\n`);
 

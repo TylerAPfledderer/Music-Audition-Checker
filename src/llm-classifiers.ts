@@ -1,19 +1,19 @@
-import Anthropic from "@anthropic-ai/sdk";
+import { LlmClient } from "./llm";
 
 import { AuditionAnalysis } from "./email";
 
-// ─── Claude Analysis ──────────────────────────────────────────────────────────
+// ─── LLM Analysis ────────────────────────────────────────────────────────────
 
 /**
- * LLM-as-classifier for standard single-page sources. Claude is given the full
+ * LLM-as-classifier for standard single-page sources. The LLM is given the full
  * relevance criteria inline so the classification logic lives in the prompt, not
  * in fragile HTML parsing or keyword matching. The structured JSON contract in the
  * prompt ensures the output is machine-readable without a schema validation library.
- * Regex extraction (`/\{[\s\S]*\}/`) is the fallback in case Claude wraps the JSON
+ * Regex extraction (`/\{[\s\S]*\}/`) is the fallback in case the LLM wraps the JSON
  * in prose despite instructions — a known LLM output reliability issue.
  */
-export async function analyzeWithClaude(
-  client: Anthropic,
+export async function analyzeWithLlm(
+  client: LlmClient,
   pageText: string,
   pageUrl: string,
   pageName: string
@@ -51,16 +51,7 @@ Today: ${today}
 Content (first 8000 chars):
 ${pageText.slice(0, 8000)}`;
 
-  const response = await client.messages.create({
-    model: "claude-sonnet-4-6",
-    max_tokens: 1000,
-    messages: [{ role: "user", content: prompt }],
-  });
-
-  const raw = response.content
-    .filter((b) => b.type === "text")
-    .map((b) => (b as { type: "text"; text: string }).text)
-    .join("");
+  const raw = await client.generate(prompt, 1000);
 
   try {
     const match = raw.match(/\{[\s\S]*\}/);
@@ -77,7 +68,7 @@ ${pageText.slice(0, 8000)}`;
       relevantItems: parsed.relevantItems ?? [],
     };
   } catch {
-    console.warn("  Could not parse Claude response as JSON:", raw.slice(0, 200));
+    console.warn("  Could not parse LLM response as JSON:", raw.slice(0, 200));
     return {
       hasRelevantAuditions: false,
       instrument: [],
@@ -92,18 +83,13 @@ ${pageText.slice(0, 8000)}`;
 }
 
 export async function probeIsAuditionPage(
-  client: Anthropic,
+  client: LlmClient,
   pageText: string,
   url: string,
   name: string
 ): Promise<{ isAuditionPage: boolean; reason: string }> {
-  const response = await client.messages.create({
-    model: "claude-sonnet-4-6",
-    max_tokens: 200,
-    messages: [
-      {
-        role: "user",
-        content: `Does this page appear to be an orchestra/symphony audition or employment/careers page?
+  const raw = await client.generate(
+    `Does this page appear to be an orchestra/symphony audition or employment/careers page?
 Answer with JSON only: { "isAuditionPage": boolean, "reason": string }
 Reason should be one sentence.
 
@@ -111,20 +97,14 @@ URL: ${url}
 Page name: ${name}
 Content sample (first 2000 chars):
 ${pageText.slice(0, 2000)}`,
-      },
-    ],
-  });
-
-  const raw = response.content
-    .filter((b) => b.type === "text")
-    .map((b) => (b as { type: "text"; text: string }).text)
-    .join("");
+    200
+  );
 
   try {
     const match = raw.match(/\{[\s\S]*\}/);
     if (!match) throw new Error("No JSON object found");
     return JSON.parse(match[0]);
   } catch {
-    return { isAuditionPage: false, reason: "Could not parse Claude response" };
+    return { isAuditionPage: false, reason: "Could not parse LLM response" };
   }
 }

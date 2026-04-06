@@ -13,9 +13,9 @@
  * before the script can corrupt state or send misleading emails.
  *
  * Two crawl paradigms coexist and are dispatched by `crawlMode` on UrlConfig:
- *   - Standard (default): single-page fetch → Claude relevance check → notify on change
- *   - Playbill ("playbill"): index fetch → Claude listing extraction →
- *     per-listing detail fetch → Claude trumpet check → notify per matching listing
+ *   - Standard (default): single-page fetch → LLM relevance check → notify on change
+ *   - Playbill ("playbill"): index fetch → LLM listing extraction →
+ *     per-listing detail fetch → LLM trumpet check → notify per matching listing
  *
  * State is persisted to audition-state.json and committed back to the repo by
  * the Actions workflow, making it the source of truth for "what has been seen
@@ -26,12 +26,12 @@ import * as fs from "fs";
 import * as path from "path";
 import dotenv from "dotenv";
 dotenv.config({ path: ".env.local" });
-import Anthropic from "@anthropic-ai/sdk";
+import { createGeminiClient } from "./llm";
 
 import { computePageHash, normalizeForHash, extractAuditionSignals, extractAuditionLinks, scrapeUrl, passesBrassKeywordGate } from "./scraper";
 import { PlaybillState, processPlaybillUrl } from "./playbill-crawler";
 import { UrlConfig, CrawlResult, sendEmail } from "./email";
-import { analyzeWithClaude } from "./claude";
+import { analyzeWithLlm } from "./llm-classifiers";
 import { preflightSecrets, preflightUrls } from "./preflight";
 import { createGitHubIssue } from "./github";
 
@@ -111,7 +111,7 @@ function saveState(state: StateFile): void {
 /**
  * Maps a Claude-generated item label to a stable canonical form.
  *
- * Claude's output is non-deterministic — "Sub list for all instruments",
+ * LLM output is non-deterministic — "Sub list for all instruments",
  * "Substitute musician positions", and "Section and sub positions for all
  * instruments" are all the same underlying opportunity. This funnel maps
  * semantically equivalent labels to a single canonical string so that
@@ -199,13 +199,13 @@ async function main(): Promise<void> {
   console.log(`Checking ${urls.length} URL(s)\n`);
 
   // Init clients
-  const anthropicKey = process.env.ANTHROPIC_API_KEY;
-  if (!anthropicKey) throw new Error("ANTHROPIC_API_KEY env var required");
-  const claude = new Anthropic({ apiKey: anthropicKey });
+  const geminiKey = process.env.GEMINI_API_KEY;
+  if (!geminiKey) throw new Error("GEMINI_API_KEY env var required");
+  const llm = createGeminiClient(geminiKey);
 
   // ── Preflight (runs before any state mutation or email) ──────────────────
   await preflightSecrets();
-  const { contentCache: pageContentCache, failures: probeFailures } = await preflightUrls(urls, claude);
+  const { contentCache: pageContentCache, failures: probeFailures } = await preflightUrls(urls, llm);
 
   if (probeFailures.length > 0) {
     console.log(`\n⚠️  ${probeFailures.length} URL(s) had preflight issues — creating GitHub issue...`);
@@ -227,7 +227,7 @@ async function main(): Promise<void> {
       try {
         if (urlConfig.crawlMode === "playbill") {
           // Multi-level Playbill crawl — handled separately
-          const playbillResults = await processPlaybillUrl(claude, urlConfig, state);
+          const playbillResults = await processPlaybillUrl(llm, urlConfig, state);
           allFindings.push(...playbillResults);
           continue;
         }
@@ -277,7 +277,7 @@ async function main(): Promise<void> {
           debugLog(`[${urlConfig.name}] hash: ${previousState.contentHash} → ${hash}`);
           debugLog(`[${urlConfig.name}] hash input (${signals.length} chars):\n${signals}`);
         }
-        console.log(`  🔍 Content changed — analyzing with Claude...`);
+        console.log(`  🔍 Content changed — analyzing with LLM...`);
 
         // Drill into internal audition-detail links to avoid false positives from
         // pages that list auditions as navigable link labels (e.g. "Winds Auditions"
@@ -302,7 +302,7 @@ async function main(): Promise<void> {
           }
         }
 
-        const analysis = await analyzeWithClaude(claude, analysisText, urlConfig.url, urlConfig.name);
+        const analysis = await analyzeWithLlm(llm, analysisText, urlConfig.url, urlConfig.name);
 
         console.log(
           `  → Relevant: ${analysis.hasRelevantAuditions} | Items: ${analysis.relevantItems.length}`
