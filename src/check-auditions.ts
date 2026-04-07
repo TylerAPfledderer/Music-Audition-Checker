@@ -201,7 +201,7 @@ async function main(): Promise<void> {
   // Init clients
   const geminiKey = process.env.GEMINI_API_KEY;
   if (!geminiKey) throw new Error("GEMINI_API_KEY env var required");
-  const llm = createGeminiClient(geminiKey);
+  const llm = createGeminiClient(geminiKey, process.env.GEMINI_MODEL);
 
   // ── Preflight (runs before any state mutation or email) ──────────────────
   await preflightSecrets();

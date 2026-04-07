@@ -88,6 +88,7 @@ Tests live in `tests/` and mirror `src/`. Run with `npm test`.
 | Variable | Purpose |
 |----------|---------|
 | `GEMINI_API_KEY` | Google Gemini API access (free tier) |
+| `GEMINI_MODEL` | (Optional) Gemini model name. Defaults to `gemini-2.5-flash`. |
 | `GMAIL_CLIENT_ID` | Gmail OAuth2 client ID |
 | `GMAIL_CLIENT_SECRET` | Gmail OAuth2 client secret |
 | `GMAIL_REFRESH_TOKEN` | Gmail OAuth2 refresh token |

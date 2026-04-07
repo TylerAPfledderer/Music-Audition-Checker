@@ -19,10 +19,12 @@ function parseRetryDelay(errorDetails?: { [key: string]: unknown }[]): number | 
   return match ? parseInt(match[1], 10) * 1000 : null;
 }
 
+const DEFAULT_MODEL = "gemini-2.5-flash";
+
 /** Creates a Gemini-backed LlmClient. */
-export function createGeminiClient(apiKey: string): LlmClient {
+export function createGeminiClient(apiKey: string, modelName?: string): LlmClient {
   const genAI = new GoogleGenerativeAI(apiKey);
-  const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+  const model = genAI.getGenerativeModel({ model: modelName || DEFAULT_MODEL });
 
   return {
     async generate(prompt: string, maxTokens: number): Promise<string> {
