@@ -26,7 +26,7 @@ import * as fs from "fs";
 import * as path from "path";
 import dotenv from "dotenv";
 dotenv.config({ path: ".env.local" });
-import { createGeminiClient, DailyQuotaExhaustedError } from "./llm";
+import { LlmClient, createGeminiClient, DailyQuotaExhaustedError } from "./llm";
 
 import { computePageHash, normalizeForHash, extractAuditionSignals, extractAuditionLinks, scrapeUrl, passesBrassKeywordGate } from "./scraper";
 import { PlaybillState, processPlaybillUrl } from "./playbill-crawler";
@@ -48,7 +48,7 @@ import { createGitHubIssue } from "./github";
  * user was last notified, enabling re-notification when a new item appears while
  * the page remains relevant (e.g. a second trumpet audition is added later).
  */
-interface PageState {
+export interface PageState {
   url: string;
   name: string;
   lastChecked: string;
@@ -167,6 +167,120 @@ export function shouldNotify(
   return currentItems.some((item) => !notifiedItems.includes(canonicalizeLabel(item)));
 }
 
+// ─── Standard URL processing ─────────────────────────────────────────────────
+
+export interface ProcessStandardUrlParams {
+  llm: LlmClient;
+  urlConfig: UrlConfig;
+  text: string;
+  html: string;
+  links?: string[];
+  previousState: PageState | undefined;
+}
+
+export type ProcessStandardUrlResult =
+  | { action: "skip-unchanged" }
+  | { action: "skip-no-brass"; pageState: PageState }
+  | { action: "analyzed"; pageState: PageState; finding: CrawlResult | null };
+
+export async function processStandardUrl(params: ProcessStandardUrlParams): Promise<ProcessStandardUrlResult> {
+  const { llm, urlConfig, text, html, links, previousState } = params;
+  const hash = computePageHash(text);
+
+  if (previousState && previousState.contentHash === hash) {
+    console.log(`[SKIP][STATE] ${urlConfig.name} — No Change`);
+    return { action: "skip-unchanged" };
+  }
+
+  if (!passesBrassKeywordGate(text)) {
+    console.log(`[SKIP][DETERMINISTIC] ${urlConfig.name} — No Brass`);
+    return {
+      action: "skip-no-brass",
+      pageState: {
+        ...(previousState ?? {}),
+        url: urlConfig.url,
+        name: urlConfig.name,
+        lastChecked: new Date().toISOString(),
+        contentHash: hash,
+        extractedSummary: null,
+        hasRelevantAuditions: false,
+        notifiedRelevantItems: previousState?.notifiedRelevantItems ?? [],
+      },
+    };
+  }
+
+  console.log(`  🔍 Content changed — analyzing with LLM...`);
+
+  let analysisText = text;
+  const subLinks = extractAuditionLinks(html, urlConfig.url, links);
+  if (subLinks.length > 0) {
+    console.log(`  ↳ Found ${subLinks.length} audition sub-page(s) — fetching for context...`);
+    const subTexts: string[] = [];
+    for (const subUrl of subLinks) {
+      try {
+        const subText = await scrapeUrl(subUrl);
+        subTexts.push(`--- Sub-page: ${subUrl} ---\n${subText.slice(0, 2000)}`);
+        console.log(`    ✓ Fetched: ${subUrl}`);
+      } catch (err) {
+        console.warn(`    ⚠️  Could not fetch sub-page ${subUrl}: ${err}`);
+      }
+    }
+    if (subTexts.length > 0) {
+      analysisText = `${text}\n\n${subTexts.join("\n\n")}`;
+    }
+  }
+
+  const analysis = await analyzeWithLlm(llm, analysisText, urlConfig.url, urlConfig.name);
+
+  console.log(
+    `  → Relevant: ${analysis.hasRelevantAuditions} | Items: ${analysis.relevantItems.length}`
+  );
+
+  const hadNotifiedItemsField = previousState?.notifiedRelevantItems !== undefined;
+  const wasRelevant = previousState?.hasRelevantAuditions ?? false;
+  const notifiedItems = previousState?.notifiedRelevantItems ?? [];
+
+  const pageState: PageState = {
+    url: urlConfig.url,
+    name: urlConfig.name,
+    lastChecked: new Date().toISOString(),
+    contentHash: hash,
+    extractedSummary: analysis.summary,
+    hasRelevantAuditions: analysis.hasRelevantAuditions,
+    notifiedRelevantItems: previousState?.notifiedRelevantItems ?? [],
+  };
+
+  let finding: CrawlResult | null = null;
+
+  if (wasRelevant && !hadNotifiedItemsField && analysis.hasRelevantAuditions) {
+    console.log(`  ℹ️  Initializing item tracking for already-relevant page (no email sent)`);
+    pageState.notifiedRelevantItems = [
+      ...new Set(analysis.relevantItems.map(canonicalizeLabel)),
+    ];
+  } else if (shouldNotify(analysis.hasRelevantAuditions, wasRelevant, analysis.relevantItems, notifiedItems)) {
+    const instrumentLabel = analysis.instrument.join(", ") || "Relevant";
+    console.log(`[NEW][AI-MATCH] ${urlConfig.name} — ${instrumentLabel}`);
+    finding = {
+      source: "standard",
+      name: urlConfig.name,
+      url: urlConfig.url,
+      summary: analysis.summary,
+      relevantItems: analysis.relevantItems,
+      futureDates: analysis.futureDates,
+    };
+    pageState.notifiedRelevantItems = [
+      ...new Set([...notifiedItems, ...analysis.relevantItems.map(canonicalizeLabel)]),
+    ];
+  } else if (analysis.hasRelevantAuditions) {
+    pageState.notifiedRelevantItems = [
+      ...new Set([...notifiedItems, ...analysis.relevantItems.map(canonicalizeLabel)]),
+    ];
+    console.log(`[SKIP][STATE] ${urlConfig.name} — No New Items`);
+  }
+
+  return { action: "analyzed", pageState, finding };
+}
+
 // ─── Main ─────────────────────────────────────────────────────────────────────
 
 /**
@@ -203,9 +317,13 @@ async function main(): Promise<void> {
   if (!geminiKey) throw new Error("GEMINI_API_KEY env var required");
   const llm = createGeminiClient(geminiKey, process.env.GEMINI_MODEL);
 
+  // Load previous state (before preflight so validated URLs can skip LLM probe)
+  const state = loadState();
+  const validatedUrls = new Set(Object.values(state.pages).map((p) => p.url));
+
   // ── Preflight (runs before any state mutation or email) ──────────────────
   await preflightSecrets();
-  const { contentCache: pageContentCache, failures: probeFailures } = await preflightUrls(urls, llm);
+  const { contentCache: pageContentCache, failures: probeFailures } = await preflightUrls(urls, llm, validatedUrls);
 
   if (probeFailures.length > 0) {
     console.log(`\n⚠️  ${probeFailures.length} URL(s) had preflight issues — creating GitHub issue...`);
@@ -215,9 +333,6 @@ async function main(): Promise<void> {
   }
 
   console.log("\n▶️  Starting main run\n");
-
-  // Load previous state
-  const state = loadState();
   const allFindings: CrawlResult[] = [];
 
   let stateValid = false;
@@ -233,127 +348,34 @@ async function main(): Promise<void> {
         }
 
         // Standard single-page flow
-        // Reuse content fetched during preflight — no second HTTP request
         const cached = pageContentCache.get(urlConfig.url);
         if (!cached) {
           console.log(`[SKIP][PREFLIGHT] ${urlConfig.name} — Failed Preflight`);
           continue;
         }
-        const { text, html: cachedHtml, links: cachedFirecrawlLinks } = cached;
-        const hash = computePageHash(text);
-        const previousState = state.pages[urlConfig.url];
 
-        // Capture whether the notifiedRelevantItems field existed BEFORE state is
-        // overwritten below. undefined means the field was never written (old schema);
-        // [] means it was written but empty. We use this to suppress a spurious
-        // notification when a page was already known-relevant before item tracking
-        // was introduced (schema evolution guard).
-        const hadNotifiedItemsField = previousState?.notifiedRelevantItems !== undefined;
-
-        // Skip if content unchanged and we already checked it recently
-        if (previousState && previousState.contentHash === hash) {
-          console.log(`[SKIP][STATE] ${urlConfig.name} — No Change`);
-          continue;
-        }
-
-        // Deterministic pre-filter: skip Claude entirely if no brass-relevant keywords
-        if (!passesBrassKeywordGate(text)) {
-          console.log(`[SKIP][DETERMINISTIC] ${urlConfig.name} — No Brass`);
-          state.pages[urlConfig.url] = {
-            ...(previousState ?? {}),
-            url: urlConfig.url,
-            name: urlConfig.name,
-            lastChecked: new Date().toISOString(),
-            contentHash: hash,
-            extractedSummary: null,
-            hasRelevantAuditions: false,
-            notifiedRelevantItems: previousState?.notifiedRelevantItems ?? [],
-          };
-          continue;
-        }
-
-        if (isDebug && previousState) {
-          const signals = extractAuditionSignals(normalizeForHash(text));
-          debugLog(`[${urlConfig.name}] hash: ${previousState.contentHash} → ${hash}`);
+        if (isDebug && state.pages[urlConfig.url]) {
+          const signals = extractAuditionSignals(normalizeForHash(cached.text));
+          const hash = computePageHash(cached.text);
+          debugLog(`[${urlConfig.name}] hash: ${state.pages[urlConfig.url].contentHash} → ${hash}`);
           debugLog(`[${urlConfig.name}] hash input (${signals.length} chars):\n${signals}`);
         }
-        console.log(`  🔍 Content changed — analyzing with LLM...`);
 
-        // Drill into internal audition-detail links to avoid false positives from
-        // pages that list auditions as navigable link labels (e.g. "Winds Auditions"
-        // → sub-page). Without this, Claude must infer from the label alone, which
-        // causes over-notification when the actual instrument list excludes trumpet.
-        let analysisText = text;
-        const subLinks = extractAuditionLinks(cachedHtml, urlConfig.url, cachedFirecrawlLinks);
-        if (subLinks.length > 0) {
-          console.log(`  ↳ Found ${subLinks.length} audition sub-page(s) — fetching for context...`);
-          const subTexts: string[] = [];
-          for (const subUrl of subLinks) {
-            try {
-              const subText = await scrapeUrl(subUrl);
-              subTexts.push(`--- Sub-page: ${subUrl} ---\n${subText.slice(0, 2000)}`);
-              console.log(`    ✓ Fetched: ${subUrl}`);
-            } catch (err) {
-              console.warn(`    ⚠️  Could not fetch sub-page ${subUrl}: ${err}`);
-            }
-          }
-          if (subTexts.length > 0) {
-            analysisText = `${text}\n\n${subTexts.join("\n\n")}`;
-          }
+        const result = await processStandardUrl({
+          llm,
+          urlConfig,
+          text: cached.text,
+          html: cached.html,
+          links: cached.links,
+          previousState: state.pages[urlConfig.url],
+        });
+
+        if (result.action === "skip-unchanged") continue;
+        if (result.action === "skip-no-brass" || result.action === "analyzed") {
+          state.pages[urlConfig.url] = result.pageState;
         }
-
-        const analysis = await analyzeWithLlm(llm, analysisText, urlConfig.url, urlConfig.name);
-
-        console.log(
-          `  → Relevant: ${analysis.hasRelevantAuditions} | Items: ${analysis.relevantItems.length}`
-        );
-
-        // Update state
-        state.pages[urlConfig.url] = {
-          url: urlConfig.url,
-          name: urlConfig.name,
-          lastChecked: new Date().toISOString(),
-          contentHash: hash,
-          extractedSummary: analysis.summary,
-          hasRelevantAuditions: analysis.hasRelevantAuditions,
-          notifiedRelevantItems: previousState?.notifiedRelevantItems ?? [],
-        };
-
-        const wasRelevant = previousState?.hasRelevantAuditions ?? false;
-        const notifiedItems = previousState?.notifiedRelevantItems ?? [];
-
-        if (wasRelevant && !hadNotifiedItemsField && analysis.hasRelevantAuditions) {
-          // Schema evolution: this page was known-relevant before notifiedRelevantItems
-          // was introduced. Silently initialize the field from the current Claude output
-          // so the next run has a populated baseline to compare against.
-          console.log(`  ℹ️  Initializing item tracking for already-relevant page (no email sent)`);
-          state.pages[urlConfig.url].notifiedRelevantItems = [
-            ...new Set(analysis.relevantItems.map(canonicalizeLabel)),
-          ];
-        } else if (shouldNotify(analysis.hasRelevantAuditions, wasRelevant, analysis.relevantItems, notifiedItems)) {
-          const instrumentLabel = analysis.instrument.join(", ") || "Relevant";
-          console.log(`[NEW][AI-MATCH] ${urlConfig.name} — ${instrumentLabel}`);
-          allFindings.push({
-            source: "standard",
-            name: urlConfig.name,
-            url: urlConfig.url,
-            summary: analysis.summary,
-            relevantItems: analysis.relevantItems,
-            futureDates: analysis.futureDates,
-          });
-          // Canonicalize and merge: store the union of previously-notified canonical
-          // labels and the current run's canonical labels. This prevents any future
-          // wording variant from being treated as a new item.
-          state.pages[urlConfig.url].notifiedRelevantItems = [
-            ...new Set([...notifiedItems, ...analysis.relevantItems.map(canonicalizeLabel)]),
-          ];
-        } else if (analysis.hasRelevantAuditions) {
-          // Still relevant, no new items. Absorb canonical labels from this run
-          // so the state stays current without triggering a notification.
-          state.pages[urlConfig.url].notifiedRelevantItems = [
-            ...new Set([...notifiedItems, ...analysis.relevantItems.map(canonicalizeLabel)]),
-          ];
-          console.log(`[SKIP][STATE] ${urlConfig.name} — No New Items`);
+        if (result.action === "analyzed" && result.finding) {
+          allFindings.push(result.finding);
         }
       } catch (err) {
         if (err instanceof DailyQuotaExhaustedError) throw err;

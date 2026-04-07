@@ -1,6 +1,17 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import { encodeSubjectRfc2047, buildEmailRaw } from "../src/email";
-import { shouldNotify, canonicalizeLabel } from "../src/check-auditions";
+import { shouldNotify, canonicalizeLabel, processStandardUrl, PageState } from "../src/check-auditions";
+import { computePageHash } from "../src/scraper";
+import type { LlmClient } from "../src/llm";
+
+// Mock scraper's network functions — keep pure functions (computePageHash etc.) real
+vi.mock("../src/scraper", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("../src/scraper")>();
+  return {
+    ...actual,
+    scrapeUrl: vi.fn(),
+  };
+});
 
 // Helper: decode base64url MIME message back to UTF-8 text
 function decodeMime(raw: string): string {
@@ -184,6 +195,124 @@ describe("shouldNotify", () => {
 
   it("still notifies for a genuinely different canonical category", () => {
     expect(shouldNotify(true, true, ["Principal Trumpet"], ["substitute list"])).toBe(true);
+  });
+});
+
+// ─── processStandardUrl ─────────────────────────────────────────────────────
+
+function makeClient(generateFn: LlmClient["generate"] = vi.fn()): LlmClient {
+  return { generate: generateFn };
+}
+
+const TEST_URL = { name: "Test Orchestra", url: "https://example.com/auditions" };
+const BRASS_PAGE_TEXT = "Auditions open for trumpet players. Apply by June 2026.";
+
+describe("processStandardUrl", () => {
+  beforeEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it("skips LLM call when content hash is unchanged", async () => {
+    const hash = computePageHash(BRASS_PAGE_TEXT);
+    const previousState: PageState = {
+      url: TEST_URL.url,
+      name: TEST_URL.name,
+      lastChecked: "2026-04-01",
+      contentHash: hash,
+      extractedSummary: null,
+      hasRelevantAuditions: false,
+      notifiedRelevantItems: [],
+    };
+
+    const client = makeClient();
+    const result = await processStandardUrl({
+      llm: client,
+      urlConfig: TEST_URL,
+      text: BRASS_PAGE_TEXT,
+      html: "",
+      previousState,
+    });
+
+    expect(result.action).toBe("skip-unchanged");
+    expect(client.generate).not.toHaveBeenCalled();
+  });
+
+  it("calls LLM when content hash has changed", async () => {
+    const previousState: PageState = {
+      url: TEST_URL.url,
+      name: TEST_URL.name,
+      lastChecked: "2026-04-01",
+      contentHash: "old-hash-that-wont-match",
+      extractedSummary: null,
+      hasRelevantAuditions: false,
+      notifiedRelevantItems: [],
+    };
+
+    const client = makeClient(vi.fn().mockResolvedValue(JSON.stringify({
+      isRelevant: false,
+      instrument: [],
+      deadline: null,
+      location: "",
+      confidenceScore: 0.9,
+      summary: null,
+      futureDates: [],
+      relevantItems: [],
+    })));
+
+    const result = await processStandardUrl({
+      llm: client,
+      urlConfig: TEST_URL,
+      text: BRASS_PAGE_TEXT,
+      html: "",
+      previousState,
+    });
+
+    expect(result.action).toBe("analyzed");
+    expect(client.generate).toHaveBeenCalledOnce();
+  });
+
+  it("calls LLM on first run (no previous state)", async () => {
+    const client = makeClient(vi.fn().mockResolvedValue(JSON.stringify({
+      isRelevant: true,
+      instrument: ["Principal Trumpet"],
+      deadline: "2026-06-01",
+      location: "Raleigh, NC",
+      confidenceScore: 0.95,
+      summary: "Trumpet audition",
+      futureDates: ["2026-06-01"],
+      relevantItems: ["Principal Trumpet"],
+    })));
+
+    const result = await processStandardUrl({
+      llm: client,
+      urlConfig: TEST_URL,
+      text: BRASS_PAGE_TEXT,
+      html: "",
+      previousState: undefined,
+    });
+
+    expect(result.action).toBe("analyzed");
+    expect(client.generate).toHaveBeenCalledOnce();
+    if (result.action === "analyzed") {
+      expect(result.finding).not.toBeNull();
+      expect(result.finding!.name).toBe("Test Orchestra");
+    }
+  });
+
+  it("skips LLM when page has no brass keywords", async () => {
+    const noBrassText = "We are hiring a new marketing director and office manager.";
+    const client = makeClient();
+
+    const result = await processStandardUrl({
+      llm: client,
+      urlConfig: TEST_URL,
+      text: noBrassText,
+      html: "",
+      previousState: undefined,
+    });
+
+    expect(result.action).toBe("skip-no-brass");
+    expect(client.generate).not.toHaveBeenCalled();
   });
 });
 
