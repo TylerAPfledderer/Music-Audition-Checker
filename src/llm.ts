@@ -5,6 +5,14 @@ export interface LlmClient {
   generate(prompt: string, maxTokens: number): Promise<string>;
 }
 
+/** Thrown when the Gemini daily quota is exhausted — retries cannot help. */
+export class DailyQuotaExhaustedError extends Error {
+  constructor() {
+    super("Gemini daily quota exhausted \u2014 aborting run");
+    this.name = "DailyQuotaExhaustedError";
+  }
+}
+
 const MAX_RETRIES = 3;
 const BASE_DELAY_MS = 60_000;
 
@@ -17,6 +25,17 @@ function parseRetryDelay(errorDetails?: { [key: string]: unknown }[]): number | 
   if (!retryInfo?.retryDelay) return null;
   const match = String(retryInfo.retryDelay).match(/^(\d+)/);
   return match ? parseInt(match[1], 10) * 1000 : null;
+}
+
+/** Check if the 429 is a daily quota exhaustion (unrecoverable within this run). */
+function isDailyQuotaExhausted(errorDetails?: { [key: string]: unknown }[]): boolean {
+  if (!errorDetails) return false;
+  const quotaFailure = errorDetails.find(
+    (d) => d["@type"] === "type.googleapis.com/google.rpc.QuotaFailure"
+  );
+  if (!quotaFailure) return false;
+  const violations = quotaFailure.violations as { quotaId?: string }[] | undefined;
+  return violations?.some((v) => v.quotaId?.includes("PerDay")) ?? false;
 }
 
 const DEFAULT_MODEL = "gemini-2.5-flash";
@@ -42,19 +61,29 @@ export function createGeminiClient(apiKey: string, modelName?: string): LlmClien
               thinkingConfig: { thinkingBudget: 0 },
             } as Parameters<typeof model.generateContent>[0] extends { generationConfig?: infer G } ? G : never,
           });
+          const usage = result.response.usageMetadata;
+          if (usage) {
+            console.log(
+              `  [tokens] in=${usage.promptTokenCount ?? 0} out=${usage.candidatesTokenCount ?? 0} total=${usage.totalTokenCount ?? 0}`
+            );
+          }
           return result.response.text();
         } catch (err) {
           if (
             err instanceof GoogleGenerativeAIFetchError &&
-            err.status === 429 &&
-            attempt < MAX_RETRIES
+            err.status === 429
           ) {
-            const retryMs = parseRetryDelay(err.errorDetails) || BASE_DELAY_MS * 2 ** attempt;
-            console.log(
-              `  \u23F3 Gemini 429 \u2014 retry ${attempt + 1}/${MAX_RETRIES} in ${Math.round(retryMs / 1000)}s...`
-            );
-            await new Promise((r) => setTimeout(r, retryMs));
-            continue;
+            if (isDailyQuotaExhausted(err.errorDetails)) {
+              throw new DailyQuotaExhaustedError();
+            }
+            if (attempt < MAX_RETRIES) {
+              const retryMs = parseRetryDelay(err.errorDetails) || BASE_DELAY_MS * 2 ** attempt;
+              console.log(
+                `  \u23F3 Gemini 429 \u2014 retry ${attempt + 1}/${MAX_RETRIES} in ${Math.round(retryMs / 1000)}s...`
+              );
+              await new Promise((r) => setTimeout(r, retryMs));
+              continue;
+            }
           }
           throw err;
         }

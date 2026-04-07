@@ -26,7 +26,7 @@ import * as fs from "fs";
 import * as path from "path";
 import dotenv from "dotenv";
 dotenv.config({ path: ".env.local" });
-import { createGeminiClient } from "./llm";
+import { createGeminiClient, DailyQuotaExhaustedError } from "./llm";
 
 import { computePageHash, normalizeForHash, extractAuditionSignals, extractAuditionLinks, scrapeUrl, passesBrassKeywordGate } from "./scraper";
 import { PlaybillState, processPlaybillUrl } from "./playbill-crawler";
@@ -356,6 +356,7 @@ async function main(): Promise<void> {
           console.log(`[SKIP][STATE] ${urlConfig.name} — No New Items`);
         }
       } catch (err) {
+        if (err instanceof DailyQuotaExhaustedError) throw err;
         console.error(`  ❌ Error processing ${urlConfig.url}:`, err);
       }
     }

@@ -1,4 +1,4 @@
-import { LlmClient } from "./llm";
+import { LlmClient, DailyQuotaExhaustedError } from "./llm";
 import { google } from "googleapis";
 
 import { MIN_CONTENT_LENGTH, fetchPage, fetchWithFirecrawl, stripHtml, extractMainContent } from "./scraper";
@@ -152,6 +152,7 @@ export async function preflightUrls(
         );
       }
     } catch (err) {
+      if (err instanceof DailyQuotaExhaustedError) throw err;
       result.error = String(err);
       console.log(`    ❌ Failed: ${result.error}`);
     }
