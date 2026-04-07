@@ -30,18 +30,18 @@ export function createGeminiClient(apiKey: string, modelName?: string): LlmClien
     async generate(prompt: string, maxTokens: number): Promise<string> {
       for (let attempt = 0; ; attempt++) {
         try {
-          // thinkingConfig is supported by the REST API but not typed in
-          // @google/generative-ai v0.24 — the SDK passes the object through
-          // to the API via JSON.stringify, so the cast is safe.
+          // thinkingConfig is supported by the REST API inside generationConfig
+          // but not typed in @google/generative-ai v0.24 — the SDK passes the
+          // object through to the API via JSON.stringify, so the cast is safe.
           const result = await model.generateContent({
             contents: [{ role: "user", parts: [{ text: prompt }] }],
             generationConfig: {
               maxOutputTokens: maxTokens,
               temperature: 0,
               responseMimeType: "application/json",
-            },
-            thinkingConfig: { thinkingBudget: 0 },
-          } as Parameters<typeof model.generateContent>[0]);
+              thinkingConfig: { thinkingBudget: 0 },
+            } as Parameters<typeof model.generateContent>[0] extends { generationConfig?: infer G } ? G : never,
+          });
           return result.response.text();
         } catch (err) {
           if (
