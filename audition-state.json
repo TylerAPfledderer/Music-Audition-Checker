@@ -1,15 +1,6 @@
 {
   "lastRun": "2026-04-08T02:20:24.269Z",
   "pages": {
-    "https://www.chamberorchestraofthetriangle.org/employment": {
-      "url": "https://www.chamberorchestraofthetriangle.org/employment",
-      "name": "Chamber Orchestra of the Triangle",
-      "lastChecked": "2026-03-18T15:16:42.660Z",
-      "contentHash": "f97a435635971080",
-      "extractedSummary": null,
-      "hasRelevantAuditions": false,
-      "notifiedRelevantItems": []
-    },
     "https://wpsymphony.org/employment/": {
       "url": "https://wpsymphony.org/employment/",
       "name": "Western Piedmont Symphony",
@@ -101,17 +92,6 @@
       "extractedSummary": null,
       "hasRelevantAuditions": false,
       "notifiedRelevantItems": []
-    },
-    "https://www.charlottesymphony.org/about/employment-auditions/": {
-      "url": "https://www.charlottesymphony.org/about/employment-auditions/",
-      "name": "Charlotte Symphony",
-      "lastChecked": "2026-04-02T20:09:05.343Z",
-      "contentHash": "940d4a36b47e2a34",
-      "extractedSummary": "The Charlotte Symphony has a Second Trumpet audition scheduled for May 31 - June 2, 2026, with applications due May 1, 2026. This is a full-time, tenure track position starting September 2026 with a minimum weekly salary of $1,377.15.",
-      "hasRelevantAuditions": true,
-      "notifiedRelevantItems": [
-        "second trumpet"
-      ]
     },
     "https://ashevillesymphony.org/employment/": {
       "url": "https://ashevillesymphony.org/employment/",
