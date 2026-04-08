@@ -1,6 +1,15 @@
 {
-  "lastRun": "2026-04-08T02:20:24.269Z",
+  "lastRun": "2026-04-07T22:31:26.935Z",
   "pages": {
+    "https://www.chamberorchestraofthetriangle.org/employment": {
+      "url": "https://www.chamberorchestraofthetriangle.org/employment",
+      "name": "Chamber Orchestra of the Triangle",
+      "lastChecked": "2026-03-18T15:16:42.660Z",
+      "contentHash": "f97a435635971080",
+      "extractedSummary": null,
+      "hasRelevantAuditions": false,
+      "notifiedRelevantItems": []
+    },
     "https://wpsymphony.org/employment/": {
       "url": "https://wpsymphony.org/employment/",
       "name": "Western Piedmont Symphony",
@@ -15,8 +24,8 @@
     "https://www.fayettevillesymphony.org/auditions-and-employment/": {
       "url": "https://www.fayettevillesymphony.org/auditions-and-employment/",
       "name": "Fayetteville Symphony Orchestra",
-      "lastChecked": "2026-04-08T02:20:24.223Z",
-      "contentHash": "dc4f96fd83e1ffbf",
+      "lastChecked": "2026-04-04T17:28:45.922Z",
+      "contentHash": "d726a970f9c55a7a",
       "extractedSummary": null,
       "hasRelevantAuditions": false,
       "notifiedRelevantItems": [
@@ -93,11 +102,22 @@
       "hasRelevantAuditions": false,
       "notifiedRelevantItems": []
     },
+    "https://www.charlottesymphony.org/about/employment-auditions/": {
+      "url": "https://www.charlottesymphony.org/about/employment-auditions/",
+      "name": "Charlotte Symphony",
+      "lastChecked": "2026-04-02T20:09:05.343Z",
+      "contentHash": "940d4a36b47e2a34",
+      "extractedSummary": "The Charlotte Symphony has a Second Trumpet audition scheduled for May 31 - June 2, 2026, with applications due May 1, 2026. This is a full-time, tenure track position starting September 2026 with a minimum weekly salary of $1,377.15.",
+      "hasRelevantAuditions": true,
+      "notifiedRelevantItems": [
+        "second trumpet"
+      ]
+    },
     "https://ashevillesymphony.org/employment/": {
       "url": "https://ashevillesymphony.org/employment/",
       "name": "Asheville Symphony",
-      "lastChecked": "2026-04-08T02:20:24.225Z",
-      "contentHash": "db24b395932784d1",
+      "lastChecked": "2026-03-19T21:59:47.908Z",
+      "contentHash": "e89ec9d1e7265247",
       "extractedSummary": null,
       "hasRelevantAuditions": false,
       "notifiedRelevantItems": []
