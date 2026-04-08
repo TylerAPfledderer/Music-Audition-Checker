@@ -334,7 +334,7 @@ describe("fetchWithFirecrawl — key gate", () => {
 
   it("throws immediately when FIRECRAWL_API_KEY is not set", async () => {
     delete process.env.FIRECRAWL_API_KEY;
-    const { fetchWithFirecrawl } = await import("../src/scraper");
+    const { fetchWithFirecrawl } = await import("../src/scraper.ts");
     await expect(fetchWithFirecrawl("https://example.com")).rejects.toThrow(
       "FIRECRAWL_API_KEY is not set"
     );

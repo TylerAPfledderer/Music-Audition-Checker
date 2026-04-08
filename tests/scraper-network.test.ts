@@ -54,7 +54,7 @@ describe("fetchWithFirecrawl", () => {
 
   it("throws immediately when FIRECRAWL_API_KEY is not set", async () => {
     delete process.env.FIRECRAWL_API_KEY;
-    const { fetchWithFirecrawl } = await import("../src/scraper");
+    const { fetchWithFirecrawl } = await import("../src/scraper.ts");
     await expect(fetchWithFirecrawl("https://example.com")).rejects.toThrow(
       "FIRECRAWL_API_KEY is not set"
     );
@@ -74,7 +74,7 @@ describe("fetchWithFirecrawl", () => {
       },
     }));
 
-    const { fetchWithFirecrawl } = await import("../src/scraper");
+    const { fetchWithFirecrawl } = await import("../src/scraper.ts");
     const result = await fetchWithFirecrawl("https://example.com");
 
     expect(mockScrape).toHaveBeenCalledWith(
@@ -95,7 +95,7 @@ describe("fetchWithFirecrawl", () => {
       },
     }));
 
-    const { fetchWithFirecrawl } = await import("../src/scraper");
+    const { fetchWithFirecrawl } = await import("../src/scraper.ts");
     await expect(fetchWithFirecrawl("https://example.com")).rejects.toThrow(
       "Page blocked by anti-bot"
     );
