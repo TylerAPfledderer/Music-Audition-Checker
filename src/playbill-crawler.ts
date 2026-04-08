@@ -1,4 +1,4 @@
-import { LlmClient } from "./llm";
+import { LlmClient, DailyQuotaExhaustedError } from "./llm";
 import { scrapeUrl, scrapeUrlRaw, contentHash } from "./scraper";
 import { CrawlResult } from "./email";
 
@@ -156,6 +156,7 @@ ${indexText.slice(0, 6000)}`;
         knownSet.has(l.url)
     );
   } catch (err) {
+    if (err instanceof DailyQuotaExhaustedError) throw err;
     console.warn(`  ⚠️  extractPlaybillListings failed: ${err}`);
     return [];
   }
@@ -201,6 +202,7 @@ ${listingText.slice(0, 4000)}`;
     if (!match) throw new Error("No JSON object found");
     return JSON.parse(match[0]) as { hasTrumpet: boolean; summary: string | null };
   } catch (err) {
+    if (err instanceof DailyQuotaExhaustedError) throw err;
     console.warn(`  ⚠️  checkListingForTrumpet failed: ${err}`);
     return { hasTrumpet: false, summary: null };
   }

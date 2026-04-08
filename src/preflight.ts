@@ -1,4 +1,4 @@
-import { LlmClient } from "./llm";
+import { LlmClient, DailyQuotaExhaustedError } from "./llm";
 import { google } from "googleapis";
 
 import { MIN_CONTENT_LENGTH, fetchPage, fetchWithFirecrawl, stripHtml, extractMainContent } from "./scraper";
@@ -85,7 +85,8 @@ export interface PreflightUrlsResult {
  */
 export async function preflightUrls(
   urls: UrlConfig[],
-  claude: LlmClient
+  claude: LlmClient,
+  validatedUrls: Set<string> = new Set()
 ): Promise<PreflightUrlsResult> {
   console.log(`\n🔍 Preflight: probing ${urls.length} URL(s)...\n`);
 
@@ -132,10 +133,13 @@ export async function preflightUrls(
       result.ok = true;
 
       if (urlConfig.crawlMode === "playbill") {
-        // Playbill is a job board, not a single audition page — skip the Claude check
         result.isAuditionPage = true;
-        result.claudeReason = "Playbill job board — audition page check skipped";
-        console.log(`    ✅ ${result.charCount.toLocaleString()} chars via ${result.method} — Playbill job board (check skipped)`);
+        result.claudeReason = "Playbill job board (probe skipped)";
+        console.log(`    ✅ ${result.charCount.toLocaleString()} chars via ${result.method} — ${result.claudeReason}`);
+      } else if (validatedUrls.has(urlConfig.url)) {
+        result.isAuditionPage = true;
+        result.claudeReason = "Previously validated (probe skipped)";
+        console.log(`    ✅ ${result.charCount.toLocaleString()} chars via ${result.method} — ${result.claudeReason}`);
       } else {
         const { isAuditionPage, reason } = await probeIsAuditionPage(
           claude,
@@ -152,6 +156,7 @@ export async function preflightUrls(
         );
       }
     } catch (err) {
+      if (err instanceof DailyQuotaExhaustedError) throw err;
       result.error = String(err);
       console.log(`    ❌ Failed: ${result.error}`);
     }
