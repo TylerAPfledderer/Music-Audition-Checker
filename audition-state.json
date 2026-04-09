@@ -1,5 +1,5 @@
 {
-  "lastRun": "2026-04-07T22:31:26.935Z",
+  "lastRun": "2026-04-09T13:03:26.598Z",
   "pages": {
     "https://www.chamberorchestraofthetriangle.org/employment": {
       "url": "https://www.chamberorchestraofthetriangle.org/employment",
@@ -24,8 +24,8 @@
     "https://www.fayettevillesymphony.org/auditions-and-employment/": {
       "url": "https://www.fayettevillesymphony.org/auditions-and-employment/",
       "name": "Fayetteville Symphony Orchestra",
-      "lastChecked": "2026-04-04T17:28:45.922Z",
-      "contentHash": "d726a970f9c55a7a",
+      "lastChecked": "2026-04-09T13:03:19.409Z",
+      "contentHash": "a160e10e30e723d5",
       "extractedSummary": null,
       "hasRelevantAuditions": false,
       "notifiedRelevantItems": [
@@ -78,8 +78,8 @@
     "https://greensborosymphony.org/about-the-symphony/auditions/": {
       "url": "https://greensborosymphony.org/about-the-symphony/auditions/",
       "name": "Greensboro Symphony Orchestra",
-      "lastChecked": "2026-03-20T22:27:16.801Z",
-      "contentHash": "71686022ed5f3919",
+      "lastChecked": "2026-04-09T13:03:19.409Z",
+      "contentHash": "e3b0c44298fc1c14",
       "extractedSummary": null,
       "hasRelevantAuditions": false,
       "notifiedRelevantItems": []
@@ -116,8 +116,8 @@
     "https://ashevillesymphony.org/employment/": {
       "url": "https://ashevillesymphony.org/employment/",
       "name": "Asheville Symphony",
-      "lastChecked": "2026-03-19T21:59:47.908Z",
-      "contentHash": "e89ec9d1e7265247",
+      "lastChecked": "2026-04-09T13:03:19.410Z",
+      "contentHash": "db24b395932784d1",
       "extractedSummary": null,
       "hasRelevantAuditions": false,
       "notifiedRelevantItems": []
@@ -132,7 +132,7 @@
       "notifiedRelevantItems": []
     }
   },
-  "playbillIndexHash": "633d90ad9462b1de",
+  "playbillIndexHash": "f3c34ae1afd9f8de",
   "playbillListings": {
     "https://playbill.com/job/mrs-doubtfire-national-tour-drums-percussion/a0380083-fa6a-4e35-9549-bb35933d6694": {
       "url": "https://playbill.com/job/mrs-doubtfire-national-tour-drums-percussion/a0380083-fa6a-4e35-9549-bb35933d6694",
@@ -376,6 +376,28 @@
       "notified": true,
       "summary": null,
       "contentHash": "289202520d564e03"
+    },
+    "https://playbill.com/job/immediate-bass-player-for-a-performance-at-tgr42/61e9fe39-7a87-4fcf-ac65-5206a7ab2c48": {
+      "url": "https://playbill.com/job/immediate-bass-player-for-a-performance-at-tgr42/61e9fe39-7a87-4fcf-ac65-5206a7ab2c48",
+      "title": "Immediate Bass Player for a Performance at TGR42",
+      "organization": "Truth and Justice Productions",
+      "firstSeen": "2026-04-09T13:03:19.410Z",
+      "lastChecked": "2026-04-09T13:03:19.410Z",
+      "hasTrumpet": false,
+      "notified": true,
+      "summary": null,
+      "contentHash": "db43b744c819b9f7"
+    },
+    "https://playbill.com/job/rehearsal-pianist/3341f669-c013-490d-ae65-5f39ea3ab7fc": {
+      "url": "https://playbill.com/job/rehearsal-pianist/3341f669-c013-490d-ae65-5f39ea3ab7fc",
+      "title": "Rehearsal Pianist",
+      "organization": "Opera Picciona",
+      "firstSeen": "2026-04-09T13:03:19.410Z",
+      "lastChecked": "2026-04-09T13:03:19.410Z",
+      "hasTrumpet": false,
+      "notified": true,
+      "summary": null,
+      "contentHash": "05fe63520b5d0110"
     }
   }
 }
