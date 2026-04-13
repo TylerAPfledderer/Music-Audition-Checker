@@ -1,5 +1,5 @@
 {
-  "lastRun": "2026-04-09T20:13:37.618Z",
+  "lastRun": "2026-04-13T08:51:43.080Z",
   "pages": {
     "https://www.chamberorchestraofthetriangle.org/employment": {
       "url": "https://www.chamberorchestraofthetriangle.org/employment",
@@ -24,10 +24,10 @@
     "https://www.fayettevillesymphony.org/auditions-and-employment/": {
       "url": "https://www.fayettevillesymphony.org/auditions-and-employment/",
       "name": "Fayetteville Symphony Orchestra",
-      "lastChecked": "2026-04-09T20:13:36.824Z",
-      "contentHash": "2f8f29837ff837a4",
-      "extractedSummary": null,
-      "hasRelevantAuditions": false,
+      "lastChecked": "2026-04-13T08:51:33.955Z",
+      "contentHash": "b384de6ac0b76860",
+      "extractedSummary": "While there are no active audition submissions at this time, the Fayetteville Symphony Orchestra is accepting inquiries for its sub list. This is relevant as a sub list is open to various instruments, including trumpet, and could lead to future performance opportunities.",
+      "hasRelevantAuditions": true,
       "notifiedRelevantItems": [
         "substitute list"
       ]
@@ -78,8 +78,8 @@
     "https://greensborosymphony.org/about-the-symphony/auditions/": {
       "url": "https://greensborosymphony.org/about-the-symphony/auditions/",
       "name": "Greensboro Symphony Orchestra",
-      "lastChecked": "2026-04-09T13:03:19.409Z",
-      "contentHash": "e3b0c44298fc1c14",
+      "lastChecked": "2026-04-13T08:51:33.956Z",
+      "contentHash": "71686022ed5f3919",
       "extractedSummary": null,
       "hasRelevantAuditions": false,
       "notifiedRelevantItems": []
@@ -132,7 +132,7 @@
       "notifiedRelevantItems": []
     }
   },
-  "playbillIndexHash": "586977194810b867",
+  "playbillIndexHash": "198fef8346323015",
   "playbillListings": {
     "https://playbill.com/job/mrs-doubtfire-national-tour-drums-percussion/a0380083-fa6a-4e35-9549-bb35933d6694": {
       "url": "https://playbill.com/job/mrs-doubtfire-national-tour-drums-percussion/a0380083-fa6a-4e35-9549-bb35933d6694",
