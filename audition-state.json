@@ -1,5 +1,5 @@
 {
-  "lastRun": "2026-04-13T08:51:43.080Z",
+  "lastRun": "2026-04-14T04:18:07.773Z",
   "pages": {
     "https://www.chamberorchestraofthetriangle.org/employment": {
       "url": "https://www.chamberorchestraofthetriangle.org/employment",
@@ -24,10 +24,10 @@
     "https://www.fayettevillesymphony.org/auditions-and-employment/": {
       "url": "https://www.fayettevillesymphony.org/auditions-and-employment/",
       "name": "Fayetteville Symphony Orchestra",
-      "lastChecked": "2026-04-13T08:51:33.955Z",
-      "contentHash": "b384de6ac0b76860",
-      "extractedSummary": "While there are no active audition submissions at this time, the Fayetteville Symphony Orchestra is accepting inquiries for its sub list. This is relevant as a sub list is open to various instruments, including trumpet, and could lead to future performance opportunities.",
-      "hasRelevantAuditions": true,
+      "lastChecked": "2026-04-14T04:18:01.279Z",
+      "contentHash": "2f8f29837ff837a4",
+      "extractedSummary": null,
+      "hasRelevantAuditions": false,
       "notifiedRelevantItems": [
         "substitute list"
       ]
@@ -132,7 +132,7 @@
       "notifiedRelevantItems": []
     }
   },
-  "playbillIndexHash": "198fef8346323015",
+  "playbillIndexHash": "d6f12d188ef61eb1",
   "playbillListings": {
     "https://playbill.com/job/mrs-doubtfire-national-tour-drums-percussion/a0380083-fa6a-4e35-9549-bb35933d6694": {
       "url": "https://playbill.com/job/mrs-doubtfire-national-tour-drums-percussion/a0380083-fa6a-4e35-9549-bb35933d6694",
@@ -398,6 +398,17 @@
       "notified": true,
       "summary": null,
       "contentHash": "05fe63520b5d0110"
+    },
+    "https://playbill.com/job/seeking-musicians-keyboard-fiddle-guitar-pedal-steel-guitar-drums-for-honky-tonk-angels/17e92b84-616d-47cd-be9b-8ec4e5af5d91": {
+      "url": "https://playbill.com/job/seeking-musicians-keyboard-fiddle-guitar-pedal-steel-guitar-drums-for-honky-tonk-angels/17e92b84-616d-47cd-be9b-8ec4e5af5d91",
+      "title": "Seeking Musicians: Keyboard, Fiddle/Guitar, Pedal Steel Guitar, Drums for Honky Tonk Angels",
+      "organization": "Florida Studio Theatre",
+      "firstSeen": "2026-04-14T04:18:01.281Z",
+      "lastChecked": "2026-04-14T04:18:01.281Z",
+      "hasTrumpet": false,
+      "notified": true,
+      "summary": null,
+      "contentHash": "5f6d6cd84d1e8448"
     }
   }
 }
