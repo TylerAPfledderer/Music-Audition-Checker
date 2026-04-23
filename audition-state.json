@@ -1,5 +1,5 @@
 {
-  "lastRun": "2026-04-20T08:54:48.842Z",
+  "lastRun": "2026-04-23T20:16:58.041Z",
   "pages": {
     "https://www.chamberorchestraofthetriangle.org/employment": {
       "url": "https://www.chamberorchestraofthetriangle.org/employment",
@@ -24,8 +24,8 @@
     "https://www.fayettevillesymphony.org/auditions-and-employment/": {
       "url": "https://www.fayettevillesymphony.org/auditions-and-employment/",
       "name": "Fayetteville Symphony Orchestra",
-      "lastChecked": "2026-04-20T08:54:45.011Z",
-      "contentHash": "e7d15eaca542d5e4",
+      "lastChecked": "2026-04-23T20:16:52.829Z",
+      "contentHash": "b038cbd8d9314e33",
       "extractedSummary": null,
       "hasRelevantAuditions": false,
       "notifiedRelevantItems": [
@@ -105,9 +105,9 @@
     "https://www.charlottesymphony.org/about/employment-auditions/": {
       "url": "https://www.charlottesymphony.org/about/employment-auditions/",
       "name": "Charlotte Symphony",
-      "lastChecked": "2026-04-02T20:09:05.343Z",
-      "contentHash": "940d4a36b47e2a34",
-      "extractedSummary": "The Charlotte Symphony has a Second Trumpet audition scheduled for May 31 - June 2, 2026, with applications due May 1, 2026. This is a full-time, tenure track position starting September 2026 with a minimum weekly salary of $1,377.15.",
+      "lastChecked": "2026-04-23T20:16:55.256Z",
+      "contentHash": "805ef228dd869b5a",
+      "extractedSummary": "The Charlotte Symphony has an open audition for a Second Trumpet position. The application deadline is May 1, 2026, with auditions scheduled for May 31 - June 2, 2026. This is a full-time, tenure-track position with employment starting in September 2026.",
       "hasRelevantAuditions": true,
       "notifiedRelevantItems": [
         "second trumpet"
@@ -116,8 +116,8 @@
     "https://ashevillesymphony.org/employment/": {
       "url": "https://ashevillesymphony.org/employment/",
       "name": "Asheville Symphony",
-      "lastChecked": "2026-04-09T13:03:19.410Z",
-      "contentHash": "db24b395932784d1",
+      "lastChecked": "2026-04-23T20:16:52.831Z",
+      "contentHash": "ae4b99b129935754",
       "extractedSummary": null,
       "hasRelevantAuditions": false,
       "notifiedRelevantItems": []
@@ -132,7 +132,7 @@
       "notifiedRelevantItems": []
     }
   },
-  "playbillIndexHash": "32f4a4f269bab658",
+  "playbillIndexHash": "7044eb41f02fcd0d",
   "playbillListings": {
     "https://playbill.com/job/mrs-doubtfire-national-tour-drums-percussion/a0380083-fa6a-4e35-9549-bb35933d6694": {
       "url": "https://playbill.com/job/mrs-doubtfire-national-tour-drums-percussion/a0380083-fa6a-4e35-9549-bb35933d6694",
