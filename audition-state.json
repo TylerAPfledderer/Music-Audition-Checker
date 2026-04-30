@@ -1,5 +1,5 @@
 {
-  "lastRun": "2026-04-23T20:16:58.041Z",
+  "lastRun": "2026-04-30T20:21:38.517Z",
   "pages": {
     "https://www.chamberorchestraofthetriangle.org/employment": {
       "url": "https://www.chamberorchestraofthetriangle.org/employment",
@@ -24,8 +24,8 @@
     "https://www.fayettevillesymphony.org/auditions-and-employment/": {
       "url": "https://www.fayettevillesymphony.org/auditions-and-employment/",
       "name": "Fayetteville Symphony Orchestra",
-      "lastChecked": "2026-04-23T20:16:52.829Z",
-      "contentHash": "b038cbd8d9314e33",
+      "lastChecked": "2026-04-30T20:21:19.332Z",
+      "contentHash": "54031850c1513e2e",
       "extractedSummary": null,
       "hasRelevantAuditions": false,
       "notifiedRelevantItems": [
@@ -58,8 +58,8 @@
     "https://charlestonsymphony.org/employment/": {
       "url": "https://charlestonsymphony.org/employment/",
       "name": "Charleston Symphony Orchestra",
-      "lastChecked": "2026-03-26T20:07:22.754Z",
-      "contentHash": "fefe1c4529e9fe55",
+      "lastChecked": "2026-04-30T20:21:19.332Z",
+      "contentHash": "405e30243cb450a9",
       "extractedSummary": null,
       "hasRelevantAuditions": false,
       "notifiedRelevantItems": []
@@ -116,8 +116,8 @@
     "https://ashevillesymphony.org/employment/": {
       "url": "https://ashevillesymphony.org/employment/",
       "name": "Asheville Symphony",
-      "lastChecked": "2026-04-23T20:16:52.831Z",
-      "contentHash": "ae4b99b129935754",
+      "lastChecked": "2026-04-30T20:21:19.333Z",
+      "contentHash": "2a0c8e2da605493b",
       "extractedSummary": null,
       "hasRelevantAuditions": false,
       "notifiedRelevantItems": []
@@ -132,7 +132,7 @@
       "notifiedRelevantItems": []
     }
   },
-  "playbillIndexHash": "7044eb41f02fcd0d",
+  "playbillIndexHash": "7c870352eac6c228",
   "playbillListings": {
     "https://playbill.com/job/mrs-doubtfire-national-tour-drums-percussion/a0380083-fa6a-4e35-9549-bb35933d6694": {
       "url": "https://playbill.com/job/mrs-doubtfire-national-tour-drums-percussion/a0380083-fa6a-4e35-9549-bb35933d6694",
@@ -409,6 +409,28 @@
       "notified": true,
       "summary": null,
       "contentHash": "5f6d6cd84d1e8448"
+    },
+    "https://playbill.com/job/musicians-for-boop-the-musical-bus-truck-national-tour/4ca01359-f624-4af9-a4a5-0deef0a4c638": {
+      "url": "https://playbill.com/job/musicians-for-boop-the-musical-bus-truck-national-tour/4ca01359-f624-4af9-a4a5-0deef0a4c638",
+      "title": "Musicians for BOOP! The Musical Bus & Truck National Tour",
+      "organization": "NETworks Presentations LLC",
+      "firstSeen": "2026-04-30T20:21:19.334Z",
+      "lastChecked": "2026-04-30T20:21:19.334Z",
+      "hasTrumpet": false,
+      "notified": true,
+      "summary": null,
+      "contentHash": "5fd9eb68aa24d9fb"
+    },
+    "https://playbill.com/job/orchestra-musicians-bastien-und-bastienne-le-66/78c5b493-717d-49e5-a90d-6501b006187e": {
+      "url": "https://playbill.com/job/orchestra-musicians-bastien-und-bastienne-le-66/78c5b493-717d-49e5-a90d-6501b006187e",
+      "title": "Orchestra Musicians - Bastien und Bastienne / Le 66",
+      "organization": "Opera Picciona",
+      "firstSeen": "2026-04-30T20:21:19.334Z",
+      "lastChecked": "2026-04-30T20:21:19.334Z",
+      "hasTrumpet": false,
+      "notified": true,
+      "summary": null,
+      "contentHash": "8b20952acc8307f0"
     }
   }
 }
