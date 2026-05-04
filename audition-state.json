@@ -1,5 +1,5 @@
 {
-  "lastRun": "2026-04-30T20:21:38.517Z",
+  "lastRun": "2026-05-04T08:58:43.314Z",
   "pages": {
     "https://www.chamberorchestraofthetriangle.org/employment": {
       "url": "https://www.chamberorchestraofthetriangle.org/employment",
@@ -24,10 +24,10 @@
     "https://www.fayettevillesymphony.org/auditions-and-employment/": {
       "url": "https://www.fayettevillesymphony.org/auditions-and-employment/",
       "name": "Fayetteville Symphony Orchestra",
-      "lastChecked": "2026-04-30T20:21:19.332Z",
-      "contentHash": "54031850c1513e2e",
-      "extractedSummary": null,
-      "hasRelevantAuditions": false,
+      "lastChecked": "2026-05-04T08:58:39.185Z",
+      "contentHash": "79b278cb64059093",
+      "extractedSummary": "The Fayetteville Symphony Orchestra is currently accepting inquiries for their sub list. While there are no active audition submissions at this time, interested musicians can email the Operations Manager to be considered for future substitute positions. This opportunity is relevant as it is an open orchestral sub list where trumpet players would qualify.",
+      "hasRelevantAuditions": true,
       "notifiedRelevantItems": [
         "substitute list"
       ]
@@ -132,7 +132,7 @@
       "notifiedRelevantItems": []
     }
   },
-  "playbillIndexHash": "7c870352eac6c228",
+  "playbillIndexHash": "5528078a15dae251",
   "playbillListings": {
     "https://playbill.com/job/mrs-doubtfire-national-tour-drums-percussion/a0380083-fa6a-4e35-9549-bb35933d6694": {
       "url": "https://playbill.com/job/mrs-doubtfire-national-tour-drums-percussion/a0380083-fa6a-4e35-9549-bb35933d6694",
@@ -431,6 +431,17 @@
       "notified": true,
       "summary": null,
       "contentHash": "8b20952acc8307f0"
+    },
+    "https://playbill.com/job/resident-drummer-guitarists/ecefd4d3-e06f-4e46-9acb-ce0dd08d2b93": {
+      "url": "https://playbill.com/job/resident-drummer-guitarists/ecefd4d3-e06f-4e46-9acb-ce0dd08d2b93",
+      "title": "Resident Drummer & Guitarists",
+      "organization": "Timber Lake Playhouse",
+      "firstSeen": "2026-05-04T08:58:39.187Z",
+      "lastChecked": "2026-05-04T08:58:39.187Z",
+      "hasTrumpet": false,
+      "notified": true,
+      "summary": null,
+      "contentHash": "1ffdb98665c26907"
     }
   }
 }
