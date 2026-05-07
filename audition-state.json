@@ -1,5 +1,5 @@
 {
-  "lastRun": "2026-05-04T08:58:43.314Z",
+  "lastRun": "2026-05-07T20:28:13.581Z",
   "pages": {
     "https://www.chamberorchestraofthetriangle.org/employment": {
       "url": "https://www.chamberorchestraofthetriangle.org/employment",
@@ -24,9 +24,9 @@
     "https://www.fayettevillesymphony.org/auditions-and-employment/": {
       "url": "https://www.fayettevillesymphony.org/auditions-and-employment/",
       "name": "Fayetteville Symphony Orchestra",
-      "lastChecked": "2026-05-04T08:58:39.185Z",
-      "contentHash": "79b278cb64059093",
-      "extractedSummary": "The Fayetteville Symphony Orchestra is currently accepting inquiries for their sub list. While there are no active audition submissions at this time, interested musicians can email the Operations Manager to be considered for future substitute positions. This opportunity is relevant as it is an open orchestral sub list where trumpet players would qualify.",
+      "lastChecked": "2026-05-07T20:25:02.948Z",
+      "contentHash": "fee75ab37becb804",
+      "extractedSummary": "The Fayetteville Symphony Orchestra is currently accepting submissions for their sub list. While there are no active audition submissions at this time, interested musicians can email the Operations Manager to be considered for future substitute positions. This opportunity is relevant as it allows for trumpet players to join the orchestra's sub list.",
       "hasRelevantAuditions": true,
       "notifiedRelevantItems": [
         "substitute list"
@@ -87,8 +87,8 @@
     "https://www.wssymphony.org/about/jobs-2/": {
       "url": "https://www.wssymphony.org/about/jobs-2/",
       "name": "Winston-Salem Symphony",
-      "lastChecked": "2026-03-18T15:17:02.945Z",
-      "contentHash": "ece6dcfc77e949f1",
+      "lastChecked": "2026-05-07T20:25:02.949Z",
+      "contentHash": "ecf37120b1005b54",
       "extractedSummary": null,
       "hasRelevantAuditions": false,
       "notifiedRelevantItems": []
@@ -105,9 +105,9 @@
     "https://www.charlottesymphony.org/about/employment-auditions/": {
       "url": "https://www.charlottesymphony.org/about/employment-auditions/",
       "name": "Charlotte Symphony",
-      "lastChecked": "2026-04-23T20:16:55.256Z",
-      "contentHash": "805ef228dd869b5a",
-      "extractedSummary": "The Charlotte Symphony has an open audition for a Second Trumpet position. The application deadline is May 1, 2026, with auditions scheduled for May 31 - June 2, 2026. This is a full-time, tenure-track position with employment starting in September 2026.",
+      "lastChecked": "2026-05-07T20:25:04.558Z",
+      "contentHash": "2a8fbe663173171f",
+      "extractedSummary": "The Charlotte Symphony has an open audition for a Second Trumpet position. The application deadline is May 1, 2026, with auditions scheduled for May 31 - June 2, 2026. The position is full-time, tenure track, with employment starting in September 2026.",
       "hasRelevantAuditions": true,
       "notifiedRelevantItems": [
         "second trumpet"
@@ -116,8 +116,8 @@
     "https://ashevillesymphony.org/employment/": {
       "url": "https://ashevillesymphony.org/employment/",
       "name": "Asheville Symphony",
-      "lastChecked": "2026-04-30T20:21:19.333Z",
-      "contentHash": "2a0c8e2da605493b",
+      "lastChecked": "2026-05-07T20:25:02.950Z",
+      "contentHash": "a27fbcccdf08dafa",
       "extractedSummary": null,
       "hasRelevantAuditions": false,
       "notifiedRelevantItems": []
@@ -132,7 +132,7 @@
       "notifiedRelevantItems": []
     }
   },
-  "playbillIndexHash": "5528078a15dae251",
+  "playbillIndexHash": "454b8b265986a390",
   "playbillListings": {
     "https://playbill.com/job/mrs-doubtfire-national-tour-drums-percussion/a0380083-fa6a-4e35-9549-bb35933d6694": {
       "url": "https://playbill.com/job/mrs-doubtfire-national-tour-drums-percussion/a0380083-fa6a-4e35-9549-bb35933d6694",
@@ -442,6 +442,83 @@
       "notified": true,
       "summary": null,
       "contentHash": "1ffdb98665c26907"
+    },
+    "https://playbill.com/job/the-palace-theatre-seeks-bassist-for-the-cher-show/3e36fbea-671f-413f-b3aa-58a2eda75042": {
+      "url": "https://playbill.com/job/the-palace-theatre-seeks-bassist-for-the-cher-show/3e36fbea-671f-413f-b3aa-58a2eda75042",
+      "title": "The Palace Theatre Seeks Bassist for ' The Cher Show '",
+      "organization": "Palace Theatre",
+      "firstSeen": "2026-05-07T20:25:04.559Z",
+      "lastChecked": "2026-05-07T20:25:04.559Z",
+      "hasTrumpet": false,
+      "notified": true,
+      "summary": null,
+      "contentHash": "e125945babb6c479"
+    },
+    "https://playbill.com/job/female-violinist-ice-queen/31a5479a-c0ca-4ec5-8920-56a81b924202": {
+      "url": "https://playbill.com/job/female-violinist-ice-queen/31a5479a-c0ca-4ec5-8920-56a81b924202",
+      "title": "Female Violinist - Ice Queen",
+      "organization": "Yuri K Productions",
+      "firstSeen": "2026-05-07T20:25:04.559Z",
+      "lastChecked": "2026-05-07T20:25:04.559Z",
+      "hasTrumpet": false,
+      "notified": true,
+      "summary": null,
+      "contentHash": "7150eaf4e6812813"
+    },
+    "https://playbill.com/job/summer-season-orchestra-musicians-hilton-head-island-sc/d7549ed3-dd4a-427b-ada3-eb7fcb6ca6fb": {
+      "url": "https://playbill.com/job/summer-season-orchestra-musicians-hilton-head-island-sc/d7549ed3-dd4a-427b-ada3-eb7fcb6ca6fb",
+      "title": "Summer Season Orchestra Musicians - Hilton Head Island, SC",
+      "organization": "Southeastern Summer Theatre Institute, LLC",
+      "firstSeen": "2026-05-07T20:25:04.559Z",
+      "lastChecked": "2026-05-07T20:25:04.559Z",
+      "hasTrumpet": false,
+      "notified": true,
+      "summary": null,
+      "contentHash": "1bd5f6ad574655a4"
+    },
+    "https://playbill.com/job/fiddle-guitar-player-for-honky-tonk-angels-pit/18b959e7-35ca-4d07-b5f4-cf7fc400763e": {
+      "url": "https://playbill.com/job/fiddle-guitar-player-for-honky-tonk-angels-pit/18b959e7-35ca-4d07-b5f4-cf7fc400763e",
+      "title": "Fiddle/Guitar Player for Honky Tonk Angels Pit",
+      "organization": "Florida Studio Theatre",
+      "firstSeen": "2026-05-07T20:25:04.559Z",
+      "lastChecked": "2026-05-07T20:25:04.559Z",
+      "hasTrumpet": false,
+      "notified": true,
+      "summary": null,
+      "contentHash": "bf8291ce434cb1d2"
+    },
+    "https://playbill.com/job/lead-rehearsal-accompanist-and-pit-keys-1-for-she-loves-me/2b37572d-e2c5-4866-a8b4-fd63d8129426": {
+      "url": "https://playbill.com/job/lead-rehearsal-accompanist-and-pit-keys-1-for-she-loves-me/2b37572d-e2c5-4866-a8b4-fd63d8129426",
+      "title": "Lead Rehearsal Accompanist and Pit Keys 1 for She Loves Me",
+      "organization": "Shenandoah Summer Music Theatre",
+      "firstSeen": "2026-05-07T20:25:04.559Z",
+      "lastChecked": "2026-05-07T20:25:04.559Z",
+      "hasTrumpet": false,
+      "notified": true,
+      "summary": null,
+      "contentHash": "11abefa01104a837"
+    },
+    "https://playbill.com/job/lead-rehearsal-accompanist-and-pit-keyboards-for-guys-and-dolls-and-beautiful-the-carole-king-musical/7c883623-8334-4fe1-9e17-1b06385465ee": {
+      "url": "https://playbill.com/job/lead-rehearsal-accompanist-and-pit-keyboards-for-guys-and-dolls-and-beautiful-the-carole-king-musical/7c883623-8334-4fe1-9e17-1b06385465ee",
+      "title": "Lead Rehearsal Accompanist and Pit Keyboards for Guys And Dolls And Beautiful: The Carole King Musical",
+      "organization": "Shenandoah Summer Music Theatre",
+      "firstSeen": "2026-05-07T20:25:04.559Z",
+      "lastChecked": "2026-05-07T20:25:04.559Z",
+      "hasTrumpet": false,
+      "notified": true,
+      "summary": null,
+      "contentHash": "f09b7c96df482349"
+    },
+    "https://playbill.com/job/drum-teaching-artist/6f23705e-ddee-412b-add7-83cdca97fbf1": {
+      "url": "https://playbill.com/job/drum-teaching-artist/6f23705e-ddee-412b-add7-83cdca97fbf1",
+      "title": "Drum Teaching Artist",
+      "organization": "Soyulla",
+      "firstSeen": "2026-05-07T20:25:04.559Z",
+      "lastChecked": "2026-05-07T20:25:04.559Z",
+      "hasTrumpet": false,
+      "notified": true,
+      "summary": null,
+      "contentHash": "191660b71dfc8844"
     }
   }
 }
