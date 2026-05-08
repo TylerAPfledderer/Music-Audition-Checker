@@ -1,5 +1,5 @@
 {
-  "lastRun": "2026-05-07T20:28:13.581Z",
+  "lastRun": "2026-05-08T18:09:54.348Z",
   "pages": {
     "https://www.chamberorchestraofthetriangle.org/employment": {
       "url": "https://www.chamberorchestraofthetriangle.org/employment",
@@ -24,10 +24,10 @@
     "https://www.fayettevillesymphony.org/auditions-and-employment/": {
       "url": "https://www.fayettevillesymphony.org/auditions-and-employment/",
       "name": "Fayetteville Symphony Orchestra",
-      "lastChecked": "2026-05-07T20:25:02.948Z",
-      "contentHash": "fee75ab37becb804",
-      "extractedSummary": "The Fayetteville Symphony Orchestra is currently accepting submissions for their sub list. While there are no active audition submissions at this time, interested musicians can email the Operations Manager to be considered for future substitute positions. This opportunity is relevant as it allows for trumpet players to join the orchestra's sub list.",
-      "hasRelevantAuditions": true,
+      "lastChecked": "2026-05-08T18:09:49.350Z",
+      "contentHash": "5becd91abecf7dc9",
+      "extractedSummary": null,
+      "hasRelevantAuditions": false,
       "notifiedRelevantItems": [
         "substitute list"
       ]
@@ -132,7 +132,7 @@
       "notifiedRelevantItems": []
     }
   },
-  "playbillIndexHash": "454b8b265986a390",
+  "playbillIndexHash": "905d9fb487cd99ec",
   "playbillListings": {
     "https://playbill.com/job/mrs-doubtfire-national-tour-drums-percussion/a0380083-fa6a-4e35-9549-bb35933d6694": {
       "url": "https://playbill.com/job/mrs-doubtfire-national-tour-drums-percussion/a0380083-fa6a-4e35-9549-bb35933d6694",
