@@ -52,6 +52,14 @@
     "url": "https://www.charlottesymphony.org/about/employment-auditions/"
   },
   {
+    "name": "West Point Academy Band",
+    "url": "https://band.westpoint.edu/auditions/"
+  },
+  {
+    "name": "U.S. Army Pershing's Own",
+    "url": "https://usarmyband.com/vacancies/"
+  },
+  {
     "name": "Playbill Job Board",
     "url": "https://playbill.com/jobs?show=60&category=Musician",
     "crawlMode": "playbill"
