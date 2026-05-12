@@ -1,5 +1,5 @@
 {
-  "lastRun": "2026-05-11T09:21:24.632Z",
+  "lastRun": "2026-05-12T16:54:27.015Z",
   "pages": {
     "https://www.chamberorchestraofthetriangle.org/employment": {
       "url": "https://www.chamberorchestraofthetriangle.org/employment",
@@ -24,8 +24,8 @@
     "https://www.fayettevillesymphony.org/auditions-and-employment/": {
       "url": "https://www.fayettevillesymphony.org/auditions-and-employment/",
       "name": "Fayetteville Symphony Orchestra",
-      "lastChecked": "2026-05-11T09:21:19.400Z",
-      "contentHash": "2658a8cc39d35420",
+      "lastChecked": "2026-05-12T16:54:14.770Z",
+      "contentHash": "2400621bc9b512a1",
       "extractedSummary": null,
       "hasRelevantAuditions": false,
       "notifiedRelevantItems": [
@@ -130,9 +130,32 @@
       "extractedSummary": null,
       "hasRelevantAuditions": false,
       "notifiedRelevantItems": []
+    },
+    "https://band.westpoint.edu/auditions/": {
+      "url": "https://band.westpoint.edu/auditions/",
+      "name": "West Point Academy Band",
+      "lastChecked": "2026-05-12T16:54:17.495Z",
+      "contentHash": "f79f620c108af0b5",
+      "extractedSummary": "The West Point Academy Band has two open positions relevant to trumpet players: Section Trumpet and Bugle/Trumpet. Both positions have application deadlines and live audition dates in 2026, which are in the future. These are full-time orchestral positions with military benefits.",
+      "hasRelevantAuditions": true,
+      "notifiedRelevantItems": [
+        "section trumpet",
+        "trumpet"
+      ]
+    },
+    "https://usarmyband.com/vacancies/": {
+      "url": "https://usarmyband.com/vacancies/",
+      "name": "U.S. Army Pershing's Own",
+      "lastChecked": "2026-05-12T16:54:20.881Z",
+      "contentHash": "6cc3a9dad25656eb",
+      "extractedSummary": "The U.S. Army Band \"Pershing's Own\" has an open audition for a Trumpet position with The U.S. Army Ceremonial Band. The application deadline is July 27, 2026, and auditions are scheduled for September 21-22, 2026. This opportunity is relevant for trumpet players seeking an orchestral position.",
+      "hasRelevantAuditions": true,
+      "notifiedRelevantItems": [
+        "trumpet"
+      ]
     }
   },
-  "playbillIndexHash": "287d33ef6c96893f",
+  "playbillIndexHash": "232a427cdaef21de",
   "playbillListings": {
     "https://playbill.com/job/mrs-doubtfire-national-tour-drums-percussion/a0380083-fa6a-4e35-9549-bb35933d6694": {
       "url": "https://playbill.com/job/mrs-doubtfire-national-tour-drums-percussion/a0380083-fa6a-4e35-9549-bb35933d6694",
@@ -519,6 +542,17 @@
       "notified": true,
       "summary": null,
       "contentHash": "191660b71dfc8844"
+    },
+    "https://playbill.com/job/musicians-for-a-beautiful-noise-bus-truck-national-tour/31a364c4-5011-401d-813c-f3961651bfb8": {
+      "url": "https://playbill.com/job/musicians-for-a-beautiful-noise-bus-truck-national-tour/31a364c4-5011-401d-813c-f3961651bfb8",
+      "title": "Musicians for A Beautiful Noise Bus & Truck National Tour",
+      "organization": "NETworks Presentations LLC",
+      "firstSeen": "2026-05-12T16:54:20.882Z",
+      "lastChecked": "2026-05-12T16:54:20.882Z",
+      "hasTrumpet": true,
+      "notified": true,
+      "summary": "NETworks Presentations LLC is seeking musicians for A BEAUTIFUL NOISE Bus & Truck National Tour, and explicitly lists TRUMPET as one of the open positions. The employment is scheduled from October 25, 2026, through September 12, 2027.",
+      "contentHash": "d715f5e5c1f5495b"
     }
   }
 }
