@@ -1,5 +1,5 @@
 {
-  "lastRun": "2026-05-12T16:54:27.015Z",
+  "lastRun": "2026-05-14T20:29:24.792Z",
   "pages": {
     "https://www.chamberorchestraofthetriangle.org/employment": {
       "url": "https://www.chamberorchestraofthetriangle.org/employment",
@@ -24,10 +24,10 @@
     "https://www.fayettevillesymphony.org/auditions-and-employment/": {
       "url": "https://www.fayettevillesymphony.org/auditions-and-employment/",
       "name": "Fayetteville Symphony Orchestra",
-      "lastChecked": "2026-05-12T16:54:14.770Z",
-      "contentHash": "2400621bc9b512a1",
-      "extractedSummary": null,
-      "hasRelevantAuditions": false,
+      "lastChecked": "2026-05-14T20:29:16.200Z",
+      "contentHash": "ede7e9e5de44caa6",
+      "extractedSummary": "The Fayetteville Symphony Orchestra is currently accepting submissions for their sub list. While there are no active audition submissions at this time, interested musicians can email the Operations Manager to be considered for future engagements. This opportunity is relevant as it allows for potential future trumpet engagements.",
+      "hasRelevantAuditions": true,
       "notifiedRelevantItems": [
         "substitute list"
       ]
@@ -105,9 +105,9 @@
     "https://www.charlottesymphony.org/about/employment-auditions/": {
       "url": "https://www.charlottesymphony.org/about/employment-auditions/",
       "name": "Charlotte Symphony",
-      "lastChecked": "2026-05-07T20:25:04.558Z",
-      "contentHash": "2a8fbe663173171f",
-      "extractedSummary": "The Charlotte Symphony has an open audition for a Second Trumpet position. The application deadline is May 1, 2026, with auditions scheduled for May 31 - June 2, 2026. The position is full-time, tenure track, with employment starting in September 2026.",
+      "lastChecked": "2026-05-14T20:29:17.648Z",
+      "contentHash": "a7554dc2eb4be610",
+      "extractedSummary": "The Charlotte Symphony Orchestra is holding auditions for a Second Trumpet position. The application deadline is May 1, 2026, with auditions scheduled for May 31 - June 2, 2026. This is a full-time, tenure-track position with employment starting in September 2026.",
       "hasRelevantAuditions": true,
       "notifiedRelevantItems": [
         "second trumpet"
@@ -155,7 +155,7 @@
       ]
     }
   },
-  "playbillIndexHash": "232a427cdaef21de",
+  "playbillIndexHash": "5bb7a4938db8e44d",
   "playbillListings": {
     "https://playbill.com/job/mrs-doubtfire-national-tour-drums-percussion/a0380083-fa6a-4e35-9549-bb35933d6694": {
       "url": "https://playbill.com/job/mrs-doubtfire-national-tour-drums-percussion/a0380083-fa6a-4e35-9549-bb35933d6694",
@@ -553,6 +553,39 @@
       "notified": true,
       "summary": "NETworks Presentations LLC is seeking musicians for A BEAUTIFUL NOISE Bus & Truck National Tour, and explicitly lists TRUMPET as one of the open positions. The employment is scheduled from October 25, 2026, through September 12, 2027.",
       "contentHash": "d715f5e5c1f5495b"
+    },
+    "https://playbill.com/job/emergency-replacement-fiddle-player-for-honky-tonk-angels/a38c1a72-013a-425d-97b1-7b9755e8b509": {
+      "url": "https://playbill.com/job/emergency-replacement-fiddle-player-for-honky-tonk-angels/a38c1a72-013a-425d-97b1-7b9755e8b509",
+      "title": "Emergency Replacement: Fiddle Player for Honky Tonk Angels",
+      "organization": "Florida Studio Theatre",
+      "firstSeen": "2026-05-14T20:29:17.649Z",
+      "lastChecked": "2026-05-14T20:29:17.649Z",
+      "hasTrumpet": false,
+      "notified": true,
+      "summary": null,
+      "contentHash": "7b3bc32bbfbe05b7"
+    },
+    "https://playbill.com/job/new-bass-player-for-the-laurie-berkner-band/af37617a-d3b9-43b5-8cc6-8cbde4a032f5": {
+      "url": "https://playbill.com/job/new-bass-player-for-the-laurie-berkner-band/af37617a-d3b9-43b5-8cc6-8cbde4a032f5",
+      "title": "New Bass Player for The Laurie Berkner Band",
+      "organization": "The Laurie Berkner Band",
+      "firstSeen": "2026-05-14T20:29:17.649Z",
+      "lastChecked": "2026-05-14T20:29:17.649Z",
+      "hasTrumpet": false,
+      "notified": true,
+      "summary": null,
+      "contentHash": "2f4829dfb4d6543c"
+    },
+    "https://playbill.com/job/on-stage-touring-musicians---the-whos-tommy/50d89b3a-519b-40ce-af0e-d651f6eb4990": {
+      "url": "https://playbill.com/job/on-stage-touring-musicians---the-whos-tommy/50d89b3a-519b-40ce-af0e-d651f6eb4990",
+      "title": "On Stage Touring Musicians – The Who’s Tommy",
+      "organization": "Smash the Mirror LLC",
+      "firstSeen": "2026-05-14T20:29:17.649Z",
+      "lastChecked": "2026-05-14T20:29:17.649Z",
+      "hasTrumpet": false,
+      "notified": true,
+      "summary": null,
+      "contentHash": "58c2c1887cde5a81"
     }
   }
 }
