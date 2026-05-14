@@ -126,75 +126,60 @@ describe("buildEmailRaw", () => {
 
 describe("shouldNotify", () => {
   it("returns false when page is not relevant", () => {
-    expect(shouldNotify(false, false, [], [])).toBe(false);
-    expect(shouldNotify(false, true, ["Principal Trumpet"], ["Principal Trumpet"])).toBe(false);
+    expect(shouldNotify(false, [], [])).toBe(false);
+    expect(shouldNotify(false, ["Principal Trumpet"], ["principal trumpet"])).toBe(false);
   });
 
-  it("returns true on rising edge (false → true)", () => {
-    expect(shouldNotify(true, false, ["Principal Trumpet"], [])).toBe(true);
+  it("returns true on first-ever notification (notifiedItems empty)", () => {
+    expect(shouldNotify(true, ["Principal Trumpet"], [])).toBe(true);
   });
 
-  it("returns false when still relevant with same items (suppress re-notification)", () => {
+  it("returns false when relevant with same items (suppress re-notification)", () => {
     // notifiedItems holds canonical form as written by canonicalizeLabel at store time
-    expect(shouldNotify(true, true, ["Principal Trumpet"], ["principal trumpet"])).toBe(false);
+    expect(shouldNotify(true, ["Principal Trumpet"], ["principal trumpet"])).toBe(false);
   });
 
-  it("returns true when still relevant and a new trumpet item was added (bug fix case)", () => {
+  it("returns true when a new trumpet item was added alongside an already-notified one", () => {
     expect(
-      shouldNotify(true, true, ["Principal Trumpet", "Second Trumpet"], ["principal trumpet"])
+      shouldNotify(true, ["Principal Trumpet", "Second Trumpet"], ["principal trumpet"])
     ).toBe(true);
   });
 
-  it("returns false when still relevant but only non-trumpet content changed (same relevant items)", () => {
-    // Claude re-analyzed after a non-trumpet audition was added, but relevantItems is unchanged
-    expect(shouldNotify(true, true, ["Principal Trumpet"], ["principal trumpet"])).toBe(false);
-  });
-
-  it("returns true when still relevant but notifiedItems is empty (never notified before)", () => {
-    expect(shouldNotify(true, true, ["Principal Trumpet"], [])).toBe(true);
-  });
-
-  it("returns true on rising edge when notifiedItems is empty (new page, first notification)", () => {
-    expect(shouldNotify(true, false, ["Principal Trumpet"], [])).toBe(true);
+  // Regression: the LLM flip-flopped hasRelevantAuditions on the Fayetteville sub-list page
+  // for weeks, causing a fresh "rising edge" email every time it flipped back to true.
+  // With notifiedItems already containing the canonical, the flip must not re-notify.
+  it("does not re-notify when LLM verdict flips false → true with the same canonical item", () => {
+    expect(shouldNotify(true, ["Sub list for all instruments"], ["substitute list"])).toBe(false);
   });
 
   // Canonical label matching: all wording variants of the same opportunity share
   // one canonical string, so no wording change can trigger a spurious re-notification.
-  it("does not re-notify when Claude uses a different phrasing for the same sub-list opportunity", () => {
-    // Stored canonical: "substitute list" (written by canonicalizeLabel on first notify)
-    // Claude returns a wording variant on the next run — all should canonicalize to "substitute list"
+  it("does not re-notify when LLM uses a different phrasing for the same sub-list opportunity", () => {
     const storedCanonical = ["substitute list"];
-    expect(shouldNotify(true, true, ["Sub list for all instruments"], storedCanonical)).toBe(false);
-    expect(shouldNotify(true, true, ["Substitute musician positions"], storedCanonical)).toBe(false);
+    expect(shouldNotify(true, ["Sub list for all instruments"], storedCanonical)).toBe(false);
+    expect(shouldNotify(true, ["Substitute musician positions"], storedCanonical)).toBe(false);
     expect(
       shouldNotify(
-        true,
         true,
         ["Sub list for all instruments (contact operations manager)"],
         storedCanonical
       )
     ).toBe(false);
     expect(
-      shouldNotify(
-        true,
-        true,
-        ["Substitute musician positions - general orchestral"],
-        storedCanonical
-      )
+      shouldNotify(true, ["Substitute musician positions - general orchestral"], storedCanonical)
     ).toBe(false);
   });
 
   it("still notifies when a genuinely new item appears alongside an already-notified canonical", () => {
-    // Sub list was previously notified; a new Principal Trumpet position just appeared.
     expect(
-      shouldNotify(true, true, ["Substitute musician positions", "Principal Trumpet"], [
+      shouldNotify(true, ["Substitute musician positions", "Principal Trumpet"], [
         "substitute list",
       ])
     ).toBe(true);
   });
 
   it("still notifies for a genuinely different canonical category", () => {
-    expect(shouldNotify(true, true, ["Principal Trumpet"], ["substitute list"])).toBe(true);
+    expect(shouldNotify(true, ["Principal Trumpet"], ["substitute list"])).toBe(true);
   });
 });
 
