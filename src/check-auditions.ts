@@ -142,28 +142,27 @@ export function canonicalizeLabel(label: string): string {
 /**
  * Determines whether a standard page should trigger a new user notification.
  *
- * Fires on two conditions:
- *   1. Rising edge — page was not relevant before, is now.
- *   2. New relevant item — page was already relevant, but Claude returned at least
- *      one item not present when the user was last notified (e.g. a second trumpet
- *      audition was added). Non-trumpet content changes won't fire because Claude's
- *      `relevantItems` list will be unchanged.
+ * Fires when the page is relevant AND either (a) the user has never been
+ * notified about this page before, or (b) the LLM returned at least one
+ * canonical item not yet in `notifiedItems`.
  *
- * `notifiedItems` being empty means no notification was ever sent, which always
- * counts as "new" when the page is relevant.
+ * The previous rising-edge rule (notify whenever `wasRelevant` flipped false →
+ * true) was removed because the LLM's relevance verdict flip-flops on
+ * borderline content (e.g. "we accept sub-list emails"). Once we've already
+ * told the user about an opportunity, a later false → true flip with the same
+ * underlying items should not re-notify.
  *
- * `notifiedItems` are stored in canonical form (via `canonicalizeLabel`). Incoming
- * `currentItems` are canonicalized before comparison so wording variants of the
- * same opportunity are treated as already-seen.
+ * `notifiedItems` is stored in canonical form (via `canonicalizeLabel`).
+ * Incoming `currentItems` are canonicalized before comparison so wording
+ * variants of the same opportunity are treated as already-seen.
  */
 export function shouldNotify(
   isNowRelevant: boolean,
-  wasRelevant: boolean,
   currentItems: string[],
   notifiedItems: string[]
 ): boolean {
   if (!isNowRelevant) return false;
-  if (!wasRelevant) return true; // rising edge
+  if (notifiedItems.length === 0) return true; // first-ever notification for this page
   return currentItems.some((item) => !notifiedItems.includes(canonicalizeLabel(item)));
 }
 
@@ -257,7 +256,7 @@ export async function processStandardUrl(params: ProcessStandardUrlParams): Prom
     pageState.notifiedRelevantItems = [
       ...new Set(analysis.relevantItems.map(canonicalizeLabel)),
     ];
-  } else if (shouldNotify(analysis.hasRelevantAuditions, wasRelevant, analysis.relevantItems, notifiedItems)) {
+  } else if (shouldNotify(analysis.hasRelevantAuditions, analysis.relevantItems, notifiedItems)) {
     const instrumentLabel = analysis.instrument.join(", ") || "Relevant";
     console.log(`[NEW][AI-MATCH] ${urlConfig.name} — ${instrumentLabel}`);
     finding = {

@@ -1,5 +1,5 @@
 {
-  "lastRun": "2026-05-14T20:29:24.792Z",
+  "lastRun": "2026-05-14T22:10:37.046Z",
   "pages": {
     "https://www.chamberorchestraofthetriangle.org/employment": {
       "url": "https://www.chamberorchestraofthetriangle.org/employment",
@@ -105,9 +105,9 @@
     "https://www.charlottesymphony.org/about/employment-auditions/": {
       "url": "https://www.charlottesymphony.org/about/employment-auditions/",
       "name": "Charlotte Symphony",
-      "lastChecked": "2026-05-14T20:29:17.648Z",
-      "contentHash": "a7554dc2eb4be610",
-      "extractedSummary": "The Charlotte Symphony Orchestra is holding auditions for a Second Trumpet position. The application deadline is May 1, 2026, with auditions scheduled for May 31 - June 2, 2026. This is a full-time, tenure-track position with employment starting in September 2026.",
+      "lastChecked": "2026-05-14T22:10:31.573Z",
+      "contentHash": "2a8fbe663173171f",
+      "extractedSummary": "The Charlotte Symphony is holding auditions for a Second Trumpet position. The application deadline is May 1, 2026, with auditions scheduled for May 31 - June 2, 2026. The position is full-time, tenure track, with employment starting in September 2026.",
       "hasRelevantAuditions": true,
       "notifiedRelevantItems": [
         "second trumpet"
@@ -155,7 +155,7 @@
       ]
     }
   },
-  "playbillIndexHash": "5bb7a4938db8e44d",
+  "playbillIndexHash": "7de07e92576e2163",
   "playbillListings": {
     "https://playbill.com/job/mrs-doubtfire-national-tour-drums-percussion/a0380083-fa6a-4e35-9549-bb35933d6694": {
       "url": "https://playbill.com/job/mrs-doubtfire-national-tour-drums-percussion/a0380083-fa6a-4e35-9549-bb35933d6694",
