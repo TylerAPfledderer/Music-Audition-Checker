@@ -1,5 +1,5 @@
 {
-  "lastRun": "2026-05-25T09:31:41.223Z",
+  "lastRun": "2026-05-28T20:44:14.496Z",
   "pages": {
     "https://www.chamberorchestraofthetriangle.org/employment": {
       "url": "https://www.chamberorchestraofthetriangle.org/employment",
@@ -24,10 +24,10 @@
     "https://www.fayettevillesymphony.org/auditions-and-employment/": {
       "url": "https://www.fayettevillesymphony.org/auditions-and-employment/",
       "name": "Fayetteville Symphony Orchestra",
-      "lastChecked": "2026-05-25T09:31:33.240Z",
-      "contentHash": "1ce8a8c9bfa91b45",
-      "extractedSummary": null,
-      "hasRelevantAuditions": false,
+      "lastChecked": "2026-05-28T20:44:09.707Z",
+      "contentHash": "fee75ab37becb804",
+      "extractedSummary": "The Fayetteville Symphony Orchestra is currently accepting submissions for its sub list. While there are no active audition submissions at this time, interested musicians, including trumpet players, can email the Operations Manager to be considered for future substitute positions. This is relevant as it offers an opportunity for trumpet players to join the orchestra's sub list.",
+      "hasRelevantAuditions": true,
       "notifiedRelevantItems": [
         "substitute list"
       ]
@@ -58,8 +58,8 @@
     "https://charlestonsymphony.org/employment/": {
       "url": "https://charlestonsymphony.org/employment/",
       "name": "Charleston Symphony Orchestra",
-      "lastChecked": "2026-04-30T20:21:19.332Z",
-      "contentHash": "405e30243cb450a9",
+      "lastChecked": "2026-05-28T20:44:09.708Z",
+      "contentHash": "c591ada69e82ce7d",
       "extractedSummary": null,
       "hasRelevantAuditions": false,
       "notifiedRelevantItems": []
@@ -116,8 +116,8 @@
     "https://ashevillesymphony.org/employment/": {
       "url": "https://ashevillesymphony.org/employment/",
       "name": "Asheville Symphony",
-      "lastChecked": "2026-05-17T04:40:05.187Z",
-      "contentHash": "fff97426cfa743dc",
+      "lastChecked": "2026-05-28T20:44:09.709Z",
+      "contentHash": "ca3256f323226624",
       "extractedSummary": null,
       "hasRelevantAuditions": false,
       "notifiedRelevantItems": []
@@ -155,7 +155,7 @@
       ]
     }
   },
-  "playbillIndexHash": "1e08fe17c967b67d",
+  "playbillIndexHash": "6cf549413953f876",
   "playbillListings": {
     "https://playbill.com/job/mrs-doubtfire-national-tour-drums-percussion/a0380083-fa6a-4e35-9549-bb35933d6694": {
       "url": "https://playbill.com/job/mrs-doubtfire-national-tour-drums-percussion/a0380083-fa6a-4e35-9549-bb35933d6694",
