@@ -1,5 +1,5 @@
 {
-  "lastRun": "2026-05-28T20:44:14.496Z",
+  "lastRun": "2026-06-04T20:38:46.036Z",
   "pages": {
     "https://www.chamberorchestraofthetriangle.org/employment": {
       "url": "https://www.chamberorchestraofthetriangle.org/employment",
@@ -24,8 +24,8 @@
     "https://www.fayettevillesymphony.org/auditions-and-employment/": {
       "url": "https://www.fayettevillesymphony.org/auditions-and-employment/",
       "name": "Fayetteville Symphony Orchestra",
-      "lastChecked": "2026-06-01T10:00:44.253Z",
-      "contentHash": "4357a56897d94563",
+      "lastChecked": "2026-06-04T20:38:36.807Z",
+      "contentHash": "0d60881b3840e933",
       "extractedSummary": null,
       "hasRelevantAuditions": false,
       "notifiedRelevantItems": [
@@ -87,8 +87,8 @@
     "https://www.wssymphony.org/about/jobs-2/": {
       "url": "https://www.wssymphony.org/about/jobs-2/",
       "name": "Winston-Salem Symphony",
-      "lastChecked": "2026-05-17T04:40:05.187Z",
-      "contentHash": "cee9500811570740",
+      "lastChecked": "2026-06-04T20:38:36.809Z",
+      "contentHash": "56d7b1f5041d10d1",
       "extractedSummary": null,
       "hasRelevantAuditions": false,
       "notifiedRelevantItems": []
@@ -105,9 +105,9 @@
     "https://www.charlottesymphony.org/about/employment-auditions/": {
       "url": "https://www.charlottesymphony.org/about/employment-auditions/",
       "name": "Charlotte Symphony",
-      "lastChecked": "2026-06-01T10:00:46.082Z",
-      "contentHash": "73f93f1f4d7ddedf",
-      "extractedSummary": "The Charlotte Symphony has an open audition for a Second Trumpet position. The application deadline is May 1, 2026, with auditions scheduled for May 31 - June 2, 2026. The position is full-time, tenure track, with employment starting in September 2026.",
+      "lastChecked": "2026-06-04T20:38:38.367Z",
+      "contentHash": "88ec73c68f4b8114",
+      "extractedSummary": "The Charlotte Symphony has an open audition for a Second Trumpet position. The application deadline is May 1, 2026, with auditions held from May 31 - June 2, 2026. This is a full-time, tenure track position with employment starting September 2026.",
       "hasRelevantAuditions": true,
       "notifiedRelevantItems": [
         "second trumpet"
@@ -116,8 +116,8 @@
     "https://ashevillesymphony.org/employment/": {
       "url": "https://ashevillesymphony.org/employment/",
       "name": "Asheville Symphony",
-      "lastChecked": "2026-06-01T10:00:44.255Z",
-      "contentHash": "0e40c9c5f0fcb982",
+      "lastChecked": "2026-06-04T20:38:36.809Z",
+      "contentHash": "ca3256f323226624",
       "extractedSummary": null,
       "hasRelevantAuditions": false,
       "notifiedRelevantItems": []
@@ -134,9 +134,9 @@
     "https://band.westpoint.edu/auditions/": {
       "url": "https://band.westpoint.edu/auditions/",
       "name": "West Point Academy Band",
-      "lastChecked": "2026-05-12T16:54:17.495Z",
-      "contentHash": "f79f620c108af0b5",
-      "extractedSummary": "The West Point Academy Band has two open positions relevant to trumpet players: Section Trumpet and Bugle/Trumpet. Both positions have application deadlines and live audition dates in 2026, which are in the future. These are full-time orchestral positions with military benefits.",
+      "lastChecked": "2026-06-04T20:38:42.017Z",
+      "contentHash": "b366035cb965d366",
+      "extractedSummary": "The West Point Academy Band has two relevant trumpet/brass auditions with future deadlines. The 'Bugle/Trumpet' position has a preliminary recording deadline of June 22, 2026, and a live round on November 2, 2026. The 'Section Trumpet' position has a packet deadline of June 3, 2026, and a live round on September 28, 2026.",
       "hasRelevantAuditions": true,
       "notifiedRelevantItems": [
         "section trumpet",
@@ -155,7 +155,7 @@
       ]
     }
   },
-  "playbillIndexHash": "b2750aba2c0bdba8",
+  "playbillIndexHash": "62017a4b1760b192",
   "playbillListings": {
     "https://playbill.com/job/mrs-doubtfire-national-tour-drums-percussion/a0380083-fa6a-4e35-9549-bb35933d6694": {
       "url": "https://playbill.com/job/mrs-doubtfire-national-tour-drums-percussion/a0380083-fa6a-4e35-9549-bb35933d6694",
@@ -586,6 +586,17 @@
       "notified": true,
       "summary": null,
       "contentHash": "58c2c1887cde5a81"
+    },
+    "https://playbill.com/job/drummers-legolandr-new-york-resort/1bae9e97-f68b-41fb-9f23-9a8b82d3f042": {
+      "url": "https://playbill.com/job/drummers-legolandr-new-york-resort/1bae9e97-f68b-41fb-9f23-9a8b82d3f042",
+      "title": "Drummers | LEGOLAND® New York Resort",
+      "organization": "RWS Global",
+      "firstSeen": "2026-06-04T20:38:42.018Z",
+      "lastChecked": "2026-06-04T20:38:42.018Z",
+      "hasTrumpet": false,
+      "notified": true,
+      "summary": null,
+      "contentHash": "4b229398741c0983"
     }
   }
 }
