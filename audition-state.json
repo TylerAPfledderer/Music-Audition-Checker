@@ -1,11 +1,11 @@
 {
-  "lastRun": "2026-06-11T20:44:03.633Z",
+  "lastRun": "2026-06-18T20:47:19.671Z",
   "pages": {
     "https://www.chamberorchestraofthetriangle.org/employment": {
       "url": "https://www.chamberorchestraofthetriangle.org/employment",
       "name": "Chamber Orchestra of the Triangle",
-      "lastChecked": "2026-03-18T15:16:42.660Z",
-      "contentHash": "f97a435635971080",
+      "lastChecked": "2026-06-18T20:47:11.038Z",
+      "contentHash": "e3b0c44298fc1c14",
       "extractedSummary": null,
       "hasRelevantAuditions": false,
       "notifiedRelevantItems": []
@@ -24,8 +24,8 @@
     "https://www.fayettevillesymphony.org/auditions-and-employment/": {
       "url": "https://www.fayettevillesymphony.org/auditions-and-employment/",
       "name": "Fayetteville Symphony Orchestra",
-      "lastChecked": "2026-06-11T20:44:00.235Z",
-      "contentHash": "849fd93a0873ac8c",
+      "lastChecked": "2026-06-18T20:47:11.039Z",
+      "contentHash": "d9752895d51b626f",
       "extractedSummary": null,
       "hasRelevantAuditions": false,
       "notifiedRelevantItems": [
@@ -78,8 +78,8 @@
     "https://greensborosymphony.org/about-the-symphony/auditions/": {
       "url": "https://greensborosymphony.org/about-the-symphony/auditions/",
       "name": "Greensboro Symphony Orchestra",
-      "lastChecked": "2026-04-13T08:51:33.956Z",
-      "contentHash": "71686022ed5f3919",
+      "lastChecked": "2026-06-18T20:47:11.040Z",
+      "contentHash": "da7c7202867d6deb",
       "extractedSummary": null,
       "hasRelevantAuditions": false,
       "notifiedRelevantItems": []
@@ -116,8 +116,8 @@
     "https://ashevillesymphony.org/employment/": {
       "url": "https://ashevillesymphony.org/employment/",
       "name": "Asheville Symphony",
-      "lastChecked": "2026-06-04T20:38:36.809Z",
-      "contentHash": "ca3256f323226624",
+      "lastChecked": "2026-06-18T20:47:11.041Z",
+      "contentHash": "202364dcb618bd5c",
       "extractedSummary": null,
       "hasRelevantAuditions": false,
       "notifiedRelevantItems": []
@@ -146,16 +146,16 @@
     "https://usarmyband.com/vacancies/": {
       "url": "https://usarmyband.com/vacancies/",
       "name": "U.S. Army Pershing's Own",
-      "lastChecked": "2026-05-12T16:54:20.881Z",
-      "contentHash": "6cc3a9dad25656eb",
-      "extractedSummary": "The U.S. Army Band \"Pershing's Own\" has an open audition for a Trumpet position with The U.S. Army Ceremonial Band. The application deadline is July 27, 2026, and auditions are scheduled for September 21-22, 2026. This opportunity is relevant for trumpet players seeking an orchestral position.",
+      "lastChecked": "2026-06-18T20:47:15.698Z",
+      "contentHash": "f6cde8562e3fbdc8",
+      "extractedSummary": "The U.S. Army Band \"Pershing's Own\" has a current vacancy for a Trumpet position in The U.S. Army Ceremonial Band. The application deadline is August 20, with auditions scheduled for October 15-16. This is a relevant opportunity for trumpet players seeking an orchestral position with a future audition date.",
       "hasRelevantAuditions": true,
       "notifiedRelevantItems": [
         "trumpet"
       ]
     }
   },
-  "playbillIndexHash": "75a57748332ab34c",
+  "playbillIndexHash": "d620dae9e153792e",
   "playbillListings": {
     "https://playbill.com/job/mrs-doubtfire-national-tour-drums-percussion/a0380083-fa6a-4e35-9549-bb35933d6694": {
       "url": "https://playbill.com/job/mrs-doubtfire-national-tour-drums-percussion/a0380083-fa6a-4e35-9549-bb35933d6694",
@@ -597,6 +597,28 @@
       "notified": true,
       "summary": null,
       "contentHash": "4b229398741c0983"
+    },
+    "https://playbill.com/job/seeking-summer-musicians-for-hairspray-footloose/e330c6eb-dcca-4a15-b477-fc2496a715a9": {
+      "url": "https://playbill.com/job/seeking-summer-musicians-for-hairspray-footloose/e330c6eb-dcca-4a15-b477-fc2496a715a9",
+      "title": "Seeking Summer Musicians for Hairspray & Footloose",
+      "organization": "NCCA Jean's Playhouse",
+      "firstSeen": "2026-06-18T20:47:15.699Z",
+      "lastChecked": "2026-06-18T20:47:15.699Z",
+      "hasTrumpet": true,
+      "notified": true,
+      "summary": "NCCA at Jean's Playhouse is seeking musicians for its 2026 Summer Season, featuring HAIRSPRAY and FOOTLOOSE, and specifically lists Trumpet as one of the sought positions. Musicians are contracted for 7 weeks and receive $300 per week plus shared housing.",
+      "contentHash": "5a45d869fd44f732"
+    },
+    "https://playbill.com/job/the-palace-theatre-seeks-bassist-for-tribute-to-queen-somebody-to-love/93055747-602c-47fa-b6bc-8005fcb0aae4": {
+      "url": "https://playbill.com/job/the-palace-theatre-seeks-bassist-for-tribute-to-queen-somebody-to-love/93055747-602c-47fa-b6bc-8005fcb0aae4",
+      "title": "The Palace Theatre Seeks Bassist for ' Tribute to Queen: Somebody to Love '",
+      "organization": "Palace Theatre",
+      "firstSeen": "2026-06-18T20:47:15.699Z",
+      "lastChecked": "2026-06-18T20:47:15.699Z",
+      "hasTrumpet": false,
+      "notified": true,
+      "summary": null,
+      "contentHash": "fab1a4cde7b1ca32"
     }
   }
 }
