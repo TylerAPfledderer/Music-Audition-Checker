@@ -1,5 +1,5 @@
 {
-  "lastRun": "2026-06-18T20:47:19.671Z",
+  "lastRun": "2026-06-22T10:10:00.070Z",
   "pages": {
     "https://www.chamberorchestraofthetriangle.org/employment": {
       "url": "https://www.chamberorchestraofthetriangle.org/employment",
@@ -24,8 +24,8 @@
     "https://www.fayettevillesymphony.org/auditions-and-employment/": {
       "url": "https://www.fayettevillesymphony.org/auditions-and-employment/",
       "name": "Fayetteville Symphony Orchestra",
-      "lastChecked": "2026-06-18T20:47:11.039Z",
-      "contentHash": "d9752895d51b626f",
+      "lastChecked": "2026-06-22T10:09:56.192Z",
+      "contentHash": "afe17aa5362bfe4d",
       "extractedSummary": null,
       "hasRelevantAuditions": false,
       "notifiedRelevantItems": [
@@ -78,8 +78,8 @@
     "https://greensborosymphony.org/about-the-symphony/auditions/": {
       "url": "https://greensborosymphony.org/about-the-symphony/auditions/",
       "name": "Greensboro Symphony Orchestra",
-      "lastChecked": "2026-06-18T20:47:11.040Z",
-      "contentHash": "da7c7202867d6deb",
+      "lastChecked": "2026-06-22T10:09:56.192Z",
+      "contentHash": "71686022ed5f3919",
       "extractedSummary": null,
       "hasRelevantAuditions": false,
       "notifiedRelevantItems": []
@@ -105,9 +105,9 @@
     "https://www.charlottesymphony.org/about/employment-auditions/": {
       "url": "https://www.charlottesymphony.org/about/employment-auditions/",
       "name": "Charlotte Symphony",
-      "lastChecked": "2026-06-04T20:38:38.367Z",
-      "contentHash": "88ec73c68f4b8114",
-      "extractedSummary": "The Charlotte Symphony has an open audition for a Second Trumpet position. The application deadline is May 1, 2026, with auditions held from May 31 - June 2, 2026. This is a full-time, tenure track position with employment starting September 2026.",
+      "lastChecked": "2026-06-22T10:09:57.747Z",
+      "contentHash": "73f93f1f4d7ddedf",
+      "extractedSummary": "The Charlotte Symphony has an open audition for a Second Trumpet position. The application deadline is May 1, 2026, with auditions scheduled for May 31 - June 2, 2026. The position is full-time, tenure track, with employment starting in September 2026.",
       "hasRelevantAuditions": true,
       "notifiedRelevantItems": [
         "second trumpet"
@@ -116,8 +116,8 @@
     "https://ashevillesymphony.org/employment/": {
       "url": "https://ashevillesymphony.org/employment/",
       "name": "Asheville Symphony",
-      "lastChecked": "2026-06-18T20:47:11.041Z",
-      "contentHash": "202364dcb618bd5c",
+      "lastChecked": "2026-06-22T10:09:56.193Z",
+      "contentHash": "4d5973e5d16902a0",
       "extractedSummary": null,
       "hasRelevantAuditions": false,
       "notifiedRelevantItems": []
@@ -155,7 +155,7 @@
       ]
     }
   },
-  "playbillIndexHash": "d620dae9e153792e",
+  "playbillIndexHash": "387377952dcb7419",
   "playbillListings": {
     "https://playbill.com/job/mrs-doubtfire-national-tour-drums-percussion/a0380083-fa6a-4e35-9549-bb35933d6694": {
       "url": "https://playbill.com/job/mrs-doubtfire-national-tour-drums-percussion/a0380083-fa6a-4e35-9549-bb35933d6694",
