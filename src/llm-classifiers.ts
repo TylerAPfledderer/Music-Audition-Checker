@@ -22,8 +22,8 @@ export async function analyzeWithLlm(
 
   const prompt = `Classify this orchestra page for trumpet audition relevance.
 
-RELEVANT: audition/position with a future date (after ${today}) that involves trumpet, brass, or an open orchestral audition where trumpet would qualify (e.g. a sub list open to any instrument).
-NOT RELEVANT: past auditions, admin/education-only roles, instruments that exclude brass.
+RELEVANT: audition/position with a future date (after ${today}) that involves trumpet (or cornet/flugelhorn), or an open orchestral audition where trumpet would qualify (e.g. a sub list open to any instrument).
+NOT RELEVANT: past auditions, admin/education-only roles, or positions for other instruments only — including French horn or English horn, which are NOT trumpet. A horn-only opening is not relevant unless the same audition also includes trumpet.
 
 Return JSON only — no prose, no markdown fences:
 {

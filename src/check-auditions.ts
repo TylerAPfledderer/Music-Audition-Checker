@@ -139,6 +139,23 @@ export function canonicalizeLabel(label: string): string {
   return l; // fallback: lowercase + stripped
 }
 
+// Non-trumpet instruments that must never count as a relevant item on their own. `\bhorn\b`
+// matches French/English horn as a whole word while leaving "flugelhorn" (a trumpet-family
+// instrument) untouched; any item that also names trumpet/cornet is preserved so a combined
+// "Trumpet & Horn" posting still qualifies. Extend TRUMPET_FAMILY / add patterns here to
+// exclude other non-trumpet brass (trombone, tuba, euphonium) if desired.
+const EXCLUDED_INSTRUMENT = /\bhorn\b/i;
+const TRUMPET_FAMILY = /\b(trumpet|cornet|flugelhorn)\b/i;
+
+/**
+ * True when an LLM-returned item names a non-trumpet instrument (e.g. French horn) and does
+ * NOT also mention trumpet/cornet/flugelhorn. Used to strip such items before they can be
+ * saved or trigger a notification — the checker is trumpet-only.
+ */
+export function isExcludedInstrument(item: string): boolean {
+  return EXCLUDED_INSTRUMENT.test(item) && !TRUMPET_FAMILY.test(item);
+}
+
 /**
  * Determines whether a standard page should trigger a new user notification.
  *
@@ -230,6 +247,15 @@ export async function processStandardUrl(params: ProcessStandardUrlParams): Prom
   }
 
   const analysis = await analyzeWithLlm(llm, analysisText, urlConfig.url, urlConfig.name);
+
+  // Drop non-trumpet instruments (e.g. French horn) so they are never saved or notified.
+  // If the ONLY relevant items were excluded, the page is not trumpet-relevant for this user.
+  const filteredItems = analysis.relevantItems.filter((i) => !isExcludedInstrument(i));
+  if (analysis.relevantItems.length > 0 && filteredItems.length === 0) {
+    analysis.hasRelevantAuditions = false;
+  }
+  analysis.relevantItems = filteredItems;
+  analysis.instrument = analysis.instrument.filter((i) => !isExcludedInstrument(i));
 
   console.log(
     `  → Relevant: ${analysis.hasRelevantAuditions} | Items: ${analysis.relevantItems.length}`
