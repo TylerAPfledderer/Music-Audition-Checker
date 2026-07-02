@@ -139,6 +139,23 @@ export function canonicalizeLabel(label: string): string {
   return l; // fallback: lowercase + stripped
 }
 
+// Non-trumpet instruments that must never count as a relevant item on their own. `\bhorn\b`
+// matches French/English horn as a whole word while leaving "flugelhorn" (a trumpet-family
+// instrument) untouched; any item that also names trumpet/cornet is preserved so a combined
+// "Trumpet & Horn" posting still qualifies. Extend TRUMPET_FAMILY / add patterns here to
+// exclude other non-trumpet brass (trombone, tuba, euphonium) if desired.
+const EXCLUDED_INSTRUMENT = /\bhorn\b/i;
+const TRUMPET_FAMILY = /\b(trumpet|cornet|flugelhorn)\b/i;
+
+/**
+ * True when an LLM-returned item names a non-trumpet instrument (e.g. French horn) and does
+ * NOT also mention trumpet/cornet/flugelhorn. Used to strip such items before they can be
+ * saved or trigger a notification — the checker is trumpet-only.
+ */
+export function isExcludedInstrument(item: string): boolean {
+  return EXCLUDED_INSTRUMENT.test(item) && !TRUMPET_FAMILY.test(item);
+}
+
 /**
  * Determines whether a standard page should trigger a new user notification.
  *
@@ -230,6 +247,15 @@ export async function processStandardUrl(params: ProcessStandardUrlParams): Prom
   }
 
   const analysis = await analyzeWithLlm(llm, analysisText, urlConfig.url, urlConfig.name);
+
+  // Drop non-trumpet instruments (e.g. French horn) so they are never saved or notified.
+  // If the ONLY relevant items were excluded, the page is not trumpet-relevant for this user.
+  const filteredItems = analysis.relevantItems.filter((i) => !isExcludedInstrument(i));
+  if (analysis.relevantItems.length > 0 && filteredItems.length === 0) {
+    analysis.hasRelevantAuditions = false;
+  }
+  analysis.relevantItems = filteredItems;
+  analysis.instrument = analysis.instrument.filter((i) => !isExcludedInstrument(i));
 
   console.log(
     `  → Relevant: ${analysis.hasRelevantAuditions} | Items: ${analysis.relevantItems.length}`
@@ -333,6 +359,11 @@ async function main(): Promise<void> {
 
   console.log("\n▶️  Starting main run\n");
   const allFindings: CrawlResult[] = [];
+  // Standard-page states that carry an unsent finding are held here and only committed to
+  // `state` after the digest email succeeds — so a send failure leaves the page's old
+  // content hash / notified items intact and the finding re-notifies next run (at-least-once,
+  // matching the Playbill `notified` flow).
+  const pendingStandardPageStates = new Map<string, PageState>();
 
   let stateValid = false;
   try {
@@ -370,11 +401,12 @@ async function main(): Promise<void> {
         });
 
         if (result.action === "skip-unchanged") continue;
-        if (result.action === "skip-no-brass" || result.action === "analyzed") {
-          state.pages[urlConfig.url] = result.pageState;
-        }
         if (result.action === "analyzed" && result.finding) {
+          // Defer committing this page's advanced state until the email actually sends.
+          pendingStandardPageStates.set(urlConfig.url, result.pageState);
           allFindings.push(result.finding);
+        } else if (result.action === "skip-no-brass" || result.action === "analyzed") {
+          state.pages[urlConfig.url] = result.pageState;
         }
       } catch (err) {
         if (err instanceof DailyQuotaExhaustedError) throw err;
@@ -430,6 +462,10 @@ async function main(): Promise<void> {
     console.log(`\n📬 Sending email (${reason})...`);
     try {
       await sendEmail(allFindings, probeFailures);
+      // Commit deferred standard-page states now that the email actually sent.
+      for (const [url, pageState] of pendingStandardPageStates) {
+        state.pages[url] = pageState;
+      }
       // Mark Playbill findings as notified only after successful email send
       for (const finding of allFindings.filter((f) => f.source === "playbill")) {
         if (state.playbillListings[finding.url]) {
@@ -440,7 +476,10 @@ async function main(): Promise<void> {
       saveState(state);
     } catch (emailErr) {
       console.error("Notification Failure:", emailErr);
-      // State is already saved — do not re-throw so the Action build succeeds
+      // Deferred standard-page states are intentionally NOT committed here, so the
+      // unsent finding is re-detected and re-notified on the next run. State saved
+      // in the finally block above (without those pages) — do not re-throw so the
+      // Action build succeeds.
     }
   } else {
     console.log("\n✅ No new relevant auditions found. No email sent.");

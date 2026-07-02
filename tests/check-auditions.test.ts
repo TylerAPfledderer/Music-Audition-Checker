@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { encodeSubjectRfc2047, buildEmailRaw } from "../src/email";
-import { shouldNotify, canonicalizeLabel, processStandardUrl, PageState } from "../src/check-auditions";
+import { shouldNotify, canonicalizeLabel, isExcludedInstrument, processStandardUrl, PageState } from "../src/check-auditions";
 import { computePageHash } from "../src/scraper";
 import type { LlmClient } from "../src/llm";
 
@@ -298,6 +298,87 @@ describe("processStandardUrl", () => {
 
     expect(result.action).toBe("skip-no-brass");
     expect(client.generate).not.toHaveBeenCalled();
+  });
+
+  it("strips French horn from a trumpet+horn page but still notifies for trumpet", async () => {
+    const client = makeClient(vi.fn().mockResolvedValue(JSON.stringify({
+      isRelevant: true,
+      instrument: ["Principal Trumpet", "Principal Horn"],
+      deadline: "2026-08-20",
+      location: "Arlington, VA",
+      confidenceScore: 0.95,
+      summary: "Trumpet and Horn vacancies.",
+      futureDates: ["2026-10-15"],
+      relevantItems: ["Principal Trumpet", "Principal Horn"],
+    })));
+
+    const result = await processStandardUrl({
+      llm: client,
+      urlConfig: TEST_URL,
+      text: BRASS_PAGE_TEXT,
+      html: "",
+      previousState: undefined,
+    });
+
+    expect(result.action).toBe("analyzed");
+    if (result.action === "analyzed") {
+      expect(result.finding).not.toBeNull();
+      expect(result.finding!.relevantItems).toEqual(["Principal Trumpet"]);
+      expect(result.pageState.hasRelevantAuditions).toBe(true);
+      expect(result.pageState.notifiedRelevantItems).not.toContain("horn");
+    }
+  });
+
+  it("does not notify when the only relevant item is French horn", async () => {
+    // Page passes the brass gate (mentions trumpet) but the LLM's only item is horn.
+    const client = makeClient(vi.fn().mockResolvedValue(JSON.stringify({
+      isRelevant: true,
+      instrument: ["Principal Horn"],
+      deadline: "2026-08-24",
+      location: "Arlington, VA",
+      confidenceScore: 0.9,
+      summary: "Horn vacancy.",
+      futureDates: ["2026-10-05"],
+      relevantItems: ["Principal Horn"],
+    })));
+
+    const result = await processStandardUrl({
+      llm: client,
+      urlConfig: TEST_URL,
+      text: BRASS_PAGE_TEXT,
+      html: "",
+      previousState: undefined,
+    });
+
+    expect(result.action).toBe("analyzed");
+    if (result.action === "analyzed") {
+      expect(result.finding).toBeNull();
+      expect(result.pageState.hasRelevantAuditions).toBe(false);
+    }
+  });
+});
+
+describe("isExcludedInstrument", () => {
+  it("excludes French and English horn", () => {
+    expect(isExcludedInstrument("Principal Horn")).toBe(true);
+    expect(isExcludedInstrument("French Horn")).toBe(true);
+    expect(isExcludedInstrument("Section Horn")).toBe(true);
+    expect(isExcludedInstrument("English Horn")).toBe(true);
+  });
+
+  it("does not exclude trumpet-family instruments", () => {
+    expect(isExcludedInstrument("Principal Trumpet")).toBe(false);
+    expect(isExcludedInstrument("Section Cornet")).toBe(false);
+    expect(isExcludedInstrument("Flugelhorn")).toBe(false); // trumpet family — 'horn' not a whole word
+  });
+
+  it("keeps a combined position that also names trumpet", () => {
+    expect(isExcludedInstrument("Trumpet & Horn")).toBe(false);
+  });
+
+  it("does not exclude unrelated non-horn items", () => {
+    expect(isExcludedInstrument("Sub List")).toBe(false);
+    expect(isExcludedInstrument("Section Trombone")).toBe(false);
   });
 });
 

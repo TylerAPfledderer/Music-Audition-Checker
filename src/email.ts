@@ -1,5 +1,7 @@
 import { google } from "googleapis";
 
+import { exchangeRefreshTokenForAccessToken, withOAuthRetry } from "./oauth";
+
 // ─── Shared types ─────────────────────────────────────────────────────────────
 
 export interface UrlConfig {
@@ -124,10 +126,10 @@ export async function sendEmail(
     );
   }
 
-  // Build OAuth2 client and set credentials
+  // Build the Gmail client. Credentials are set per-attempt inside the retry block below
+  // using a natively-fetched access token, so googleapis never performs its own
+  // gaxios/node-fetch token refresh (the source of the "Premature close" send failures).
   const oauth2Client = new google.auth.OAuth2(clientId, clientSecret);
-  oauth2Client.setCredentials({ refresh_token: refreshToken });
-
   const gmail = google.gmail({ version: "v1", auth: oauth2Client });
 
   const today = new Date().toLocaleDateString("en-US", {
@@ -195,18 +197,26 @@ export async function sendEmail(
   });
 
   const labelName = process.env.GMAIL_LABEL_NAME;
-  if (labelName) {
-    const labelId = await getOrCreateLabel(gmail, labelName);
-    await gmail.users.messages.insert({
-      userId: "me",
-      requestBody: { raw, labelIds: [labelId, "INBOX"] },
-    });
-    console.log(`✉️  Email inserted into mailbox with label "${labelName}" for ${notifyEmail}`);
-  } else {
-    await gmail.users.messages.send({
-      userId: "me",
-      requestBody: { raw },
-    });
-    console.log(`✉️  Email sent to ${notifyEmail}`);
-  }
+
+  // Retry the whole send: each attempt mints a fresh access token via native https and
+  // hands it to the client, so a transient "Premature close" drop no longer silently
+  // discards a notification. Permanent credential errors fail fast (see withOAuthRetry).
+  await withOAuthRetry(async () => {
+    oauth2Client.setCredentials({ access_token: await exchangeRefreshTokenForAccessToken() });
+
+    if (labelName) {
+      const labelId = await getOrCreateLabel(gmail, labelName);
+      await gmail.users.messages.insert({
+        userId: "me",
+        requestBody: { raw, labelIds: [labelId, "INBOX"] },
+      });
+      console.log(`✉️  Email inserted into mailbox with label "${labelName}" for ${notifyEmail}`);
+    } else {
+      await gmail.users.messages.send({
+        userId: "me",
+        requestBody: { raw },
+      });
+      console.log(`✉️  Email sent to ${notifyEmail}`);
+    }
+  }, "Gmail send");
 }

@@ -147,13 +147,10 @@
       "url": "https://usarmyband.com/vacancies/",
       "name": "U.S. Army Pershing's Own",
       "lastChecked": "2026-07-02T14:20:01.452Z",
-      "contentHash": "aab1bceb189b0997",
+      "contentHash": "",
       "extractedSummary": "The U.S. Army Band \"Pershing's Own\" has current vacancies for Trumpet and Horn. The Trumpet position has an application deadline of August 20 and audition dates of October 15-16. The Horn position has an application deadline of August 24 and an audition date of October 5. All auditions are held in Arlington, Virginia.",
       "hasRelevantAuditions": true,
-      "notifiedRelevantItems": [
-        "trumpet",
-        "horn"
-      ]
+      "notifiedRelevantItems": []
     }
   },
   "playbillIndexHash": "1a5b5d71d4715e0e",
