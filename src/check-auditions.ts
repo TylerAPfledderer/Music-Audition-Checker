@@ -333,6 +333,11 @@ async function main(): Promise<void> {
 
   console.log("\n▶️  Starting main run\n");
   const allFindings: CrawlResult[] = [];
+  // Standard-page states that carry an unsent finding are held here and only committed to
+  // `state` after the digest email succeeds — so a send failure leaves the page's old
+  // content hash / notified items intact and the finding re-notifies next run (at-least-once,
+  // matching the Playbill `notified` flow).
+  const pendingStandardPageStates = new Map<string, PageState>();
 
   let stateValid = false;
   try {
@@ -370,11 +375,12 @@ async function main(): Promise<void> {
         });
 
         if (result.action === "skip-unchanged") continue;
-        if (result.action === "skip-no-brass" || result.action === "analyzed") {
-          state.pages[urlConfig.url] = result.pageState;
-        }
         if (result.action === "analyzed" && result.finding) {
+          // Defer committing this page's advanced state until the email actually sends.
+          pendingStandardPageStates.set(urlConfig.url, result.pageState);
           allFindings.push(result.finding);
+        } else if (result.action === "skip-no-brass" || result.action === "analyzed") {
+          state.pages[urlConfig.url] = result.pageState;
         }
       } catch (err) {
         if (err instanceof DailyQuotaExhaustedError) throw err;
@@ -430,6 +436,10 @@ async function main(): Promise<void> {
     console.log(`\n📬 Sending email (${reason})...`);
     try {
       await sendEmail(allFindings, probeFailures);
+      // Commit deferred standard-page states now that the email actually sent.
+      for (const [url, pageState] of pendingStandardPageStates) {
+        state.pages[url] = pageState;
+      }
       // Mark Playbill findings as notified only after successful email send
       for (const finding of allFindings.filter((f) => f.source === "playbill")) {
         if (state.playbillListings[finding.url]) {
@@ -440,7 +450,10 @@ async function main(): Promise<void> {
       saveState(state);
     } catch (emailErr) {
       console.error("Notification Failure:", emailErr);
-      // State is already saved — do not re-throw so the Action build succeeds
+      // Deferred standard-page states are intentionally NOT committed here, so the
+      // unsent finding is re-detected and re-notified on the next run. State saved
+      // in the finally block above (without those pages) — do not re-throw so the
+      // Action build succeeds.
     }
   } else {
     console.log("\n✅ No new relevant auditions found. No email sent.");
