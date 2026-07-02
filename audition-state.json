@@ -1,5 +1,5 @@
 {
-  "lastRun": "2026-07-02T14:21:01.674Z",
+  "lastRun": "2026-07-02T14:52:35.210Z",
   "pages": {
     "https://www.chamberorchestraofthetriangle.org/employment": {
       "url": "https://www.chamberorchestraofthetriangle.org/employment",
@@ -105,8 +105,8 @@
     "https://www.charlottesymphony.org/about/employment-auditions/": {
       "url": "https://www.charlottesymphony.org/about/employment-auditions/",
       "name": "Charlotte Symphony",
-      "lastChecked": "2026-07-02T14:19:54.878Z",
-      "contentHash": "9bb7b3f616c9d3d5",
+      "lastChecked": "2026-07-02T14:52:31.595Z",
+      "contentHash": "2b99050785c06943",
       "extractedSummary": null,
       "hasRelevantAuditions": false,
       "notifiedRelevantItems": [
@@ -146,11 +146,13 @@
     "https://usarmyband.com/vacancies/": {
       "url": "https://usarmyband.com/vacancies/",
       "name": "U.S. Army Pershing's Own",
-      "lastChecked": "2026-07-02T14:20:01.452Z",
-      "contentHash": "",
-      "extractedSummary": "The U.S. Army Band \"Pershing's Own\" has current vacancies for Trumpet and Horn. The Trumpet position has an application deadline of August 20 and audition dates of October 15-16. The Horn position has an application deadline of August 24 and an audition date of October 5. All auditions are held in Arlington, Virginia.",
+      "lastChecked": "2026-07-02T14:52:35.170Z",
+      "contentHash": "aab1bceb189b0997",
+      "extractedSummary": "The U.S. Army Ceremonial Band has an open audition for a Trumpet position. The application deadline is August 20, with auditions scheduled for October 15-16. This is a relevant opportunity for trumpet players.",
       "hasRelevantAuditions": true,
-      "notifiedRelevantItems": []
+      "notifiedRelevantItems": [
+        "trumpet"
+      ]
     }
   },
   "playbillIndexHash": "1a5b5d71d4715e0e",
