@@ -1,5 +1,5 @@
 {
-  "lastRun": "2026-06-22T10:10:00.070Z",
+  "lastRun": "2026-07-02T14:21:01.674Z",
   "pages": {
     "https://www.chamberorchestraofthetriangle.org/employment": {
       "url": "https://www.chamberorchestraofthetriangle.org/employment",
@@ -24,8 +24,8 @@
     "https://www.fayettevillesymphony.org/auditions-and-employment/": {
       "url": "https://www.fayettevillesymphony.org/auditions-and-employment/",
       "name": "Fayetteville Symphony Orchestra",
-      "lastChecked": "2026-06-22T10:09:56.192Z",
-      "contentHash": "afe17aa5362bfe4d",
+      "lastChecked": "2026-07-02T14:19:54.876Z",
+      "contentHash": "849fd93a0873ac8c",
       "extractedSummary": null,
       "hasRelevantAuditions": false,
       "notifiedRelevantItems": [
@@ -105,10 +105,10 @@
     "https://www.charlottesymphony.org/about/employment-auditions/": {
       "url": "https://www.charlottesymphony.org/about/employment-auditions/",
       "name": "Charlotte Symphony",
-      "lastChecked": "2026-06-22T10:09:57.747Z",
-      "contentHash": "73f93f1f4d7ddedf",
-      "extractedSummary": "The Charlotte Symphony has an open audition for a Second Trumpet position. The application deadline is May 1, 2026, with auditions scheduled for May 31 - June 2, 2026. The position is full-time, tenure track, with employment starting in September 2026.",
-      "hasRelevantAuditions": true,
+      "lastChecked": "2026-07-02T14:19:54.878Z",
+      "contentHash": "9bb7b3f616c9d3d5",
+      "extractedSummary": null,
+      "hasRelevantAuditions": false,
       "notifiedRelevantItems": [
         "second trumpet"
       ]
@@ -116,8 +116,8 @@
     "https://ashevillesymphony.org/employment/": {
       "url": "https://ashevillesymphony.org/employment/",
       "name": "Asheville Symphony",
-      "lastChecked": "2026-06-22T10:09:56.193Z",
-      "contentHash": "4d5973e5d16902a0",
+      "lastChecked": "2026-07-02T14:19:54.878Z",
+      "contentHash": "202364dcb618bd5c",
       "extractedSummary": null,
       "hasRelevantAuditions": false,
       "notifiedRelevantItems": []
@@ -134,9 +134,9 @@
     "https://band.westpoint.edu/auditions/": {
       "url": "https://band.westpoint.edu/auditions/",
       "name": "West Point Academy Band",
-      "lastChecked": "2026-06-04T20:38:42.017Z",
-      "contentHash": "b366035cb965d366",
-      "extractedSummary": "The West Point Academy Band has two relevant trumpet/brass auditions with future deadlines. The 'Bugle/Trumpet' position has a preliminary recording deadline of June 22, 2026, and a live round on November 2, 2026. The 'Section Trumpet' position has a packet deadline of June 3, 2026, and a live round on September 28, 2026.",
+      "lastChecked": "2026-07-02T14:19:58.220Z",
+      "contentHash": "a23097d2873745ca",
+      "extractedSummary": "The West Point Academy Band has ongoing vacancies for Bugle/Trumpet and Section Trumpet. While the packet deadlines for these positions have passed, the live rounds are scheduled for November 2, 2026, and September 28, 2026, respectively, which are in the future. These are relevant audition opportunities for trumpet players.",
       "hasRelevantAuditions": true,
       "notifiedRelevantItems": [
         "section trumpet",
@@ -146,16 +146,17 @@
     "https://usarmyband.com/vacancies/": {
       "url": "https://usarmyband.com/vacancies/",
       "name": "U.S. Army Pershing's Own",
-      "lastChecked": "2026-06-18T20:47:15.698Z",
-      "contentHash": "f6cde8562e3fbdc8",
-      "extractedSummary": "The U.S. Army Band \"Pershing's Own\" has a current vacancy for a Trumpet position in The U.S. Army Ceremonial Band. The application deadline is August 20, with auditions scheduled for October 15-16. This is a relevant opportunity for trumpet players seeking an orchestral position with a future audition date.",
+      "lastChecked": "2026-07-02T14:20:01.452Z",
+      "contentHash": "aab1bceb189b0997",
+      "extractedSummary": "The U.S. Army Band \"Pershing's Own\" has current vacancies for Trumpet and Horn. The Trumpet position has an application deadline of August 20 and audition dates of October 15-16. The Horn position has an application deadline of August 24 and an audition date of October 5. All auditions are held in Arlington, Virginia.",
       "hasRelevantAuditions": true,
       "notifiedRelevantItems": [
-        "trumpet"
+        "trumpet",
+        "horn"
       ]
     }
   },
-  "playbillIndexHash": "387377952dcb7419",
+  "playbillIndexHash": "1a5b5d71d4715e0e",
   "playbillListings": {
     "https://playbill.com/job/mrs-doubtfire-national-tour-drums-percussion/a0380083-fa6a-4e35-9549-bb35933d6694": {
       "url": "https://playbill.com/job/mrs-doubtfire-national-tour-drums-percussion/a0380083-fa6a-4e35-9549-bb35933d6694",
@@ -619,6 +620,72 @@
       "notified": true,
       "summary": null,
       "contentHash": "fab1a4cde7b1ca32"
+    },
+    "https://playbill.com/job/seeking-immediate-guitarist-for-hairspray-footloose/98c5caf1-5c38-4ab9-b093-872d4adf1cf1": {
+      "url": "https://playbill.com/job/seeking-immediate-guitarist-for-hairspray-footloose/98c5caf1-5c38-4ab9-b093-872d4adf1cf1",
+      "title": "Seeking Immediate Guitarist for Hairspray & Footloose",
+      "organization": "NCCA Jean's Playhouse",
+      "firstSeen": "2026-07-02T14:20:01.453Z",
+      "lastChecked": "2026-07-02T14:20:01.453Z",
+      "hasTrumpet": false,
+      "notified": true,
+      "summary": null,
+      "contentHash": "a49c89242a8d666f"
+    },
+    "https://playbill.com/job/bass-player-for-closer-than-ever/adeab644-4195-4e73-96b0-3b8cf6002cbf": {
+      "url": "https://playbill.com/job/bass-player-for-closer-than-ever/adeab644-4195-4e73-96b0-3b8cf6002cbf",
+      "title": "Bass Player for Closer Than Ever",
+      "organization": "Centenary Stage Company",
+      "firstSeen": "2026-07-02T14:20:01.453Z",
+      "lastChecked": "2026-07-02T14:20:01.453Z",
+      "hasTrumpet": false,
+      "notified": true,
+      "summary": null,
+      "contentHash": "d3751e719a5a186a"
+    },
+    "https://playbill.com/job/violin-fiddle-for-the-water-for-elephants-bus-truck-national-tour/fec531af-57d8-481f-a8a7-5dacf9f761fc": {
+      "url": "https://playbill.com/job/violin-fiddle-for-the-water-for-elephants-bus-truck-national-tour/fec531af-57d8-481f-a8a7-5dacf9f761fc",
+      "title": "Violin (Fiddle) For The Water For Elephants Bus & Truck National Tour",
+      "organization": "NETworks Presentations LLC",
+      "firstSeen": "2026-07-02T14:20:01.453Z",
+      "lastChecked": "2026-07-02T14:20:01.453Z",
+      "hasTrumpet": false,
+      "notified": true,
+      "summary": null,
+      "contentHash": "ef980d0449e75992"
+    },
+    "https://playbill.com/job/french-inspired-musicians-wanted-for-bastille-day-celebration-accordion-harp-acoustic-performers/cb5431bd-995e-4369-a58e-f03a0cf6eb28": {
+      "url": "https://playbill.com/job/french-inspired-musicians-wanted-for-bastille-day-celebration-accordion-harp-acoustic-performers/cb5431bd-995e-4369-a58e-f03a0cf6eb28",
+      "title": "French-Inspired Musicians (Accordion, Harp & Acoustic Performers)",
+      "organization": "New York Dog Parade",
+      "firstSeen": "2026-07-02T14:20:01.453Z",
+      "lastChecked": "2026-07-02T14:20:01.453Z",
+      "hasTrumpet": false,
+      "notified": true,
+      "summary": null,
+      "contentHash": "8e885d99d8b1321c"
+    },
+    "https://playbill.com/job/dance-exchange-musician/dae1f317-d79d-480e-aaa9-2a8fce2ec1d6": {
+      "url": "https://playbill.com/job/dance-exchange-musician/dae1f317-d79d-480e-aaa9-2a8fce2ec1d6",
+      "title": "Dance eXchange Musician",
+      "organization": "BalletX",
+      "firstSeen": "2026-07-02T14:20:01.453Z",
+      "lastChecked": "2026-07-02T14:20:01.453Z",
+      "hasTrumpet": false,
+      "notified": true,
+      "summary": null,
+      "contentHash": "35607c261f462505"
+    },
+    "https://playbill.com/job/musicians-for-forget-i-said-anything/1a0b6d5f-6412-49cf-964c-ecbc83515b73": {
+      "url": "https://playbill.com/job/musicians-for-forget-i-said-anything/1a0b6d5f-6412-49cf-964c-ecbc83515b73",
+      "title": "Musicians for Forget I Said Anything",
+      "organization": "Something Better Productions",
+      "firstSeen": "2026-07-02T14:20:01.453Z",
+      "lastChecked": "2026-07-02T14:20:01.453Z",
+      "hasTrumpet": false,
+      "notified": true,
+      "summary": null,
+      "contentHash": "8191e6ed52be832b"
     }
   }
 }
