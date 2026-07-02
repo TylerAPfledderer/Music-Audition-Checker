@@ -7,11 +7,34 @@ import { probeIsAuditionPage } from "./llm-classifiers";
 
 // ─── Preflight: secrets ───────────────────────────────────────────────────────
 
+const OAUTH_MAX_RETRIES = 3;
+const OAUTH_BASE_DELAY_MS = 2000;
+
+/**
+ * A permanent OAuth2 failure (bad/expired/revoked credentials) is not worth retrying —
+ * Google surfaces these as `invalid_grant`/`invalid_client`/`unauthorized_client`. Every
+ * other failure (e.g. "Premature close", ECONNRESET, socket hang up, timeouts) is a
+ * transient transport error where the credentials never got judged, so a retry can succeed.
+ */
+function isPermanentOAuthError(err: unknown): boolean {
+  const msg = String(err instanceof Error ? err.message : err).toLowerCase();
+  return (
+    msg.includes("invalid_grant") ||
+    msg.includes("invalid_client") ||
+    msg.includes("unauthorized_client")
+  );
+}
+
 /**
  * Validates not just presence but actual usability of credentials by performing a
  * live OAuth2 token exchange. This catches expired refresh tokens before any page
  * fetching or state mutation occurs, so a credential failure produces a clean error
  * rather than a partially-completed run with no email sent.
+ *
+ * The token exchange is retried with exponential backoff because the request to
+ * Google's OAuth endpoint occasionally drops mid-flight (e.g. "Premature close") on
+ * CI runners — a transport hiccup that should not abort the entire weekly run. Genuine
+ * credential rejections fail fast without retrying.
  */
 export async function preflightSecrets(): Promise<void> {
   console.log("🔐 Preflight: checking secrets...");
@@ -40,12 +63,22 @@ export async function preflightSecrets(): Promise<void> {
   );
   oauth2Client.setCredentials({ refresh_token: process.env.GMAIL_REFRESH_TOKEN });
 
-  try {
-    const { token } = await oauth2Client.getAccessToken();
-    if (!token) throw new Error("Empty access token returned");
-    console.log("  ✓ Gmail OAuth2 token exchange successful");
-  } catch (err) {
-    throw new Error(`Gmail OAuth2 token exchange failed: ${err}`);
+  for (let attempt = 0; attempt <= OAUTH_MAX_RETRIES; attempt++) {
+    try {
+      const { token } = await oauth2Client.getAccessToken();
+      if (!token) throw new Error("Empty access token returned");
+      console.log("  ✓ Gmail OAuth2 token exchange successful");
+      return;
+    } catch (err) {
+      if (isPermanentOAuthError(err) || attempt === OAUTH_MAX_RETRIES) {
+        throw new Error(`Gmail OAuth2 token exchange failed: ${err}`);
+      }
+      const delayMs = OAUTH_BASE_DELAY_MS * 2 ** attempt;
+      console.log(
+        `  ⏳ Gmail OAuth2 token exchange failed (${err}) — retry ${attempt + 1}/${OAUTH_MAX_RETRIES} in ${Math.round(delayMs / 1000)}s...`
+      );
+      await new Promise((r) => setTimeout(r, delayMs));
+    }
   }
 }
 
