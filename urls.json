@@ -60,6 +60,10 @@
     "url": "https://usarmyband.com/vacancies/"
   },
   {
+    "name": "Virginia Symphony",
+    "url": "https://virginiasymphony.org/jobs-auditions/"
+  },
+  {
     "name": "Playbill Job Board",
     "url": "https://playbill.com/jobs?show=60&category=Musician",
     "crawlMode": "playbill"
