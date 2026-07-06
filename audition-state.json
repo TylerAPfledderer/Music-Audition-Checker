@@ -1,5 +1,5 @@
 {
-  "lastRun": "2026-07-03T04:38:36.651Z",
+  "lastRun": "2026-07-06T09:31:06.158Z",
   "pages": {
     "https://www.chamberorchestraofthetriangle.org/employment": {
       "url": "https://www.chamberorchestraofthetriangle.org/employment",
@@ -24,10 +24,10 @@
     "https://www.fayettevillesymphony.org/auditions-and-employment/": {
       "url": "https://www.fayettevillesymphony.org/auditions-and-employment/",
       "name": "Fayetteville Symphony Orchestra",
-      "lastChecked": "2026-07-03T04:38:30.850Z",
-      "contentHash": "fee75ab37becb804",
-      "extractedSummary": "The Fayetteville Symphony Orchestra is currently accepting submissions for its sub list. Interested musicians, including trumpeters, can email the Operations Manager to be considered. While there are no active audition submissions for specific positions, the sub list is open.",
-      "hasRelevantAuditions": true,
+      "lastChecked": "2026-07-06T09:30:48.237Z",
+      "contentHash": "054b3f25feb4d2a5",
+      "extractedSummary": null,
+      "hasRelevantAuditions": false,
       "notifiedRelevantItems": [
         "substitute list"
       ]
@@ -105,8 +105,8 @@
     "https://www.charlottesymphony.org/about/employment-auditions/": {
       "url": "https://www.charlottesymphony.org/about/employment-auditions/",
       "name": "Charlotte Symphony",
-      "lastChecked": "2026-07-03T04:38:30.853Z",
-      "contentHash": "9bb7b3f616c9d3d5",
+      "lastChecked": "2026-07-06T09:30:48.239Z",
+      "contentHash": "2b99050785c06943",
       "extractedSummary": null,
       "hasRelevantAuditions": false,
       "notifiedRelevantItems": [
@@ -167,7 +167,7 @@
       ]
     }
   },
-  "playbillIndexHash": "b32286f022ab78ac",
+  "playbillIndexHash": "6c856b4cf4b0e846",
   "playbillListings": {
     "https://playbill.com/job/mrs-doubtfire-national-tour-drums-percussion/a0380083-fa6a-4e35-9549-bb35933d6694": {
       "url": "https://playbill.com/job/mrs-doubtfire-national-tour-drums-percussion/a0380083-fa6a-4e35-9549-bb35933d6694",
