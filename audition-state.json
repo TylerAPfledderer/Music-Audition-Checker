@@ -1,5 +1,5 @@
 {
-  "lastRun": "2026-07-06T09:31:06.158Z",
+  "lastRun": "2026-07-09T21:09:33.922Z",
   "pages": {
     "https://www.chamberorchestraofthetriangle.org/employment": {
       "url": "https://www.chamberorchestraofthetriangle.org/employment",
@@ -24,8 +24,8 @@
     "https://www.fayettevillesymphony.org/auditions-and-employment/": {
       "url": "https://www.fayettevillesymphony.org/auditions-and-employment/",
       "name": "Fayetteville Symphony Orchestra",
-      "lastChecked": "2026-07-06T09:30:48.237Z",
-      "contentHash": "054b3f25feb4d2a5",
+      "lastChecked": "2026-07-09T21:09:12.423Z",
+      "contentHash": "e3b0c44298fc1c14",
       "extractedSummary": null,
       "hasRelevantAuditions": false,
       "notifiedRelevantItems": [
@@ -134,9 +134,9 @@
     "https://band.westpoint.edu/auditions/": {
       "url": "https://band.westpoint.edu/auditions/",
       "name": "West Point Academy Band",
-      "lastChecked": "2026-07-02T14:19:58.220Z",
-      "contentHash": "a23097d2873745ca",
-      "extractedSummary": "The West Point Academy Band has ongoing vacancies for Bugle/Trumpet and Section Trumpet. While the packet deadlines for these positions have passed, the live rounds are scheduled for November 2, 2026, and September 28, 2026, respectively, which are in the future. These are relevant audition opportunities for trumpet players.",
+      "lastChecked": "2026-07-09T21:09:16.155Z",
+      "contentHash": "8d93cc8f9d4d498d",
+      "extractedSummary": "The West Point Academy Band has two relevant trumpet auditions: one for Bugle/Trumpet with a live round on November 2, 2026, and another for Section Trumpet with a live round on September 28, 2026. Both positions are for a stabilized duty assignment at the U.S. Military Academy and offer full military benefits.",
       "hasRelevantAuditions": true,
       "notifiedRelevantItems": [
         "section trumpet",
@@ -157,9 +157,9 @@
     "https://virginiasymphony.org/jobs-auditions/": {
       "url": "https://virginiasymphony.org/jobs-auditions/",
       "name": "Virginia Symphony",
-      "lastChecked": "2026-07-03T04:38:32.376Z",
-      "contentHash": "6b890c6d694dd81f",
-      "extractedSummary": "The Virginia Symphony Orchestra has an open audition for a TRUMPET III position with an application deadline of January 18, 2027, and an in-person audition in February 2027. They are also accepting rolling submissions for a Substitute Musician list, which would include trumpet players. Both opportunities are relevant for trumpet players.",
+      "lastChecked": "2026-07-09T21:09:18.414Z",
+      "contentHash": "53db5ac74f0fdd93",
+      "extractedSummary": "The Virginia Symphony Orchestra has an open audition for a TRUMPET III position with an application deadline of January 18, 2027, and in-person auditions scheduled for February 15-16, 2027. This position is tenure-track and relevant for trumpet players. Additionally, the orchestra accepts rolling submissions for a Substitute Musician list, which would be open to trumpet players.",
       "hasRelevantAuditions": true,
       "notifiedRelevantItems": [
         "trumpet",
@@ -167,7 +167,7 @@
       ]
     }
   },
-  "playbillIndexHash": "6c856b4cf4b0e846",
+  "playbillIndexHash": "c19cc429255c537e",
   "playbillListings": {
     "https://playbill.com/job/mrs-doubtfire-national-tour-drums-percussion/a0380083-fa6a-4e35-9549-bb35933d6694": {
       "url": "https://playbill.com/job/mrs-doubtfire-national-tour-drums-percussion/a0380083-fa6a-4e35-9549-bb35933d6694",
