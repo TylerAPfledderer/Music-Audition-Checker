@@ -1,5 +1,5 @@
 {
-  "lastRun": "2026-07-09T21:09:33.922Z",
+  "lastRun": "2026-07-13T11:17:41.085Z",
   "pages": {
     "https://www.chamberorchestraofthetriangle.org/employment": {
       "url": "https://www.chamberorchestraofthetriangle.org/employment",
@@ -105,8 +105,8 @@
     "https://www.charlottesymphony.org/about/employment-auditions/": {
       "url": "https://www.charlottesymphony.org/about/employment-auditions/",
       "name": "Charlotte Symphony",
-      "lastChecked": "2026-07-06T09:30:48.239Z",
-      "contentHash": "2b99050785c06943",
+      "lastChecked": "2026-07-13T11:17:31.790Z",
+      "contentHash": "fd32b0b69f95e946",
       "extractedSummary": null,
       "hasRelevantAuditions": false,
       "notifiedRelevantItems": [
@@ -146,9 +146,9 @@
     "https://usarmyband.com/vacancies/": {
       "url": "https://usarmyband.com/vacancies/",
       "name": "U.S. Army Pershing's Own",
-      "lastChecked": "2026-07-02T14:52:35.170Z",
-      "contentHash": "aab1bceb189b0997",
-      "extractedSummary": "The U.S. Army Ceremonial Band has an open audition for a Trumpet position. The application deadline is August 20, with auditions scheduled for October 15-16. This is a relevant opportunity for trumpet players.",
+      "lastChecked": "2026-07-13T11:17:36.289Z",
+      "contentHash": "042a802e2ebf2cea",
+      "extractedSummary": "The U.S. Army Band \"Pershing's Own\" has an open vacancy for a Trumpet position with the U.S. Army Ceremonial Band. The application deadline is August 20, and auditions are scheduled for October 15 - October 16. This position is relevant as it is a trumpet-specific audition with future dates.",
       "hasRelevantAuditions": true,
       "notifiedRelevantItems": [
         "trumpet"
@@ -157,9 +157,9 @@
     "https://virginiasymphony.org/jobs-auditions/": {
       "url": "https://virginiasymphony.org/jobs-auditions/",
       "name": "Virginia Symphony",
-      "lastChecked": "2026-07-09T21:09:18.414Z",
-      "contentHash": "53db5ac74f0fdd93",
-      "extractedSummary": "The Virginia Symphony Orchestra has an open audition for a TRUMPET III position with an application deadline of January 18, 2027, and in-person auditions scheduled for February 15-16, 2027. This position is tenure-track and relevant for trumpet players. Additionally, the orchestra accepts rolling submissions for a Substitute Musician list, which would be open to trumpet players.",
+      "lastChecked": "2026-07-13T11:17:38.222Z",
+      "contentHash": "91c6b170536748c4",
+      "extractedSummary": "The Virginia Symphony Orchestra has an open audition for a TRUMPET III position with an application deadline of January 18, 2027, and in-person auditions on February 15-16, 2027. They also accept rolling submissions for a Substitute Musician list, which would include trumpet players. These opportunities are relevant for trumpet players seeking future orchestral positions.",
       "hasRelevantAuditions": true,
       "notifiedRelevantItems": [
         "trumpet",
@@ -167,7 +167,7 @@
       ]
     }
   },
-  "playbillIndexHash": "c19cc429255c537e",
+  "playbillIndexHash": "61cd6491a42bd76e",
   "playbillListings": {
     "https://playbill.com/job/mrs-doubtfire-national-tour-drums-percussion/a0380083-fa6a-4e35-9549-bb35933d6694": {
       "url": "https://playbill.com/job/mrs-doubtfire-national-tour-drums-percussion/a0380083-fa6a-4e35-9549-bb35933d6694",
