@@ -1,5 +1,5 @@
 {
-  "lastRun": "2026-07-13T11:17:41.085Z",
+  "lastRun": "2026-07-16T20:41:29.884Z",
   "pages": {
     "https://www.chamberorchestraofthetriangle.org/employment": {
       "url": "https://www.chamberorchestraofthetriangle.org/employment",
@@ -67,10 +67,10 @@
     "https://rhsymphony.org/auditions": {
       "url": "https://rhsymphony.org/auditions",
       "name": "Rock Hill Symphony Orchestra",
-      "lastChecked": "2026-03-18T15:16:57.099Z",
-      "contentHash": "29fddee0ea659bb7",
-      "extractedSummary": "The Rock Hill Symphony Orchestra has open auditions for section and sub positions for all instruments, submitted via YouTube video. These are general orchestral auditions that would include trumpet positions, with no specified closing date mentioned.",
-      "hasRelevantAuditions": true,
+      "lastChecked": "2026-07-16T20:41:21.906Z",
+      "contentHash": "d72605b75b6a474c",
+      "extractedSummary": null,
+      "hasRelevantAuditions": false,
       "notifiedRelevantItems": [
         "substitute list"
       ]
@@ -87,8 +87,8 @@
     "https://www.wssymphony.org/about/jobs-2/": {
       "url": "https://www.wssymphony.org/about/jobs-2/",
       "name": "Winston-Salem Symphony",
-      "lastChecked": "2026-06-11T20:44:00.236Z",
-      "contentHash": "665f66085a43a221",
+      "lastChecked": "2026-07-16T20:41:21.906Z",
+      "contentHash": "180a79422ce11dec",
       "extractedSummary": null,
       "hasRelevantAuditions": false,
       "notifiedRelevantItems": []
@@ -105,8 +105,8 @@
     "https://www.charlottesymphony.org/about/employment-auditions/": {
       "url": "https://www.charlottesymphony.org/about/employment-auditions/",
       "name": "Charlotte Symphony",
-      "lastChecked": "2026-07-13T11:17:31.790Z",
-      "contentHash": "fd32b0b69f95e946",
+      "lastChecked": "2026-07-16T20:41:21.907Z",
+      "contentHash": "fe4a396f57b1944d",
       "extractedSummary": null,
       "hasRelevantAuditions": false,
       "notifiedRelevantItems": [
@@ -125,8 +125,8 @@
     "https://rso.com/auditions/": {
       "url": "https://rso.com/auditions/",
       "name": "Roanoke Symphony Orchestra",
-      "lastChecked": "2026-03-21T03:02:15.117Z",
-      "contentHash": "1b1e8f5f0307b649",
+      "lastChecked": "2026-07-16T20:41:21.905Z",
+      "contentHash": "4556bb7ed9e7b421",
       "extractedSummary": null,
       "hasRelevantAuditions": false,
       "notifiedRelevantItems": []
@@ -134,10 +134,10 @@
     "https://band.westpoint.edu/auditions/": {
       "url": "https://band.westpoint.edu/auditions/",
       "name": "West Point Academy Band",
-      "lastChecked": "2026-07-09T21:09:16.155Z",
-      "contentHash": "8d93cc8f9d4d498d",
-      "extractedSummary": "The West Point Academy Band has two relevant trumpet auditions: one for Bugle/Trumpet with a live round on November 2, 2026, and another for Section Trumpet with a live round on September 28, 2026. Both positions are for a stabilized duty assignment at the U.S. Military Academy and offer full military benefits.",
-      "hasRelevantAuditions": true,
+      "lastChecked": "2026-07-16T20:41:21.907Z",
+      "contentHash": "e057baa2342fbf4e",
+      "extractedSummary": null,
+      "hasRelevantAuditions": false,
       "notifiedRelevantItems": [
         "section trumpet",
         "trumpet"
@@ -157,9 +157,9 @@
     "https://virginiasymphony.org/jobs-auditions/": {
       "url": "https://virginiasymphony.org/jobs-auditions/",
       "name": "Virginia Symphony",
-      "lastChecked": "2026-07-13T11:17:38.222Z",
-      "contentHash": "91c6b170536748c4",
-      "extractedSummary": "The Virginia Symphony Orchestra has an open audition for a TRUMPET III position with an application deadline of January 18, 2027, and in-person auditions on February 15-16, 2027. They also accept rolling submissions for a Substitute Musician list, which would include trumpet players. These opportunities are relevant for trumpet players seeking future orchestral positions.",
+      "lastChecked": "2026-07-16T20:41:23.615Z",
+      "contentHash": "46d261456f3d00c9",
+      "extractedSummary": "The Virginia Symphony Orchestra has an open audition for a TRUMPET III position with an application deadline of January 18, 2027, and an in-person audition on February 15-16, 2027. They also accept rolling submissions for Substitute Musician auditions, which would include trumpet players. These opportunities are relevant for trumpet players seeking future orchestral positions.",
       "hasRelevantAuditions": true,
       "notifiedRelevantItems": [
         "trumpet",
@@ -167,7 +167,7 @@
       ]
     }
   },
-  "playbillIndexHash": "61cd6491a42bd76e",
+  "playbillIndexHash": "a0f4cafd448d9752",
   "playbillListings": {
     "https://playbill.com/job/mrs-doubtfire-national-tour-drums-percussion/a0380083-fa6a-4e35-9549-bb35933d6694": {
       "url": "https://playbill.com/job/mrs-doubtfire-national-tour-drums-percussion/a0380083-fa6a-4e35-9549-bb35933d6694",
@@ -697,6 +697,39 @@
       "notified": true,
       "summary": null,
       "contentHash": "8191e6ed52be832b"
+    },
+    "https://playbill.com/job/seeking-touring-production-musicians-mystic-pizza/5ddfd745-e889-4ef3-9030-a9e17119c82e": {
+      "url": "https://playbill.com/job/seeking-touring-production-musicians-mystic-pizza/5ddfd745-e889-4ef3-9030-a9e17119c82e",
+      "title": "Seeking Touring Production Musicians -- Mystic Pizza",
+      "organization": "Mystic Pizza LLC",
+      "firstSeen": "2026-07-16T20:41:23.616Z",
+      "lastChecked": "2026-07-16T20:41:23.616Z",
+      "hasTrumpet": false,
+      "notified": true,
+      "summary": null,
+      "contentHash": "dbfed0e1333ad5f8"
+    },
+    "https://playbill.com/job/seeking-touring-production-musicians-the-music-man/7d2ef407-03f5-472b-911e-d6aae0302c5c": {
+      "url": "https://playbill.com/job/seeking-touring-production-musicians-the-music-man/7d2ef407-03f5-472b-911e-d6aae0302c5c",
+      "title": "Seeking Touring Production Musicians -- The Music Man",
+      "organization": "Ya Got Trouble LLC",
+      "firstSeen": "2026-07-16T20:41:23.616Z",
+      "lastChecked": "2026-07-16T20:41:23.616Z",
+      "hasTrumpet": false,
+      "notified": true,
+      "summary": null,
+      "contentHash": "746bc43834c12f84"
+    },
+    "https://playbill.com/job/violin-viola-and-bass-for-a-beautiful-noise-bus-truck-national-tour/2bc61a2a-1b24-464e-a678-802e2685c9a6": {
+      "url": "https://playbill.com/job/violin-viola-and-bass-for-a-beautiful-noise-bus-truck-national-tour/2bc61a2a-1b24-464e-a678-802e2685c9a6",
+      "title": "Violin/Viola And Bass For A Beautiful Noise Bus & Truck National Tour",
+      "organization": "NETworks Presentations LLC",
+      "firstSeen": "2026-07-16T20:41:23.616Z",
+      "lastChecked": "2026-07-16T20:41:23.616Z",
+      "hasTrumpet": false,
+      "notified": true,
+      "summary": null,
+      "contentHash": "61d3c79a8bb90ad3"
     }
   }
 }
