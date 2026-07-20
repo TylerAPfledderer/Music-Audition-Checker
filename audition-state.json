@@ -1,5 +1,5 @@
 {
-  "lastRun": "2026-07-16T20:41:29.884Z",
+  "lastRun": "2026-07-20T10:58:00.269Z",
   "pages": {
     "https://www.chamberorchestraofthetriangle.org/employment": {
       "url": "https://www.chamberorchestraofthetriangle.org/employment",
@@ -167,7 +167,7 @@
       ]
     }
   },
-  "playbillIndexHash": "a0f4cafd448d9752",
+  "playbillIndexHash": "bb8655c2a3e30909",
   "playbillListings": {
     "https://playbill.com/job/mrs-doubtfire-national-tour-drums-percussion/a0380083-fa6a-4e35-9549-bb35933d6694": {
       "url": "https://playbill.com/job/mrs-doubtfire-national-tour-drums-percussion/a0380083-fa6a-4e35-9549-bb35933d6694",
@@ -730,6 +730,17 @@
       "notified": true,
       "summary": null,
       "contentHash": "61d3c79a8bb90ad3"
+    },
+    "https://playbill.com/job/event-band-vocalist/780a7734-272d-43f0-911f-58f129e7ac56": {
+      "url": "https://playbill.com/job/event-band-vocalist/780a7734-272d-43f0-911f-58f129e7ac56",
+      "title": "Event Band Vocalist",
+      "organization": "Elan Artists",
+      "firstSeen": "2026-07-20T10:57:46.822Z",
+      "lastChecked": "2026-07-20T10:57:46.822Z",
+      "hasTrumpet": false,
+      "notified": true,
+      "summary": null,
+      "contentHash": "bc7d3cd403b45fa4"
     }
   }
 }
