@@ -1,5 +1,5 @@
 {
-  "lastRun": "2026-07-20T10:58:00.269Z",
+  "lastRun": "2026-07-23T20:48:00.025Z",
   "pages": {
     "https://www.chamberorchestraofthetriangle.org/employment": {
       "url": "https://www.chamberorchestraofthetriangle.org/employment",
@@ -134,8 +134,8 @@
     "https://band.westpoint.edu/auditions/": {
       "url": "https://band.westpoint.edu/auditions/",
       "name": "West Point Academy Band",
-      "lastChecked": "2026-07-16T20:41:21.907Z",
-      "contentHash": "e057baa2342fbf4e",
+      "lastChecked": "2026-07-23T20:47:54.179Z",
+      "contentHash": "e591be6af37059ff",
       "extractedSummary": null,
       "hasRelevantAuditions": false,
       "notifiedRelevantItems": [
@@ -157,9 +157,9 @@
     "https://virginiasymphony.org/jobs-auditions/": {
       "url": "https://virginiasymphony.org/jobs-auditions/",
       "name": "Virginia Symphony",
-      "lastChecked": "2026-07-16T20:41:23.615Z",
-      "contentHash": "46d261456f3d00c9",
-      "extractedSummary": "The Virginia Symphony Orchestra has an open audition for a TRUMPET III position with an application deadline of January 18, 2027, and an in-person audition on February 15-16, 2027. They also accept rolling submissions for Substitute Musician auditions, which would include trumpet players. These opportunities are relevant for trumpet players seeking future orchestral positions.",
+      "lastChecked": "2026-07-23T20:47:55.739Z",
+      "contentHash": "cbde94282f7a8085",
+      "extractedSummary": "The Virginia Symphony Orchestra has an open audition for a TRUMPET III position with an application deadline of January 18, 2027, and in-person auditions on February 15-16, 2027. They also accept rolling submissions for a Substitute Musician list, which would include trumpet players. Both opportunities are relevant for trumpet players.",
       "hasRelevantAuditions": true,
       "notifiedRelevantItems": [
         "trumpet",
@@ -167,7 +167,7 @@
       ]
     }
   },
-  "playbillIndexHash": "bb8655c2a3e30909",
+  "playbillIndexHash": "0fab81ae4ea3a3b6",
   "playbillListings": {
     "https://playbill.com/job/mrs-doubtfire-national-tour-drums-percussion/a0380083-fa6a-4e35-9549-bb35933d6694": {
       "url": "https://playbill.com/job/mrs-doubtfire-national-tour-drums-percussion/a0380083-fa6a-4e35-9549-bb35933d6694",
