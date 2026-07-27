@@ -1,5 +1,5 @@
 {
-  "lastRun": "2026-07-23T20:48:00.025Z",
+  "lastRun": "2026-07-27T11:29:49.949Z",
   "pages": {
     "https://www.chamberorchestraofthetriangle.org/employment": {
       "url": "https://www.chamberorchestraofthetriangle.org/employment",
@@ -167,7 +167,7 @@
       ]
     }
   },
-  "playbillIndexHash": "0fab81ae4ea3a3b6",
+  "playbillIndexHash": "e8fe945f65ccbdc2",
   "playbillListings": {
     "https://playbill.com/job/mrs-doubtfire-national-tour-drums-percussion/a0380083-fa6a-4e35-9549-bb35933d6694": {
       "url": "https://playbill.com/job/mrs-doubtfire-national-tour-drums-percussion/a0380083-fa6a-4e35-9549-bb35933d6694",
@@ -741,6 +741,17 @@
       "notified": true,
       "summary": null,
       "contentHash": "bc7d3cd403b45fa4"
+    },
+    "https://playbill.com/job/hadestown-2nd-national-tour-non-afm-musicians/b200697a-b97c-4b76-9b93-e4dea5ce870d": {
+      "url": "https://playbill.com/job/hadestown-2nd-national-tour-non-afm-musicians/b200697a-b97c-4b76-9b93-e4dea5ce870d",
+      "title": "Hadestown 2nd National Tour - Non-AFM Musicians",
+      "organization": "Spring Will Come Again LLC",
+      "firstSeen": "2026-07-27T11:29:45.389Z",
+      "lastChecked": "2026-07-27T11:29:45.389Z",
+      "hasTrumpet": false,
+      "notified": true,
+      "summary": null,
+      "contentHash": "85b784f6efd26cad"
     }
   }
 }
