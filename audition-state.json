@@ -1,5 +1,5 @@
 {
-  "lastRun": "2026-07-27T11:29:49.949Z",
+  "lastRun": "2026-07-30T20:52:41.532Z",
   "pages": {
     "https://www.chamberorchestraofthetriangle.org/employment": {
       "url": "https://www.chamberorchestraofthetriangle.org/employment",
@@ -105,8 +105,8 @@
     "https://www.charlottesymphony.org/about/employment-auditions/": {
       "url": "https://www.charlottesymphony.org/about/employment-auditions/",
       "name": "Charlotte Symphony",
-      "lastChecked": "2026-07-16T20:41:21.907Z",
-      "contentHash": "fe4a396f57b1944d",
+      "lastChecked": "2026-07-30T20:52:37.044Z",
+      "contentHash": "7050702dcfec3420",
       "extractedSummary": null,
       "hasRelevantAuditions": false,
       "notifiedRelevantItems": [
@@ -167,7 +167,7 @@
       ]
     }
   },
-  "playbillIndexHash": "e8fe945f65ccbdc2",
+  "playbillIndexHash": "385217b026108747",
   "playbillListings": {
     "https://playbill.com/job/mrs-doubtfire-national-tour-drums-percussion/a0380083-fa6a-4e35-9549-bb35933d6694": {
       "url": "https://playbill.com/job/mrs-doubtfire-national-tour-drums-percussion/a0380083-fa6a-4e35-9549-bb35933d6694",
@@ -752,6 +752,17 @@
       "notified": true,
       "summary": null,
       "contentHash": "85b784f6efd26cad"
+    },
+    "https://playbill.com/job/seeking-singers-and-band-for-upcoming-queer-heartbreak-cabaret/86898ed0-91ff-4121-a03a-377f74a60618": {
+      "url": "https://playbill.com/job/seeking-singers-and-band-for-upcoming-queer-heartbreak-cabaret/86898ed0-91ff-4121-a03a-377f74a60618",
+      "title": "Seeking Singers and Band for Upcoming Queer Heartbreak Cabaret!",
+      "organization": "Jesse Hartley & Mer Julia Muirhead",
+      "firstSeen": "2026-07-30T20:52:37.045Z",
+      "lastChecked": "2026-07-30T20:52:37.045Z",
+      "hasTrumpet": false,
+      "notified": true,
+      "summary": null,
+      "contentHash": "af00060e191c5262"
     }
   }
 }
