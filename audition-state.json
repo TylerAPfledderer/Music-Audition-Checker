@@ -1,5 +1,5 @@
 {
-  "lastRun": "2026-07-30T20:52:41.532Z",
+  "lastRun": "2026-08-03T11:30:41.270Z",
   "pages": {
     "https://www.chamberorchestraofthetriangle.org/employment": {
       "url": "https://www.chamberorchestraofthetriangle.org/employment",
@@ -24,8 +24,8 @@
     "https://www.fayettevillesymphony.org/auditions-and-employment/": {
       "url": "https://www.fayettevillesymphony.org/auditions-and-employment/",
       "name": "Fayetteville Symphony Orchestra",
-      "lastChecked": "2026-07-09T21:09:12.423Z",
-      "contentHash": "e3b0c44298fc1c14",
+      "lastChecked": "2026-08-03T11:30:36.938Z",
+      "contentHash": "9be7b49e8d5882e4",
       "extractedSummary": null,
       "hasRelevantAuditions": false,
       "notifiedRelevantItems": [
@@ -116,8 +116,8 @@
     "https://ashevillesymphony.org/employment/": {
       "url": "https://ashevillesymphony.org/employment/",
       "name": "Asheville Symphony",
-      "lastChecked": "2026-07-02T14:19:54.878Z",
-      "contentHash": "202364dcb618bd5c",
+      "lastChecked": "2026-08-03T11:30:36.939Z",
+      "contentHash": "ce29f90f9a7286e1",
       "extractedSummary": null,
       "hasRelevantAuditions": false,
       "notifiedRelevantItems": []
@@ -167,7 +167,7 @@
       ]
     }
   },
-  "playbillIndexHash": "385217b026108747",
+  "playbillIndexHash": "28c4bf60993e2c90",
   "playbillListings": {
     "https://playbill.com/job/mrs-doubtfire-national-tour-drums-percussion/a0380083-fa6a-4e35-9549-bb35933d6694": {
       "url": "https://playbill.com/job/mrs-doubtfire-national-tour-drums-percussion/a0380083-fa6a-4e35-9549-bb35933d6694",
@@ -763,6 +763,17 @@
       "notified": true,
       "summary": null,
       "contentHash": "af00060e191c5262"
+    },
+    "https://playbill.com/job/violin-bass-and-cello-players-needed-for-spring-awakening/bee7deac-92b9-4103-bb99-7bb1dbd6430f": {
+      "url": "https://playbill.com/job/violin-bass-and-cello-players-needed-for-spring-awakening/bee7deac-92b9-4103-bb99-7bb1dbd6430f",
+      "title": "Violin, Bass, and Cello Players Needed for Spring Awakening",
+      "organization": "Vanguard Theater",
+      "firstSeen": "2026-08-03T11:30:36.940Z",
+      "lastChecked": "2026-08-03T11:30:36.940Z",
+      "hasTrumpet": false,
+      "notified": true,
+      "summary": null,
+      "contentHash": "9c811cf413bb8992"
     }
   }
 }
