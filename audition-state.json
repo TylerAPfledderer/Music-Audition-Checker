@@ -1,22 +1,24 @@
 {
-  "lastRun": "2026-08-03T11:30:41.270Z",
+  "lastRun": "2026-08-07T00:50:26.753Z",
   "pages": {
     "https://www.chamberorchestraofthetriangle.org/employment": {
       "url": "https://www.chamberorchestraofthetriangle.org/employment",
       "name": "Chamber Orchestra of the Triangle",
-      "lastChecked": "2026-06-18T20:47:11.038Z",
-      "contentHash": "e3b0c44298fc1c14",
-      "extractedSummary": null,
-      "hasRelevantAuditions": false,
-      "notifiedRelevantItems": []
+      "lastChecked": "2026-08-07T00:50:18.592Z",
+      "contentHash": "9c291ec1a942da2c",
+      "extractedSummary": "The Chamber Orchestra of the Triangle is holding auditions for its 2026-27 season, including substitute and available contracted positions. Trumpet is listed as an instrument for which auditions will be held, with specific solo repertoire and orchestral excerpts provided. The application deadline is August 28, 2026, and auditions are scheduled for August 30, 2026.",
+      "hasRelevantAuditions": true,
+      "notifiedRelevantItems": [
+        "trumpet"
+      ]
     },
     "https://wpsymphony.org/employment/": {
       "url": "https://wpsymphony.org/employment/",
       "name": "Western Piedmont Symphony",
-      "lastChecked": "2026-04-02T20:08:58.716Z",
-      "contentHash": "b9ced44ce1de0eb8",
-      "extractedSummary": "The Western Piedmont Symphony has a Third Trumpet audition scheduled for May 24, 2026, with an application deadline of May 15, 2026. This is a section position paying $80 per service plus travel allowance for their 26-27 season of approximately 35 services.",
-      "hasRelevantAuditions": true,
+      "lastChecked": "2026-08-07T00:50:18.593Z",
+      "contentHash": "5b118058f9f3141f",
+      "extractedSummary": null,
+      "hasRelevantAuditions": false,
       "notifiedRelevantItems": [
         "trumpet"
       ]
@@ -116,8 +118,8 @@
     "https://ashevillesymphony.org/employment/": {
       "url": "https://ashevillesymphony.org/employment/",
       "name": "Asheville Symphony",
-      "lastChecked": "2026-08-03T11:30:36.939Z",
-      "contentHash": "ce29f90f9a7286e1",
+      "lastChecked": "2026-08-07T00:50:18.594Z",
+      "contentHash": "6da0b3e2de176f02",
       "extractedSummary": null,
       "hasRelevantAuditions": false,
       "notifiedRelevantItems": []
@@ -167,7 +169,7 @@
       ]
     }
   },
-  "playbillIndexHash": "28c4bf60993e2c90",
+  "playbillIndexHash": "107aae5bfbd38d32",
   "playbillListings": {
     "https://playbill.com/job/mrs-doubtfire-national-tour-drums-percussion/a0380083-fa6a-4e35-9549-bb35933d6694": {
       "url": "https://playbill.com/job/mrs-doubtfire-national-tour-drums-percussion/a0380083-fa6a-4e35-9549-bb35933d6694",
@@ -774,6 +776,50 @@
       "notified": true,
       "summary": null,
       "contentHash": "9c811cf413bb8992"
+    },
+    "https://playbill.com/job/royal-caribbean-entertainment-live-music-seeking-saxophonists-for-jazz-band/95587c01-97b0-4467-af85-99c457f21901": {
+      "url": "https://playbill.com/job/royal-caribbean-entertainment-live-music-seeking-saxophonists-for-jazz-band/95587c01-97b0-4467-af85-99c457f21901",
+      "title": "Royal Caribbean Entertainment | Live Music | Seeking Saxophonists for Jazz Band",
+      "organization": "Royal Caribbean Entertainment",
+      "firstSeen": "2026-08-07T00:50:18.597Z",
+      "lastChecked": "2026-08-07T00:50:18.597Z",
+      "hasTrumpet": false,
+      "notified": true,
+      "summary": null,
+      "contentHash": "5b0fd526dbfb87df"
+    },
+    "https://playbill.com/job/seeking-reed-1-musician-the-music-man/21c263e5-1bbc-4c46-9670-dc1f84e9eafe": {
+      "url": "https://playbill.com/job/seeking-reed-1-musician-the-music-man/21c263e5-1bbc-4c46-9670-dc1f84e9eafe",
+      "title": "Seeking Reed 1 Musician -- The Music Man",
+      "organization": "Ya Got Trouble LLC",
+      "firstSeen": "2026-08-07T00:50:18.597Z",
+      "lastChecked": "2026-08-07T00:50:18.597Z",
+      "hasTrumpet": false,
+      "notified": true,
+      "summary": null,
+      "contentHash": "2133a542dea5fd63"
+    },
+    "https://playbill.com/job/open-call-for-piano-bar-entertainers-at-sea/c5e40f39-303e-4540-89b9-7f75600345d9": {
+      "url": "https://playbill.com/job/open-call-for-piano-bar-entertainers-at-sea/c5e40f39-303e-4540-89b9-7f75600345d9",
+      "title": "Open Call for Piano Bar Entertainers at Sea",
+      "organization": "RWS GLOBAL",
+      "firstSeen": "2026-08-07T00:50:18.597Z",
+      "lastChecked": "2026-08-07T00:50:18.597Z",
+      "hasTrumpet": false,
+      "notified": true,
+      "summary": null,
+      "contentHash": "43036713e8787a0e"
+    },
+    "https://playbill.com/job/keyboard-guitar-viola-and-cello-players-needed-for-showpeople-theatre-collective-fall-season/c5e16f3f-2451-4eee-b488-0b107dfe1b73": {
+      "url": "https://playbill.com/job/keyboard-guitar-viola-and-cello-players-needed-for-showpeople-theatre-collective-fall-season/c5e16f3f-2451-4eee-b488-0b107dfe1b73",
+      "title": "Keyboard, Guitar, Viola, and Cello Players Needed for Showpeople Theatre Collective Fall Season",
+      "organization": "Showpeople Theatre Collective",
+      "firstSeen": "2026-08-07T00:50:18.597Z",
+      "lastChecked": "2026-08-07T00:50:18.597Z",
+      "hasTrumpet": false,
+      "notified": true,
+      "summary": null,
+      "contentHash": "31e16bae6ce8c221"
     }
   }
 }
