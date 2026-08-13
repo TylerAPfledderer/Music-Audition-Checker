@@ -1,5 +1,5 @@
 {
-  "lastRun": "2026-08-10T09:27:10.279Z",
+  "lastRun": "2026-08-13T20:27:31.687Z",
   "pages": {
     "https://www.chamberorchestraofthetriangle.org/employment": {
       "url": "https://www.chamberorchestraofthetriangle.org/employment",
@@ -60,8 +60,8 @@
     "https://charlestonsymphony.org/employment/": {
       "url": "https://charlestonsymphony.org/employment/",
       "name": "Charleston Symphony Orchestra",
-      "lastChecked": "2026-06-11T20:44:00.235Z",
-      "contentHash": "413dd89c91a3043d",
+      "lastChecked": "2026-08-13T20:27:24.865Z",
+      "contentHash": "f4c992a4fd3118fd",
       "extractedSummary": null,
       "hasRelevantAuditions": false,
       "notifiedRelevantItems": []
@@ -89,8 +89,8 @@
     "https://www.wssymphony.org/about/jobs-2/": {
       "url": "https://www.wssymphony.org/about/jobs-2/",
       "name": "Winston-Salem Symphony",
-      "lastChecked": "2026-07-16T20:41:21.906Z",
-      "contentHash": "180a79422ce11dec",
+      "lastChecked": "2026-08-13T20:27:24.866Z",
+      "contentHash": "0efec5c0792d6673",
       "extractedSummary": null,
       "hasRelevantAuditions": false,
       "notifiedRelevantItems": []
@@ -127,8 +127,8 @@
     "https://rso.com/auditions/": {
       "url": "https://rso.com/auditions/",
       "name": "Roanoke Symphony Orchestra",
-      "lastChecked": "2026-07-16T20:41:21.905Z",
-      "contentHash": "4556bb7ed9e7b421",
+      "lastChecked": "2026-08-13T20:27:24.865Z",
+      "contentHash": "89a6cf3d3428e9a8",
       "extractedSummary": null,
       "hasRelevantAuditions": false,
       "notifiedRelevantItems": []
@@ -169,7 +169,7 @@
       ]
     }
   },
-  "playbillIndexHash": "71e0bb891428b991",
+  "playbillIndexHash": "246c6ee2937d6000",
   "playbillListings": {
     "https://playbill.com/job/mrs-doubtfire-national-tour-drums-percussion/a0380083-fa6a-4e35-9549-bb35933d6694": {
       "url": "https://playbill.com/job/mrs-doubtfire-national-tour-drums-percussion/a0380083-fa6a-4e35-9549-bb35933d6694",
@@ -820,6 +820,17 @@
       "notified": true,
       "summary": null,
       "contentHash": "31e16bae6ce8c221"
+    },
+    "https://playbill.com/job/shucked-2nd-national-tour-touring-musicians-non-afm/8fe84be1-7ea8-446f-bc3f-40fc995b8450": {
+      "url": "https://playbill.com/job/shucked-2nd-national-tour-touring-musicians-non-afm/8fe84be1-7ea8-446f-bc3f-40fc995b8450",
+      "title": "Shucked 2nd National Tour | Touring Musicians - Non AFM",
+      "organization": "Work Light Productions",
+      "firstSeen": "2026-08-13T20:27:24.868Z",
+      "lastChecked": "2026-08-13T20:27:24.868Z",
+      "hasTrumpet": false,
+      "notified": true,
+      "summary": null,
+      "contentHash": "e30f13aaec31058a"
     }
   }
 }
