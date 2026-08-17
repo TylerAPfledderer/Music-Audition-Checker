@@ -1,5 +1,5 @@
 {
-  "lastRun": "2026-08-13T20:27:31.687Z",
+  "lastRun": "2026-08-17T08:49:01.162Z",
   "pages": {
     "https://www.chamberorchestraofthetriangle.org/employment": {
       "url": "https://www.chamberorchestraofthetriangle.org/employment",
@@ -60,8 +60,8 @@
     "https://charlestonsymphony.org/employment/": {
       "url": "https://charlestonsymphony.org/employment/",
       "name": "Charleston Symphony Orchestra",
-      "lastChecked": "2026-08-13T20:27:24.865Z",
-      "contentHash": "f4c992a4fd3118fd",
+      "lastChecked": "2026-08-17T08:48:55.858Z",
+      "contentHash": "05add2cea7f8e7d0",
       "extractedSummary": null,
       "hasRelevantAuditions": false,
       "notifiedRelevantItems": []
@@ -107,8 +107,8 @@
     "https://www.charlottesymphony.org/about/employment-auditions/": {
       "url": "https://www.charlottesymphony.org/about/employment-auditions/",
       "name": "Charlotte Symphony",
-      "lastChecked": "2026-07-30T20:52:37.044Z",
-      "contentHash": "7050702dcfec3420",
+      "lastChecked": "2026-08-17T08:48:55.859Z",
+      "contentHash": "bff398430ce698e1",
       "extractedSummary": null,
       "hasRelevantAuditions": false,
       "notifiedRelevantItems": [
@@ -169,7 +169,7 @@
       ]
     }
   },
-  "playbillIndexHash": "246c6ee2937d6000",
+  "playbillIndexHash": "8885915f88f98769",
   "playbillListings": {
     "https://playbill.com/job/mrs-doubtfire-national-tour-drums-percussion/a0380083-fa6a-4e35-9549-bb35933d6694": {
       "url": "https://playbill.com/job/mrs-doubtfire-national-tour-drums-percussion/a0380083-fa6a-4e35-9549-bb35933d6694",
@@ -831,6 +831,17 @@
       "notified": true,
       "summary": null,
       "contentHash": "e30f13aaec31058a"
+    },
+    "https://playbill.com/job/auditions-for-community-choir/cfe332f0-2030-4b3a-bd0c-c714307e90c7": {
+      "url": "https://playbill.com/job/auditions-for-community-choir/cfe332f0-2030-4b3a-bd0c-c714307e90c7",
+      "title": "Auditions for Community Choir",
+      "organization": "Gotham City Music Collective",
+      "firstSeen": "2026-08-17T08:48:55.860Z",
+      "lastChecked": "2026-08-17T08:48:55.860Z",
+      "hasTrumpet": false,
+      "notified": true,
+      "summary": null,
+      "contentHash": "401a945346314f94"
     }
   }
 }
