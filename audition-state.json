@@ -1,5 +1,5 @@
 {
-  "lastRun": "2026-08-17T08:49:01.162Z",
+  "lastRun": "2026-08-20T20:14:45.265Z",
   "pages": {
     "https://www.chamberorchestraofthetriangle.org/employment": {
       "url": "https://www.chamberorchestraofthetriangle.org/employment",
@@ -60,8 +60,8 @@
     "https://charlestonsymphony.org/employment/": {
       "url": "https://charlestonsymphony.org/employment/",
       "name": "Charleston Symphony Orchestra",
-      "lastChecked": "2026-08-17T08:48:55.858Z",
-      "contentHash": "05add2cea7f8e7d0",
+      "lastChecked": "2026-08-20T20:14:38.939Z",
+      "contentHash": "8557553d733e75dc",
       "extractedSummary": null,
       "hasRelevantAuditions": false,
       "notifiedRelevantItems": []
@@ -118,8 +118,8 @@
     "https://ashevillesymphony.org/employment/": {
       "url": "https://ashevillesymphony.org/employment/",
       "name": "Asheville Symphony",
-      "lastChecked": "2026-08-07T00:50:18.594Z",
-      "contentHash": "6da0b3e2de176f02",
+      "lastChecked": "2026-08-20T20:14:38.941Z",
+      "contentHash": "f17afbc375d69c41",
       "extractedSummary": null,
       "hasRelevantAuditions": false,
       "notifiedRelevantItems": []
@@ -169,7 +169,7 @@
       ]
     }
   },
-  "playbillIndexHash": "8885915f88f98769",
+  "playbillIndexHash": "37762b124798192d",
   "playbillListings": {
     "https://playbill.com/job/mrs-doubtfire-national-tour-drums-percussion/a0380083-fa6a-4e35-9549-bb35933d6694": {
       "url": "https://playbill.com/job/mrs-doubtfire-national-tour-drums-percussion/a0380083-fa6a-4e35-9549-bb35933d6694",
@@ -842,6 +842,28 @@
       "notified": true,
       "summary": null,
       "contentHash": "401a945346314f94"
+    },
+    "https://playbill.com/job/the-palace-theatre-seeks-musicians-for-sister-act/b65686fc-484f-4c40-8924-36bc1b300277": {
+      "url": "https://playbill.com/job/the-palace-theatre-seeks-musicians-for-sister-act/b65686fc-484f-4c40-8924-36bc1b300277",
+      "title": "The Palace Theatre Seeks Musicians for ' Sister Act '",
+      "organization": "Palace Theatre",
+      "firstSeen": "2026-08-20T20:14:38.942Z",
+      "lastChecked": "2026-08-20T20:14:38.942Z",
+      "hasTrumpet": true,
+      "notified": true,
+      "summary": "The Palace Theatre is seeking professional musicians for their production of 'Sister Act', specifically listing 'Trumpet' as one of the instruments they are currently seeking. The role requires experienced, versatile musicians with strong sight-reading skills and professional musical theatre experience for a live pit orchestra.",
+      "contentHash": "d25d00df6e369dcb"
+    },
+    "https://playbill.com/job/immediate-replacement-drummer-for-the-beetlejuice-bus-truck-national-tour/335e451c-9b6f-46e8-8811-3982927eca58": {
+      "url": "https://playbill.com/job/immediate-replacement-drummer-for-the-beetlejuice-bus-truck-national-tour/335e451c-9b6f-46e8-8811-3982927eca58",
+      "title": "Immediate Replacement Drummer for the Beetlejuice Bus & Truck National Tour",
+      "organization": "NETworks Presentations LLC",
+      "firstSeen": "2026-08-20T20:14:38.942Z",
+      "lastChecked": "2026-08-20T20:14:38.942Z",
+      "hasTrumpet": false,
+      "notified": true,
+      "summary": null,
+      "contentHash": "74281e38bc576bb7"
     }
   }
 }
