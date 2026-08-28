@@ -1,5 +1,5 @@
 {
-  "lastRun": "2026-08-24T08:53:25.596Z",
+  "lastRun": "2026-08-28T03:53:24.253Z",
   "pages": {
     "https://www.chamberorchestraofthetriangle.org/employment": {
       "url": "https://www.chamberorchestraofthetriangle.org/employment",
@@ -80,11 +80,13 @@
     "https://greensborosymphony.org/about-the-symphony/auditions/": {
       "url": "https://greensborosymphony.org/about-the-symphony/auditions/",
       "name": "Greensboro Symphony Orchestra",
-      "lastChecked": "2026-08-24T08:53:20.737Z",
-      "contentHash": "da7c7202867d6deb",
-      "extractedSummary": null,
-      "hasRelevantAuditions": false,
-      "notifiedRelevantItems": []
+      "lastChecked": "2026-08-28T03:53:16.173Z",
+      "contentHash": "c2977df1de19eec7",
+      "extractedSummary": "The Greensboro Symphony Orchestra has an opening for a Third/Utility Trumpet position. The audition date is Monday, October 12, 2026, and the deadline for resume and deposit is September 28, 2026. This position is relevant as it is a trumpet opening with a future audition date.",
+      "hasRelevantAuditions": true,
+      "notifiedRelevantItems": [
+        "trumpet"
+      ]
     },
     "https://www.wssymphony.org/about/jobs-2/": {
       "url": "https://www.wssymphony.org/about/jobs-2/",
@@ -118,8 +120,8 @@
     "https://ashevillesymphony.org/employment/": {
       "url": "https://ashevillesymphony.org/employment/",
       "name": "Asheville Symphony",
-      "lastChecked": "2026-08-20T20:14:38.941Z",
-      "contentHash": "f17afbc375d69c41",
+      "lastChecked": "2026-08-28T03:53:16.174Z",
+      "contentHash": "2af4544c20553d1a",
       "extractedSummary": null,
       "hasRelevantAuditions": false,
       "notifiedRelevantItems": []
@@ -148,9 +150,9 @@
     "https://usarmyband.com/vacancies/": {
       "url": "https://usarmyband.com/vacancies/",
       "name": "U.S. Army Pershing's Own",
-      "lastChecked": "2026-07-13T11:17:36.289Z",
-      "contentHash": "042a802e2ebf2cea",
-      "extractedSummary": "The U.S. Army Band \"Pershing's Own\" has an open vacancy for a Trumpet position with the U.S. Army Ceremonial Band. The application deadline is August 20, and auditions are scheduled for October 15 - October 16. This position is relevant as it is a trumpet-specific audition with future dates.",
+      "lastChecked": "2026-08-28T03:53:19.021Z",
+      "contentHash": "0f2809a8b076d08c",
+      "extractedSummary": "The U.S. Army Band \"Pershing's Own\" has an open vacancy for a Trumpet position in The U.S. Army Ceremonial Band. The application deadline is August 20, with auditions scheduled for October 15 - October 16. This is a relevant opportunity for trumpet players.",
       "hasRelevantAuditions": true,
       "notifiedRelevantItems": [
         "trumpet"
@@ -159,9 +161,9 @@
     "https://virginiasymphony.org/jobs-auditions/": {
       "url": "https://virginiasymphony.org/jobs-auditions/",
       "name": "Virginia Symphony",
-      "lastChecked": "2026-07-23T20:47:55.739Z",
-      "contentHash": "cbde94282f7a8085",
-      "extractedSummary": "The Virginia Symphony Orchestra has an open audition for a TRUMPET III position with an application deadline of January 18, 2027, and in-person auditions on February 15-16, 2027. They also accept rolling submissions for a Substitute Musician list, which would include trumpet players. Both opportunities are relevant for trumpet players.",
+      "lastChecked": "2026-08-28T03:53:20.585Z",
+      "contentHash": "e5d06c6170ba62a5",
+      "extractedSummary": "The Virginia Symphony Orchestra has an open audition for a TRUMPET III position with an application deadline of January 18, 2027, and in-person auditions on February 15-16, 2027. They also accept rolling submissions for Substitute Musician recorded auditions, which would include trumpet players. Both opportunities are relevant as they involve trumpet and have future dates.",
       "hasRelevantAuditions": true,
       "notifiedRelevantItems": [
         "trumpet",
@@ -169,7 +171,7 @@
       ]
     }
   },
-  "playbillIndexHash": "5b1933fa62bb8af8",
+  "playbillIndexHash": "cc80bb5e84585e9f",
   "playbillListings": {
     "https://playbill.com/job/mrs-doubtfire-national-tour-drums-percussion/a0380083-fa6a-4e35-9549-bb35933d6694": {
       "url": "https://playbill.com/job/mrs-doubtfire-national-tour-drums-percussion/a0380083-fa6a-4e35-9549-bb35933d6694",
