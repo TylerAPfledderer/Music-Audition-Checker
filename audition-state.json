@@ -1,5 +1,5 @@
 {
-  "lastRun": "2026-08-31T16:01:52.251Z",
+  "lastRun": "2026-09-03T21:57:42.772Z",
   "pages": {
     "https://www.chamberorchestraofthetriangle.org/employment": {
       "url": "https://www.chamberorchestraofthetriangle.org/employment",
@@ -109,8 +109,8 @@
     "https://www.charlottesymphony.org/about/employment-auditions/": {
       "url": "https://www.charlottesymphony.org/about/employment-auditions/",
       "name": "Charlotte Symphony",
-      "lastChecked": "2026-08-17T08:48:55.859Z",
-      "contentHash": "bff398430ce698e1",
+      "lastChecked": "2026-09-03T21:57:33.460Z",
+      "contentHash": "7e66f639e0392b1a",
       "extractedSummary": null,
       "hasRelevantAuditions": false,
       "notifiedRelevantItems": [
@@ -120,8 +120,8 @@
     "https://ashevillesymphony.org/employment/": {
       "url": "https://ashevillesymphony.org/employment/",
       "name": "Asheville Symphony",
-      "lastChecked": "2026-08-28T03:53:16.174Z",
-      "contentHash": "2af4544c20553d1a",
+      "lastChecked": "2026-09-03T21:57:33.460Z",
+      "contentHash": "aa4be79c3a3d4180",
       "extractedSummary": null,
       "hasRelevantAuditions": false,
       "notifiedRelevantItems": []
@@ -129,8 +129,8 @@
     "https://rso.com/auditions/": {
       "url": "https://rso.com/auditions/",
       "name": "Roanoke Symphony Orchestra",
-      "lastChecked": "2026-08-13T20:27:24.865Z",
-      "contentHash": "89a6cf3d3428e9a8",
+      "lastChecked": "2026-09-03T21:57:33.458Z",
+      "contentHash": "48cf2e048d48cb70",
       "extractedSummary": null,
       "hasRelevantAuditions": false,
       "notifiedRelevantItems": []
@@ -161,9 +161,9 @@
     "https://virginiasymphony.org/jobs-auditions/": {
       "url": "https://virginiasymphony.org/jobs-auditions/",
       "name": "Virginia Symphony",
-      "lastChecked": "2026-08-28T03:53:20.585Z",
-      "contentHash": "e5d06c6170ba62a5",
-      "extractedSummary": "The Virginia Symphony Orchestra has an open audition for a TRUMPET III position with an application deadline of January 18, 2027, and in-person auditions on February 15-16, 2027. They also accept rolling submissions for Substitute Musician recorded auditions, which would include trumpet players. Both opportunities are relevant as they involve trumpet and have future dates.",
+      "lastChecked": "2026-09-03T21:57:38.744Z",
+      "contentHash": "90608484a4b50bfa",
+      "extractedSummary": "The Virginia Symphony Orchestra has an open audition for a TRUMPET III position with an application deadline of January 18, 2027, and in-person auditions scheduled for February 15-16, 2027. Additionally, they are accepting recorded auditions for a Substitute Musician position on a rolling basis, which would be open to trumpet players. Both opportunities are relevant as they involve trumpet and have future dates.",
       "hasRelevantAuditions": true,
       "notifiedRelevantItems": [
         "trumpet",
@@ -171,7 +171,7 @@
       ]
     }
   },
-  "playbillIndexHash": "41b368325be5ecd8",
+  "playbillIndexHash": "404c11cf03b7435d",
   "playbillListings": {
     "https://playbill.com/job/mrs-doubtfire-national-tour-drums-percussion/a0380083-fa6a-4e35-9549-bb35933d6694": {
       "url": "https://playbill.com/job/mrs-doubtfire-national-tour-drums-percussion/a0380083-fa6a-4e35-9549-bb35933d6694",
@@ -866,6 +866,17 @@
       "notified": true,
       "summary": null,
       "contentHash": "74281e38bc576bb7"
+    },
+    "https://playbill.com/job/trumpet-flugelhorn-for-water-for-elephants-bus-truck-national-tour/01032c70-20b6-455b-a3ec-d45dc3d129df": {
+      "url": "https://playbill.com/job/trumpet-flugelhorn-for-water-for-elephants-bus-truck-national-tour/01032c70-20b6-455b-a3ec-d45dc3d129df",
+      "title": "Trumpet/Flugelhorn For Water For Elephants Bus & Truck National Tour",
+      "organization": "NETworks Presentations LLC",
+      "firstSeen": "2026-09-03T21:57:38.745Z",
+      "lastChecked": "2026-09-03T21:57:38.745Z",
+      "hasTrumpet": true,
+      "notified": true,
+      "summary": "NETworks Presentations, LLC is seeking a Trumpet/Flugelhorn player for the 'Water For Elephants' Bus & Truck National Tour. The position requires proficiency in circus and big band/swing styles, with employment from November 2026 to May 2027.",
+      "contentHash": "3f31c0a5dc4c9d8b"
     }
   }
 }
