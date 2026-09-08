@@ -33,7 +33,7 @@ import { PlaybillState, processPlaybillUrl } from "./playbill-crawler";
 import { UrlConfig, CrawlResult, sendEmail } from "./email";
 import { analyzeWithLlm } from "./llm-classifiers";
 import { preflightSecrets, preflightUrls } from "./preflight";
-import { createGitHubIssue } from "./github";
+import { createGitHubIssue, createCredentialFailureIssue } from "./github";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -347,7 +347,17 @@ async function main(): Promise<void> {
   const validatedUrls = new Set(Object.values(state.pages).map((p) => p.url));
 
   // ── Preflight (runs before any state mutation or email) ──────────────────
-  await preflightSecrets();
+  // A credential failure here (e.g. an expired/revoked Gmail refresh token) aborts
+  // the run before any URL is checked. File a GitHub issue with remediation steps
+  // so this doesn't rely on someone noticing a red Actions run on a weekly cron.
+  try {
+    await preflightSecrets();
+  } catch (err) {
+    await createCredentialFailureIssue(String(err)).catch((issueErr) =>
+      console.warn("  Could not create GitHub issue:", issueErr.message)
+    );
+    throw err;
+  }
   const { contentCache: pageContentCache, failures: probeFailures } = await preflightUrls(urls, llm, validatedUrls);
 
   if (probeFailures.length > 0) {

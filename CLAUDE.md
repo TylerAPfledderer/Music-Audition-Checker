@@ -42,7 +42,7 @@ npm test               # Run vitest test suite
 ## Architecture
 
 ### Two-Phase Execution (`check-auditions.ts`)
-1. **PREFLIGHT** — validates secrets, probes all URLs, confirms they are audition pages, builds content cache. Collects failures without stopping; auto-creates GitHub Issues for failures.
+1. **PREFLIGHT** — validates secrets, probes all URLs, confirms they are audition pages, builds content cache. URL probe failures are collected without stopping the run and auto-create a GitHub Issue. A secrets failure (e.g. an expired/revoked Gmail OAuth2 refresh token) aborts the run immediately — since no page can be checked or emailed without valid credentials — but still files a GitHub Issue (label `credentials`) with remediation steps, so the failure isn't only visible as a red Actions run.
 2. **MAIN RUN** — dispatches each URL by `crawlMode`. Skips unchanged pages (content hash), calls LLM for relevance analysis, sends a single digest email with all findings.
 
 ### Crawl Modes
